@@ -1,3 +1,4 @@
+export * from "./Acceso.js";
 export * from "./Cliente.js";
 export * from "./Dosis.js";
 export * from "./FichaMedica.js";
