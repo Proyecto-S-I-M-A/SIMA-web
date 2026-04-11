@@ -1,4 +1,5 @@
 import express from "express";
+import RouteAcceso from "./routes/Route_Acceso.js";
 import RouteCliente from "./routes/Route_Cliente.js";
 import RouteUsuario from "./routes/Route_Usuario.js";
 import RouteFichaMedica from "./routes/Route_FichaMedica.js";
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(express.json());
 
+app.use("/api/v0", RouteAcceso);
 app.use("/api/v0", RouteCliente);
 app.use("/api/v0", RouteUsuario);
 app.use("/api/v0", RouteFichaMedica);
