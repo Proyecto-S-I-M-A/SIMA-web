@@ -1,0 +1,27 @@
+### CREATE Nuevo Acceso para cliente
+POST http://localhost:3000/api/v0/accesos
+Content-Type: application/json
+
+{
+    "usuario": "juanperez",
+    "password": "password123",
+    "tipo": "cliente"
+}
+
+### READ un Acceso
+GET http://localhost:3000/api/v0/accesos/1
+
+### READ todos los Accesos
+GET http://localhost:3000/api/v0/accesos/all
+
+### UPDATE un Acceso
+PUT http://localhost:3000/api/v0/accesos/1
+Content-Type: application/json
+
+{
+    "password": "newpassword456",
+    "tipo": "admin"
+}
+
+### DELETE un Acceso (soft delete)
+DELETE http://localhost:3000/api/v0/accesos/1
