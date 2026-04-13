@@ -1,7 +1,16 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-class Receta extends Model {}
+class Receta extends Model {
+  declare id: number;
+  declare doctor_remitente: string
+  declare ruc_doctor_remitente: string;
+  declare hospital_remitente: string
+  declare telefono_hospital: string;
+  declare correo: string
+  declare codigo: number;
+  declare fecha: Date;
+}
 
 Receta.init(
   {
@@ -23,6 +32,8 @@ Receta.init(
     modelName: "Receta",
     tableName: "recetas",
     schema: "public",
+    timestamps: true,
+    underscored: false,
   },
 );
 export default Receta;

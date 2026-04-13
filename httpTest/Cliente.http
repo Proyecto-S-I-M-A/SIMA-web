@@ -1,5 +1,3 @@
-# GET http://localhost:3000/clientes/; 
-
 POST http://localhost:3000/api/v0/clientes
 Content-Type: application/json
 
@@ -7,9 +5,29 @@ Content-Type: application/json
 	"nombre": "Juan",
 	"apellido": "Perez",
 	"cedula": "1234567890",
-	"password": "secreto123",
 	"correo": "juan.perez@example.com",
 	"asegurado": false,
 	"verificado": false,
+	"id_acceso": 2,
 	"sexo": "M"
 }
+
+### READ un Cliente
+GET http://localhost:3000/api/v0/clientes/1
+
+### READ todos los Clientes
+GET http://localhost:3000/api/v0/clientes/all
+
+### UPDATE un Cliente
+PUT http://localhost:3000/api/v0/clientes/1
+Content-Type: application/json
+
+{
+	"nombre": "Juan Carlos",
+	"apellido": "Perez",
+	"asegurado": true,
+	"verificado": true
+}
+
+### DELETE un Cliente (soft delete)
+DELETE http://localhost:3000/api/v0/clientes/1

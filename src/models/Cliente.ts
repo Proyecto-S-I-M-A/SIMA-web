@@ -41,6 +41,8 @@ Cliente.init(
     modelName: "Cliente",
     tableName: "clientes",
     schema: "public",
+    timestamps: true,
+    underscored: false,
   },
 );
 

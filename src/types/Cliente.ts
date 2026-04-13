@@ -7,6 +7,7 @@ export interface ClienteAttributes {
   asegurado: boolean;
   verificado: boolean;
   sexo: string | null;
+  id_acceso: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,6 +20,7 @@ export interface ClienteCreationAttributes {
   asegurado?: boolean;
   verificado?: boolean;
   sexo?: string | null;
+  id_acceso: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -3,7 +3,7 @@ import sequelize from "../config/sequelize.js";
 
 
 class Acceso extends Model {
-  id: any;
+    declare id: number;
 }
 
 Acceso.init(

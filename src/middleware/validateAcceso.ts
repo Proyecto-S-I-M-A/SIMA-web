@@ -22,11 +22,6 @@ export const validateAccesoCreation = [
     .withMessage('El tipo es requerido')
     .isLength({ min: 2, max: 20 })
     .withMessage('El tipo debe tener entre 2 y 20 caracteres'),
-
-  body('activo')
-    .optional()
-    .isBoolean()
-    .withMessage('Activo debe ser un booleano'),
 ];
 
 // Middleware para manejar errores de validación
