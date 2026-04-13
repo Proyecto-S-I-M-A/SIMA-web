@@ -28,11 +28,6 @@ export const validateClienteCreation = [
     .isEmail()
     .withMessage('El correo debe ser un email válido'),
 
-  body('password')
-    .optional({ checkFalsy: true })
-    .isLength({ min: 6 })
-    .withMessage('La contraseña debe tener al menos 6 caracteres'),
-
   body('sexo')
     .trim()
     .optional({ checkFalsy: true })
@@ -48,6 +43,12 @@ export const validateClienteCreation = [
     .optional()
     .isBoolean()
     .withMessage('Verificado debe ser un booleano'),
+
+  body("id_acceso")
+    .trim()
+    .notEmpty()
+    .isNumeric()
+    .withMessage('el id_acceso es requerido y debe ser un número'),
 ];
 
 // Middleware para manejar errores de validación
