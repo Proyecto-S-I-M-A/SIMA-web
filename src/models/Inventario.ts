@@ -1,7 +1,14 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-class Inventario extends Model {}
+class Inventario extends Model {
+  declare id: number;
+  declare nombre_medicamento: string;
+  declare marca: string;
+  declare precio: number;
+  declare cantidad: number;
+  declare resetado: boolean;
+}
 
 Inventario.init(
   {
@@ -21,6 +28,8 @@ Inventario.init(
     modelName: "Inventario",
     tableName: "inventario",
     schema: "public",
+    timestamps: true,
+    underscored: false,
   },
 );
 export default Inventario;
