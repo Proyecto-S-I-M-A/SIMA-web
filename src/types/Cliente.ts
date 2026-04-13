@@ -3,7 +3,6 @@ export interface ClienteAttributes {
   nombre: string;
   apellido: string | null;
   cedula: string | null;
-  password: string | null;
   correo: string | null;
   asegurado: boolean;
   verificado: boolean;
@@ -16,7 +15,6 @@ export interface ClienteCreationAttributes {
   nombre?: string;
   apellido?: string | null;
   cedula?: string | null;
-  password?: string | null;
   correo?: string | null;
   asegurado?: boolean;
   verificado?: boolean;
