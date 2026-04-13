@@ -1,32 +1,22 @@
-import { AccesoCreationAttributes } from '../types/Acceso.js';
 import type { Request, Response } from 'express';
 import Acceso from '../models/Acceso.js';
+import Cliente from '../models/Cliente.js';
 import encodePassword from '../services/Encode.js';
+import { AccesoAttributes, AccesoCreationAttributes } from '@/types/Acceso.js';
 
 async function CREATE(request: Request, response: Response) {
   try {
-    const { usuario, password, tipo } = request.body;
-
-    if (!usuario || !password || !tipo) {
-      return response.status(400).json({
-        error: 'Los campos usuario, password y tipo son requeridos',
-      });
-    }
+    const body: AccesoCreationAttributes = request.body;
 
     // Verificar que no exista usuario duplicado
-    const existingUser = await Acceso.findOne({ where: { usuario, activo: true } });
+    const existingUser = await Acceso.findOne({ where: { usuario: body.usuario } });
     if (existingUser) {
       return response.status(409).json({
         error: 'El usuario ya existe',
       });
     }
 
-    const acceso = await Acceso.create({
-      usuario,
-      password: encodePassword(password),
-      tipo,
-      activo: true,
-    });
+    const acceso = await Acceso.create(body as any);
 
     response.status(201).json({ 
       message: "Acceso creado exitosamente", 
@@ -72,6 +62,7 @@ async function READ(request: Request, response: Response) {
 async function UPDATE(request: Request, response: Response) {
   try {
     const id = request.params.id;
+    const body: AccesoAttributes = {...request.body, password: encodePassword(request.body.password)}
     if (!id) {
       return response.status(400).json({ error: 'El id del acceso es requerido' });
     }
@@ -81,13 +72,7 @@ async function UPDATE(request: Request, response: Response) {
       return response.status(404).json({ error: 'Acceso no encontrado' });
     }
 
-    const updateData: any = {};
-    if (request.body.usuario) updateData.usuario = request.body.usuario;
-    if (request.body.password) updateData.password = encodePassword(request.body.password);
-    if (request.body.tipo) updateData.tipo = request.body.tipo;
-    if (request.body.activo !== undefined) updateData.activo = request.body.activo;
-
-    await acceso.update(updateData);
+    await acceso.update(body);
     response.status(200).json({ 
       message: "Acceso actualizado exitosamente", 
       acceso: acceso.id 
@@ -113,6 +98,7 @@ async function DELETE(request: Request, response: Response) {
     }
 
     await acceso.update({ activo: false });
+    await Cliente.update({ activo: false }, { where: { id_acceso: acceso.id } });
     response.status(200).json({ 
       message: "Acceso eliminado exitosamente", 
       acceso: acceso.id 
