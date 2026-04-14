@@ -1,0 +1,47 @@
+### CREATE inventario de una Maquina
+POST http://localhost:3000/api/v0/inventario
+Content-Type: application/json
+
+{
+    "id_maquina": 1,
+    "nombre_medicamento": "Paracetamol 500mg",
+    "marca": "Genfar",
+    "precio": 1.50,
+    "cantidad": 120,
+    "resetado": false
+}
+
+### CREATE inventario de una Maquina
+POST http://localhost:3000/api/v0/inventario
+Content-Type: application/json
+
+{
+    "id_maquina": 1,
+    "nombre_medicamento": "Antibioticos",
+    "marca": "Bayer",
+    "precio": 1.50,
+    "cantidad": 100,
+    "resetado": true
+}
+
+### READ un registro de Inventario
+GET http://localhost:3000/api/v0/inventario/1
+
+### READ todo el Inventario
+GET http://localhost:3000/api/v0/inventario/all
+
+### UPDATE un registro de Inventario
+PUT http://localhost:3000/api/v0/inventario/1
+Content-Type: application/json
+
+{
+    "id_maquina": 1,
+    "nombre_medicamento": "Paracetamol 500mg",
+    "marca": "MK",
+    "precio": 1.75,
+    "cantidad": 90,
+    "resetado": false
+}
+
+### DELETE un registro de Inventario
+DELETE http://localhost:3000/api/v0/inventario/1

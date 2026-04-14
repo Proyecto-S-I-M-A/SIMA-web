@@ -21,9 +21,6 @@ Cliente.init(
       type: DataTypes.STRING(50),
       unique: true,
     },
-    password: {
-      type: DataTypes.STRING(100),
-    },
     correo: {
       type: DataTypes.STRING(50),
     },

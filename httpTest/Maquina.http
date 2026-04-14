@@ -1,0 +1,30 @@
+### CREATE nueva Maquina
+POST http://localhost:3000/api/v0/maquinas
+Content-Type: application/json
+
+{
+    "ubicacion": "Sede Norte - Piso 1",
+    "activo": true,
+    "latitud": -0.180653,
+    "longitud": -78.467834
+}
+
+### READ una Maquina
+GET http://localhost:3000/api/v0/maquinas/1
+
+### READ todas las Maquinas
+GET http://localhost:3000/api/v0/maquinas/all
+
+### UPDATE una Maquina
+PUT http://localhost:3000/api/v0/maquinas/1
+Content-Type: application/json
+
+{
+    "ubicacion": "Sede Norte - Piso 2",
+    "activo": true,
+    "latitud": -0.1807,
+    "longitud": -78.4680
+}
+
+### DELETE una Maquina (soft delete -> activo=false)
+DELETE http://localhost:3000/api/v0/maquinas/1
