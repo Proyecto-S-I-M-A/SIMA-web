@@ -8,11 +8,13 @@ import RouteReceta from "./routes/Route_Receta.js";
 import RouteDosis from "./routes/Route_Dosis.js";
 import RouteInventario from "./routes/Route_Inventario.js";
 import RouteMaquina from "./routes/Route_Maquina.js";
+import requireSupabaseAuth from "./middleware/requireSupabaseAuth.js";
 import "./models/index.js";
 
 const app = express();
 
 app.use(express.json());
+app.use("/api/v0", requireSupabaseAuth);
 
 app.use("/api/v0", RouteAcceso);
 app.use("/api/v0", RouteCliente);

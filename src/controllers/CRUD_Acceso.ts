@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import Acceso from '../models/Acceso.js';
 import Cliente from '../models/Cliente.js';
+import { supabase } from '../config/supabase.js';
 import encodePassword from '../services/Encode.js';
 import { AccesoAttributes, AccesoCreationAttributes } from '@/types/Acceso.js';
 
