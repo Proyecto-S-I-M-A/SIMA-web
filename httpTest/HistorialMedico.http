@@ -1,0 +1,41 @@
+### CREATE nuevo Historial Medico
+POST http://localhost:3000/api/v0/historiales-medicos
+Content-Type: application/json
+
+{
+    "id_cliente": 2,
+    "fecha_consulta": "2026-04-14",
+    "motivo_consulta": "Dolor de cabeza persistente",
+    "diagnostico": "Migraña",
+    "tratamiento": "Ibuprofeno 400mg cada 8 horas",
+    "observaciones": "Control en 7 dias",
+    "presion_arterial": "120/80",
+    "temperatura": 36.7,
+    "peso": 70.5,
+    "altura": 1.72,
+    "frecuencia_cardiaca": 76,
+    "medico": "Dr. Carlos Ramirez",
+    "fecha_registro": "2026-04-14"
+}
+
+### READ un Historial Medico
+GET http://localhost:3000/api/v0/historiales-medicos/1
+
+### READ todos los Historiales Medicos
+GET http://localhost:3000/api/v0/historiales-medicos/all
+
+### UPDATE un Historial Medico
+PUT http://localhost:3000/api/v0/historiales-medicos/1
+Content-Type: application/json
+
+{
+    "id_cliente": 1,
+    "motivo_consulta": "Dolor de cabeza leve",
+    "diagnostico": "Cefalea tensional",
+    "tratamiento": "Paracetamol 500mg cada 8 horas",
+    "observaciones": "Mejora clinica",
+    "frecuencia_cardiaca": 74
+}
+
+### DELETE un Historial Medico
+DELETE http://localhost:3000/api/v0/historiales-medicos/1

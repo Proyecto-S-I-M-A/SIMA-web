@@ -6,7 +6,7 @@ import { AccesoAttributes, AccesoCreationAttributes } from '@/types/Acceso.js';
 
 async function CREATE(request: Request, response: Response) {
   try {
-    const body: AccesoCreationAttributes = request.body;
+    const body: AccesoCreationAttributes = {...request.body, password: encodePassword(request.body.password)};
 
     // Verificar que no exista usuario duplicado
     const existingUser = await Acceso.findOne({ where: { usuario: body.usuario } });

@@ -1,0 +1,30 @@
+### CREATE nueva Dosis
+POST http://localhost:3000/api/v0/dosis
+Content-Type: application/json
+
+{
+    "id_receta": 1,
+    "id_medicamento": 1,
+    "cantidad": 2,
+    "instrucciones": "Tomar 1 tableta cada 12 horas despues de alimentos"
+}
+
+### READ una Dosis
+GET http://localhost:3000/api/v0/dosis/1
+
+### READ todas las Dosis
+GET http://localhost:3000/api/v0/dosis/all
+
+### UPDATE una Dosis
+PUT http://localhost:3000/api/v0/dosis/1
+Content-Type: application/json
+
+{
+    "id_receta": 1,
+    "id_medicamento": 1,
+    "cantidad": 3,
+    "instrucciones": "Tomar 1 tableta cada 8 horas durante 5 dias"
+}
+
+### DELETE una Dosis
+DELETE http://localhost:3000/api/v0/dosis/1

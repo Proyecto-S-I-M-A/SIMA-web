@@ -1,0 +1,30 @@
+### CREATE nueva Ficha Medica
+POST http://localhost:3000/api/v0/fichas-medicas
+Content-Type: application/json
+
+{
+    "id_cliente": 2,
+    "tipo_sanguineo": "O+",
+    "alergenos": "Penicilina",
+    "enfermedad_cronica": "Hipertension"
+}
+
+### READ una Ficha Medica
+GET http://localhost:3000/api/v0/fichas-medicas/1
+
+### READ todas las Fichas Medicas
+GET http://localhost:3000/api/v0/fichas-medicas/all
+
+### UPDATE una Ficha Medica
+PUT http://localhost:3000/api/v0/fichas-medicas/1
+Content-Type: application/json
+
+{
+    "id_cliente": 1,
+    "tipo_sanguineo": "O+",
+    "alergenos": "Ninguno",
+    "enfermedad_cronica": "Ninguna"
+}
+
+### DELETE una Ficha Medica
+DELETE http://localhost:3000/api/v0/fichas-medicas/1

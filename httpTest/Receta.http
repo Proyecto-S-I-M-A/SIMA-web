@@ -1,0 +1,36 @@
+### CREATE nueva Receta
+POST http://localhost:3000/api/v0/recetas
+Content-Type: application/json
+
+{
+    "id_cliente": 2,
+    "doctor_remitente": "Ana Torres",
+    "ruc_doctor_remitente": "1712345678001",
+    "hospital_remitente": "Clinica Norte",
+    "telefono_hospital": "022345678",
+    "correo": "contacto@clinicanorte.com",
+    "codigo": 1001,
+    "fecha": "2026-04-14"
+}
+
+### READ una Receta
+GET http://localhost:3000/api/v0/recetas/1
+
+### READ todas las Recetas
+GET http://localhost:3000/api/v0/recetas/all
+
+### UPDATE una Receta
+PUT http://localhost:3000/api/v0/recetas/1
+Content-Type: application/json
+
+{
+    "id_cliente": 1,
+    "doctor_remitente": "Ana Torres",
+    "hospital_remitente": "Clinica Central",
+    "telefono_hospital": "022000111",
+    "codigo": 1002,
+    "fecha": "2026-04-15"
+}
+
+### DELETE una Receta
+DELETE http://localhost:3000/api/v0/recetas/1
