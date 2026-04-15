@@ -4,7 +4,9 @@ export interface AccesoAttributes {
   password: string;
   tipo: string;
   ultimo_acceso: Date | null;
+  correo: string;
   activo: boolean;
+  token: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,6 +16,7 @@ export interface AccesoCreationAttributes {
   password?: string;
   tipo?: string;
   ultimo_acceso?: Date | null;
+  correo?: string;
   activo?: boolean;
   createdAt?: Date;
   updatedAt?: Date;

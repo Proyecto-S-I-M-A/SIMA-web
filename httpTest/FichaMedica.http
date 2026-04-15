@@ -1,5 +1,9 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
 ### CREATE nueva Ficha Medica
-POST http://localhost:3000/api/v0/fichas-medicas
+POST {{baseUrl}}/fichas-medicas
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -10,13 +14,16 @@ Content-Type: application/json
 }
 
 ### READ una Ficha Medica
-GET http://localhost:3000/api/v0/fichas-medicas/1
+GET {{baseUrl}}/fichas-medicas/1
+Authorization: Bearer {{accessToken}}
 
 ### READ todas las Fichas Medicas
-GET http://localhost:3000/api/v0/fichas-medicas/all
+GET {{baseUrl}}/fichas-medicas/all
+Authorization: Bearer {{accessToken}}
 
 ### UPDATE una Ficha Medica
-PUT http://localhost:3000/api/v0/fichas-medicas/1
+PUT {{baseUrl}}/fichas-medicas/1
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -27,4 +34,5 @@ Content-Type: application/json
 }
 
 ### DELETE una Ficha Medica
-DELETE http://localhost:3000/api/v0/fichas-medicas/1
+DELETE {{baseUrl}}/fichas-medicas/1
+Authorization: Bearer {{accessToken}}

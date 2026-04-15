@@ -1,4 +1,8 @@
-POST http://localhost:3000/api/v0/clientes
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
+POST {{baseUrl}}/clientes
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -13,13 +17,16 @@ Content-Type: application/json
 }
 
 ### READ un Cliente
-GET http://localhost:3000/api/v0/clientes/1
+GET {{baseUrl}}/clientes/1
+Authorization: Bearer {{accessToken}}
 
 ### READ todos los Clientes
-GET http://localhost:3000/api/v0/clientes/all
+GET {{baseUrl}}/clientes/all
+Authorization: Bearer {{accessToken}}
 
 ### UPDATE un Cliente
-PUT http://localhost:3000/api/v0/clientes/1
+PUT {{baseUrl}}/clientes/1
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -30,4 +37,5 @@ Content-Type: application/json
 }
 
 ### DELETE un Cliente (soft delete)
-DELETE http://localhost:3000/api/v0/clientes/1
+DELETE {{baseUrl}}/clientes/1
+Authorization: Bearer {{accessToken}}

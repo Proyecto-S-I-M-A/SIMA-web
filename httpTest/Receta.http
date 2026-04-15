@@ -1,5 +1,9 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
 ### CREATE nueva Receta
-POST http://localhost:3000/api/v0/recetas
+POST {{baseUrl}}/recetas
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -14,13 +18,16 @@ Content-Type: application/json
 }
 
 ### READ una Receta
-GET http://localhost:3000/api/v0/recetas/1
+GET {{baseUrl}}/recetas/1
+Authorization: Bearer {{accessToken}}
 
 ### READ todas las Recetas
-GET http://localhost:3000/api/v0/recetas/all
+GET {{baseUrl}}/recetas/all
+Authorization: Bearer {{accessToken}}
 
 ### UPDATE una Receta
-PUT http://localhost:3000/api/v0/recetas/1
+PUT {{baseUrl}}/recetas/1
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -33,4 +40,5 @@ Content-Type: application/json
 }
 
 ### DELETE una Receta
-DELETE http://localhost:3000/api/v0/recetas/1
+DELETE {{baseUrl}}/recetas/1
+Authorization: Bearer {{accessToken}}

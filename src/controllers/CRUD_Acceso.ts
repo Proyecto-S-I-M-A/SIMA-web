@@ -1,12 +1,12 @@
 import type { Request, Response } from 'express';
 import Acceso from '../models/Acceso.js';
 import Cliente from '../models/Cliente.js';
-import { supabase } from '../config/supabase.js';
 import encodePassword from '../services/Encode.js';
 import { AccesoAttributes, AccesoCreationAttributes } from '@/types/Acceso.js';
 
 async function CREATE(request: Request, response: Response) {
   try {
+    
     const body: AccesoCreationAttributes = {...request.body, password: encodePassword(request.body.password)};
 
     // Verificar que no exista usuario duplicado
@@ -21,7 +21,7 @@ async function CREATE(request: Request, response: Response) {
 
     response.status(201).json({ 
       message: "Acceso creado exitosamente", 
-      acceso: acceso.id 
+      acceso: { id: acceso.id, token: acceso.token, refresh: acceso.refresh } 
     });
   } catch (e: any) {
     console.error('Error al crear acceso:', e);
