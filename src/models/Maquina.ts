@@ -1,7 +1,13 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-class Maquina extends Model {}
+class Maquina extends Model {
+  declare id: number;
+  declare ubicacion: string;
+  declare activo: boolean;
+  declare latitud: number;
+  declare longitud: number;
+}
 
 Maquina.init(
   {
@@ -20,6 +26,8 @@ Maquina.init(
     modelName: "Maquina",
     tableName: "maquinas",
     schema: "public",
+    timestamps: true,
+    underscored: false,
   },
 );
 export default Maquina;

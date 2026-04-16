@@ -1,7 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-class FichaMedica extends Model {}
+class FichaMedica extends Model {
+  declare id: number;
+  declare tipo_sanguineo: string
+  declare alergenos: string
+  declare enfermedad_cronica: string
+}
 
 FichaMedica.init(
   {
@@ -19,6 +24,8 @@ FichaMedica.init(
     modelName: "FichaMedica",
     tableName: "fichas_medicas",
     schema: "public",
+    timestamps: true,
+    underscored: false,
   },
 );
 export default FichaMedica;

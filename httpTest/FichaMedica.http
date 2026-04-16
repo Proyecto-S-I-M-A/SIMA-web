@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
+### CREATE nueva Ficha Medica
+POST {{baseUrl}}/fichas-medicas
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "id_cliente": 2,
+    "tipo_sanguineo": "O+",
+    "alergenos": "Penicilina",
+    "enfermedad_cronica": "Hipertension"
+}
+
+### READ una Ficha Medica
+GET {{baseUrl}}/fichas-medicas/1
+Authorization: Bearer {{accessToken}}
+
+### READ todas las Fichas Medicas
+GET {{baseUrl}}/fichas-medicas/all
+Authorization: Bearer {{accessToken}}
+
+### UPDATE una Ficha Medica
+PUT {{baseUrl}}/fichas-medicas/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "id_cliente": 1,
+    "tipo_sanguineo": "O+",
+    "alergenos": "Ninguno",
+    "enfermedad_cronica": "Ninguna"
+}
+
+### DELETE una Ficha Medica
+DELETE {{baseUrl}}/fichas-medicas/1
+Authorization: Bearer {{accessToken}}

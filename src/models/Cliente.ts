@@ -21,9 +21,6 @@ Cliente.init(
       type: DataTypes.STRING(50),
       unique: true,
     },
-    password: {
-      type: DataTypes.STRING(100),
-    },
     correo: {
       type: DataTypes.STRING(50),
     },
@@ -37,10 +34,6 @@ Cliente.init(
     },
     sexo: {
       type: DataTypes.STRING(10),
-    },
-    activo: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
     }
   },
   {
@@ -48,6 +41,8 @@ Cliente.init(
     modelName: "Cliente",
     tableName: "clientes",
     schema: "public",
+    timestamps: true,
+    underscored: false,
   },
 );
 

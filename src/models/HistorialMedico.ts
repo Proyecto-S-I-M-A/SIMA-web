@@ -1,7 +1,21 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-class HistorialMedico extends Model {}
+class HistorialMedico extends Model {
+  declare id: number;
+  declare fecha_consulta: Date
+  declare motivo_consulta: string
+  declare diagnostico: string
+  declare tratamiento: string
+  declare observaciones: string
+  declare presion_arterial: string
+  declare temperatura: number
+  declare peso: number
+  declare altura: number
+  declare frecuencia_cardiaca: number
+  declare medico: string
+  declare fecha_registro: Date
+}
 
 HistorialMedico.init(
   {
@@ -28,6 +42,8 @@ HistorialMedico.init(
     modelName: "HistorialMedico",
     tableName: "historiales_medicos",
     schema: "public",
+    timestamps: true,
+    underscored: false,
   },
 );
 export default HistorialMedico;

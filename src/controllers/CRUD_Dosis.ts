@@ -1,13 +1,14 @@
 import { DosisCreationAttributes, DosisUpdateAttributes } from '../types/Dosis.js';
 import type { Request, Response } from 'express';
-import sql from '../config/database.js';
+import Dosis from '../models/Dosis.js';
+
 
 async function CREATE(request: Request, response: Response) {
   try {
     const body: DosisCreationAttributes = request.body;
 
-    const res = await sql`INSERT INTO dosis ${sql(body)} RETURNING *`;
-    response.status(201).json(res[0]);
+    const res = await Dosis.create(body as any, { returning: true });
+    response.status(201).json(res);
   } catch (e: any) {
     console.error('Error al crear dosis:', e);
     response.status(500).json({
@@ -20,11 +21,11 @@ async function CREATE(request: Request, response: Response) {
 async function READ(request: Request, response: Response) {
   try {
     const id = request.params.id;
-    if (id) {
-      const res = await sql`SELECT * FROM dosis WHERE id = ${id}`;
+    if (id && id !== "all") {
+      const res = await Dosis.findByPk(parseInt(String(id)));
       response.status(200).json(res);
     } else {
-      const res = await sql`SELECT * FROM dosis`;
+      const res = await Dosis.findAll();
       response.status(200).json(res);
     }
   } catch (e: any) {
@@ -43,8 +44,8 @@ async function UPDATE(request: Request, response: Response) {
       return response.status(400).json({ error: 'ID es requerido' });
     }
 
-    const res = await sql`UPDATE dosis SET ${sql(body)} WHERE id = ${id} RETURNING *`;
-    if (res.length === 0) {
+    const res = await Dosis.update(body, { where: { id: parseInt(String(id)) }, returning: true });
+    if (res[0] === 0) {
       return response.status(404).json({ error: 'Dosis no encontrada' });
     }
 
@@ -58,7 +59,7 @@ async function UPDATE(request: Request, response: Response) {
   }
 }
 
-async function DELETE_DOSIS(request: Request, response: Response) {
+async function DELETE(request: Request, response: Response) {
   try {
     const id = request.params.id;
 
@@ -66,12 +67,12 @@ async function DELETE_DOSIS(request: Request, response: Response) {
       return response.status(400).json({ error: 'ID es requerido' });
     }
 
-    const res = await sql`DELETE FROM dosis WHERE id = ${id} RETURNING *`;
-    if (res.length === 0) {
+    const res = await Dosis.destroy({ where: { id: parseInt(String(id)) } });
+    if (res === 0) {
       return response.status(404).json({ error: 'Dosis no encontrada' });
     }
 
-    response.status(200).json({ message: 'Dosis eliminada', data: res[0] });
+    response.status(200).json({ message: 'Dosis eliminada', data: res });
   } catch (e: any) {
     console.error('Error al eliminar dosis:', e);
     response.status(500).json({
@@ -81,4 +82,4 @@ async function DELETE_DOSIS(request: Request, response: Response) {
   }
 }
 
-export { CREATE, READ, UPDATE, DELETE_DOSIS };
+export { CREATE, READ, UPDATE, DELETE };

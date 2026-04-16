@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
+### CREATE nueva Maquina
+POST {{baseUrl}}/maquinas
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "ubicacion": "Sede Norte - Piso 1",
+    "activo": true,
+    "latitud": -0.180653,
+    "longitud": -78.467834
+}
+
+### READ una Maquina
+GET {{baseUrl}}/maquinas/1
+Authorization: Bearer {{accessToken}}
+
+### READ todas las Maquinas
+GET {{baseUrl}}/maquinas/all
+Authorization: Bearer {{accessToken}}
+
+### UPDATE una Maquina
+PUT {{baseUrl}}/maquinas/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "ubicacion": "Sede Norte - Piso 2",
+    "activo": true,
+    "latitud": -0.1807,
+    "longitud": -78.4680
+}
+
+### DELETE una Maquina (soft delete -> activo=false)
+DELETE {{baseUrl}}/maquinas/1
+Authorization: Bearer {{accessToken}}

@@ -1,15 +1,41 @@
-# GET http://localhost:3000/clientes/; 
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
 
-POST http://localhost:3000/api/v0/clientes
+POST {{baseUrl}}/clientes
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
 	"nombre": "Juan",
 	"apellido": "Perez",
 	"cedula": "1234567890",
-	"password": "secreto123",
 	"correo": "juan.perez@example.com",
 	"asegurado": false,
 	"verificado": false,
+	"id_acceso": 2,
 	"sexo": "M"
 }
+
+### READ un Cliente
+GET {{baseUrl}}/clientes/1
+Authorization: Bearer {{accessToken}}
+
+### READ todos los Clientes
+GET {{baseUrl}}/clientes/all
+Authorization: Bearer {{accessToken}}
+
+### UPDATE un Cliente
+PUT {{baseUrl}}/clientes/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+	"nombre": "Juan Carlos",
+	"apellido": "Perez",
+	"asegurado": true,
+	"verificado": true
+}
+
+### DELETE un Cliente (soft delete)
+DELETE {{baseUrl}}/clientes/1
+Authorization: Bearer {{accessToken}}

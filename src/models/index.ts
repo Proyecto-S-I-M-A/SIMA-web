@@ -6,8 +6,15 @@ import Receta from "./Receta.js";
 import Dosis from "./Dosis.js";
 import Inventario from "./Inventario.js";
 import Maquina from "./Maquina.js";
+import Acceso from "./Acceso.js";
 
 /* Relaciones */
+
+Acceso.hasOne(Cliente, { foreignKey: "id_acceso" });
+Cliente.belongsTo(Acceso);
+
+Acceso.hasOne(Usuario, { foreignKey: "id_acceso" });
+Usuario.belongsTo(Acceso);
 
 Cliente.hasOne(FichaMedica, { foreignKey: "id_cliente" });
 FichaMedica.belongsTo(Cliente);

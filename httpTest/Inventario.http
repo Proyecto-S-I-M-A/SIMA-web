@@ -1,0 +1,56 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
+### CREATE inventario de una Maquina
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "id_maquina": 1,
+    "nombre_medicamento": "Paracetamol 500mg",
+    "marca": "Genfar",
+    "precio": 1.50,
+    "cantidad": 120,
+    "resetado": false
+}
+
+### CREATE inventario de una Maquina
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "id_maquina": 1,
+    "nombre_medicamento": "Antibioticos",
+    "marca": "Bayer",
+    "precio": 1.50,
+    "cantidad": 100,
+    "resetado": true
+}
+
+### READ un registro de Inventario
+GET {{baseUrl}}/inventario/1
+Authorization: Bearer {{accessToken}}
+
+### READ todo el Inventario
+GET {{baseUrl}}/inventario/all
+Authorization: Bearer {{accessToken}}
+
+### UPDATE un registro de Inventario
+PUT {{baseUrl}}/inventario/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+    "id_maquina": 1,
+    "nombre_medicamento": "Paracetamol 500mg",
+    "marca": "MK",
+    "precio": 1.75,
+    "cantidad": 90,
+    "resetado": false
+}
+
+### DELETE un registro de Inventario
+DELETE {{baseUrl}}/inventario/1
+Authorization: Bearer {{accessToken}}

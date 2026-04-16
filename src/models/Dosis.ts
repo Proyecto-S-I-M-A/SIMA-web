@@ -1,7 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-class Dosis extends Model {}
+class Dosis extends Model {
+  declare id: number;
+  declare id_medicamento: number | null;
+  declare cantidad: number | null;
+  declare instrucciones: string | null;
+}
 
 Dosis.init(
   {
@@ -19,6 +24,8 @@ Dosis.init(
     modelName: "Dosis",
     tableName: "dosis",
     schema: "public",
+    timestamps: true,
+    underscored: false,
   },
 );
 export default Dosis;

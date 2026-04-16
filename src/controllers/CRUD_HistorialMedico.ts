@@ -1,13 +1,13 @@
 import { HistorialMedicoCreationAttributes, HistorialMedicoUpdateAttributes } from '../types/HistorialMedico.js';
 import type { Request, Response } from 'express';
-import sql from '../config/database.js';
+import HistorialMedico from '../models/HistorialMedico.js';
 
 async function CREATE(request: Request, response: Response) {
   try {
     const body: HistorialMedicoCreationAttributes = request.body;
 
-    const res = await sql`INSERT INTO historiales_medicos ${sql(body)} RETURNING *`;
-    response.status(201).json(res[0]);
+    const res = await HistorialMedico.create(body as any, { returning: true });
+    response.status(201).json(res);
   } catch (e: any) {
     console.error('Error al crear historial médico:', e);
     response.status(500).json({
@@ -20,11 +20,11 @@ async function CREATE(request: Request, response: Response) {
 async function READ(request: Request, response: Response) {
   try {
     const id = request.params.id;
-    if (id) {
-      const res = await sql`SELECT * FROM historiales_medicos WHERE id = ${id}`;
+    if (id && id !== "all") {
+      const res = await HistorialMedico.findByPk(parseInt(String(id)));
       response.status(200).json(res);
     } else {
-      const res = await sql`SELECT * FROM historiales_medicos`;
+      const res = await HistorialMedico.findAll();
       response.status(200).json(res);
     }
   } catch (e: any) {
@@ -43,8 +43,8 @@ async function UPDATE(request: Request, response: Response) {
       return response.status(400).json({ error: 'ID es requerido' });
     }
 
-    const res = await sql`UPDATE historiales_medicos SET ${sql(body)} WHERE id = ${id} RETURNING *`;
-    if (res.length === 0) {
+    const res = await HistorialMedico.update(body, { where: { id: parseInt(String(id)) }, returning: true });
+    if (res[0] === 0) {
       return response.status(404).json({ error: 'Historial médico no encontrado' });
     }
 
@@ -58,7 +58,7 @@ async function UPDATE(request: Request, response: Response) {
   }
 }
 
-async function DELETE_HISTORIAL(request: Request, response: Response) {
+async function DELETE(request: Request, response: Response) {
   try {
     const id = request.params.id;
 
@@ -66,12 +66,12 @@ async function DELETE_HISTORIAL(request: Request, response: Response) {
       return response.status(400).json({ error: 'ID es requerido' });
     }
 
-    const res = await sql`DELETE FROM historiales_medicos WHERE id = ${id} RETURNING *`;
-    if (res.length === 0) {
+    const res = await HistorialMedico.destroy({ where: { id: parseInt(String(id)) } });
+    if (res === 0) {
       return response.status(404).json({ error: 'Historial médico no encontrado' });
     }
 
-    response.status(200).json({ message: 'Historial médico eliminado', data: res[0] });
+    response.status(200).json({ message: 'Historial médico eliminado', data: res });
   } catch (e: any) {
     console.error('Error al eliminar historial médico:', e);
     response.status(500).json({
@@ -81,4 +81,4 @@ async function DELETE_HISTORIAL(request: Request, response: Response) {
   }
 }
 
-export { CREATE, READ, UPDATE, DELETE_HISTORIAL };
+export { CREATE, READ, UPDATE, DELETE };
