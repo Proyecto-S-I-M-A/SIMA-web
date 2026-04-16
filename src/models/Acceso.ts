@@ -16,17 +16,8 @@ Acceso.init(
       autoIncrement: true,
     },
     usuario: DataTypes.STRING(50),
-    password: DataTypes.STRING(100),
     tipo: DataTypes.STRING(20),
     ultimo_acceso: DataTypes.DATE,
-    token: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    refresh: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
     activo: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,

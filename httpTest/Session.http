@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000/api/v0
-@RefreshToken =
+@refreshToken = PEGA_AQUI_EL_REFRESH_TOKEN
 
 ### LOGIN (cuenta existente)
 # @name login
@@ -22,9 +22,8 @@ Content-Type: application/json
 
 ### REFRESH TOKEN (usar refresh_token del login en Authorization)
 POST {{baseUrl}}/auth/refresh-token
-Authorization: Bearer ailpar2qhekg
-Content-Type: application/json
+Authorization: Bearer {{refreshToken}}
 
-### EJEMPLO CONSULTA PROTEGIDA (usar access_token del login)
+### EJEMPLO DE CONSULTA PROTEGIDA
 GET {{baseUrl}}/accesos/all
 Authorization: Bearer {{login.response.body.$.session.access_token}}
