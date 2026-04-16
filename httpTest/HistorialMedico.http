@@ -1,5 +1,9 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
 ### CREATE nuevo Historial Medico
-POST http://localhost:3000/api/v0/historiales-medicos
+POST {{baseUrl}}/historiales-medicos
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -19,13 +23,16 @@ Content-Type: application/json
 }
 
 ### READ un Historial Medico
-GET http://localhost:3000/api/v0/historiales-medicos/1
+GET {{baseUrl}}/historiales-medicos/1
+Authorization: Bearer {{accessToken}}
 
 ### READ todos los Historiales Medicos
-GET http://localhost:3000/api/v0/historiales-medicos/all
+GET {{baseUrl}}/historiales-medicos/all
+Authorization: Bearer {{accessToken}}
 
 ### UPDATE un Historial Medico
-PUT http://localhost:3000/api/v0/historiales-medicos/1
+PUT {{baseUrl}}/historiales-medicos/1
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -38,4 +45,5 @@ Content-Type: application/json
 }
 
 ### DELETE un Historial Medico
-DELETE http://localhost:3000/api/v0/historiales-medicos/1
+DELETE {{baseUrl}}/historiales-medicos/1
+Authorization: Bearer {{accessToken}}

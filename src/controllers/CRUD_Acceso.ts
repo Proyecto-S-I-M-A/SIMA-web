@@ -6,7 +6,8 @@ import { AccesoAttributes, AccesoCreationAttributes } from '@/types/Acceso.js';
 
 async function CREATE(request: Request, response: Response) {
   try {
-    const body: AccesoCreationAttributes = {...request.body, password: encodePassword(request.body.password)};
+    
+    const body: AccesoCreationAttributes = {...request.body};
 
     // Verificar que no exista usuario duplicado
     const existingUser = await Acceso.findOne({ where: { usuario: body.usuario } });
@@ -20,7 +21,7 @@ async function CREATE(request: Request, response: Response) {
 
     response.status(201).json({ 
       message: "Acceso creado exitosamente", 
-      acceso: acceso.id 
+      acceso: { id: acceso.id } 
     });
   } catch (e: any) {
     console.error('Error al crear acceso:', e);
@@ -62,7 +63,7 @@ async function READ(request: Request, response: Response) {
 async function UPDATE(request: Request, response: Response) {
   try {
     const id = request.params.id;
-    const body: AccesoAttributes = {...request.body, password: encodePassword(request.body.password)}
+    const body: AccesoAttributes = {...request.body};
     if (!id) {
       return response.status(400).json({ error: 'El id del acceso es requerido' });
     }

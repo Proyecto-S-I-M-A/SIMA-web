@@ -8,20 +8,26 @@ import RouteReceta from "./routes/Route_Receta.js";
 import RouteDosis from "./routes/Route_Dosis.js";
 import RouteInventario from "./routes/Route_Inventario.js";
 import RouteMaquina from "./routes/Route_Maquina.js";
+import requireSupabaseAuth from "./middleware/requireSupabaseAuth.js";
+import RouteSession from "./routes/Route_Session.js";
 import "./models/index.js";
 
 const app = express();
 
-app.use(express.json());
+const prefix = "/api/v0";
 
-app.use("/api/v0", RouteAcceso);
-app.use("/api/v0", RouteCliente);
-app.use("/api/v0", RouteUsuario);
-app.use("/api/v0", RouteFichaMedica);
-app.use("/api/v0", RouteHistorialMedico);
-app.use("/api/v0", RouteReceta);
-app.use("/api/v0", RouteDosis);
-app.use("/api/v0", RouteInventario);
-app.use("/api/v0", RouteMaquina);
+app.use(express.json());
+app.use(prefix, RouteSession);
+app.use(prefix, requireSupabaseAuth);
+
+app.use(prefix, RouteAcceso);
+app.use(prefix, RouteCliente);
+app.use(prefix, RouteUsuario);
+app.use(prefix, RouteFichaMedica);
+app.use(prefix, RouteHistorialMedico);
+app.use(prefix, RouteReceta);
+app.use(prefix, RouteDosis);
+app.use(prefix, RouteInventario);
+app.use(prefix, RouteMaquina);
 
 export default app;

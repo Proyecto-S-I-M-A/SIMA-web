@@ -1,0 +1,29 @@
+@baseUrl = http://localhost:3000/api/v0
+@refreshToken = PEGA_AQUI_EL_REFRESH_TOKEN
+
+### LOGIN (cuenta existente)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "rubenfeng12@gmail.com",
+    "password": "admin123"
+}
+
+### SIGNUP (crear nueva cuenta)
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+    "email": "rubenfeng12@gmail.com",
+    "password": "admin123"
+}
+
+### REFRESH TOKEN (usar refresh_token del login en Authorization)
+POST {{baseUrl}}/auth/refresh-token
+Authorization: Bearer {{refreshToken}}
+
+### EJEMPLO DE CONSULTA PROTEGIDA
+GET {{baseUrl}}/accesos/all
+Authorization: Bearer {{login.response.body.$.session.access_token}}

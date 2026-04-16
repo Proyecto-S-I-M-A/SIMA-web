@@ -1,5 +1,9 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
 ### CREATE nueva Dosis
-POST http://localhost:3000/api/v0/dosis
+POST {{baseUrl}}/dosis
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -10,13 +14,16 @@ Content-Type: application/json
 }
 
 ### READ una Dosis
-GET http://localhost:3000/api/v0/dosis/1
+GET {{baseUrl}}/dosis/1
+Authorization: Bearer {{accessToken}}
 
 ### READ todas las Dosis
-GET http://localhost:3000/api/v0/dosis/all
+GET {{baseUrl}}/dosis/all
+Authorization: Bearer {{accessToken}}
 
 ### UPDATE una Dosis
-PUT http://localhost:3000/api/v0/dosis/1
+PUT {{baseUrl}}/dosis/1
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -27,4 +34,5 @@ Content-Type: application/json
 }
 
 ### DELETE una Dosis
-DELETE http://localhost:3000/api/v0/dosis/1
+DELETE {{baseUrl}}/dosis/1
+Authorization: Bearer {{accessToken}}

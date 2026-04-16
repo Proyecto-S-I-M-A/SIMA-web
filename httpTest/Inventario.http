@@ -1,5 +1,9 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
 ### CREATE inventario de una Maquina
-POST http://localhost:3000/api/v0/inventario
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -12,7 +16,8 @@ Content-Type: application/json
 }
 
 ### CREATE inventario de una Maquina
-POST http://localhost:3000/api/v0/inventario
+POST {{baseUrl}}/inventario
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -25,13 +30,16 @@ Content-Type: application/json
 }
 
 ### READ un registro de Inventario
-GET http://localhost:3000/api/v0/inventario/1
+GET {{baseUrl}}/inventario/1
+Authorization: Bearer {{accessToken}}
 
 ### READ todo el Inventario
-GET http://localhost:3000/api/v0/inventario/all
+GET {{baseUrl}}/inventario/all
+Authorization: Bearer {{accessToken}}
 
 ### UPDATE un registro de Inventario
-PUT http://localhost:3000/api/v0/inventario/1
+PUT {{baseUrl}}/inventario/1
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -44,4 +52,5 @@ Content-Type: application/json
 }
 
 ### DELETE un registro de Inventario
-DELETE http://localhost:3000/api/v0/inventario/1
+DELETE {{baseUrl}}/inventario/1
+Authorization: Bearer {{accessToken}}

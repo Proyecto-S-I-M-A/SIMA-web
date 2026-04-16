@@ -1,5 +1,9 @@
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
 ### CREATE nueva Maquina
-POST http://localhost:3000/api/v0/maquinas
+POST {{baseUrl}}/maquinas
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -10,13 +14,16 @@ Content-Type: application/json
 }
 
 ### READ una Maquina
-GET http://localhost:3000/api/v0/maquinas/1
+GET {{baseUrl}}/maquinas/1
+Authorization: Bearer {{accessToken}}
 
 ### READ todas las Maquinas
-GET http://localhost:3000/api/v0/maquinas/all
+GET {{baseUrl}}/maquinas/all
+Authorization: Bearer {{accessToken}}
 
 ### UPDATE una Maquina
-PUT http://localhost:3000/api/v0/maquinas/1
+PUT {{baseUrl}}/maquinas/1
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
@@ -27,4 +34,5 @@ Content-Type: application/json
 }
 
 ### DELETE una Maquina (soft delete -> activo=false)
-DELETE http://localhost:3000/api/v0/maquinas/1
+DELETE {{baseUrl}}/maquinas/1
+Authorization: Bearer {{accessToken}}

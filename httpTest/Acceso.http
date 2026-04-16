@@ -1,27 +1,41 @@
-### CREATE Nuevo Acceso para cliente
-POST http://localhost:3000/api/v0/accesos
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = eyJhbGciOiJFUzI1NiIsImtpZCI6ImNhNDRkYjVkLWUzNmEtNGRkMC04ODliLTU0NGRlZjQ0MTY4YiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3VzdHF3aWhrbXN1bWdyY2ludHhsLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIyYjY1MmE5NC1jYWRlLTQ0Y2ItYWJiMy1mYzFiZGU5NzJiZTciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc2MjczNDk5LCJpYXQiOjE3NzYyNjk4OTksImVtYWlsIjoicnViZW5mZW5nMTJAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InJ1YmVuZmVuZzEyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6IjJiNjUyYTk0LWNhZGUtNDRjYi1hYmIzLWZjMWJkZTk3MmJlNyJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzc2MjY5NzI0fV0sInNlc3Npb25faWQiOiI0NWRhYTliYy1kMDRlLTQzODctODllNy05YTUyMzFhZDc3MjIiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.INnLQQ5cD2mE7wTNxf4eIiYoxrad6C8nrrkspKHZ__OKt3QtykXdskYAGHhBUfnMQvkn2Kz3aPWT4NcQS_leGA
+
+@baseUrl = http://localhost:3000/api/v0
+@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+
+### CREATE nuevo Acceso
+POST {{baseUrl}}/accesos
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "usuario": "juanperez",
-    "password": "password123",
-    "tipo": "cliente"
+    "usuario": "ruben123",
+    "tipo": "admin",
+    "ultimo_acceso": "2026-04-16T12:00:00Z",
+    "activo": true
 }
 
 ### READ un Acceso
-GET http://localhost:3000/api/v0/accesos/1
+GET {{baseUrl}}/accesos/1
+Authorization: Bearer {{accessToken}}
 
 ### READ todos los Accesos
-GET http://localhost:3000/api/v0/accesos/all
+GET {{baseUrl}}/accesos/all
+Authorization: Bearer {{accessToken}}
 
 ### UPDATE un Acceso
-PUT http://localhost:3000/api/v0/accesos/1
+PUT {{baseUrl}}/accesos/1
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
-    "password": "newpassword456",
-    "tipo": "admin"
+    "usuario": "ruben123",
+    "tipo": "doctor",
+    "ultimo_acceso": "2026-04-16T13:00:00Z",
+    "activo": true
 }
 
-### DELETE un Acceso (soft delete)
-DELETE http://localhost:3000/api/v0/accesos/1
+### DELETE un Acceso
+DELETE {{baseUrl}}/accesos/1
+Authorization: Bearer {{accessToken}}

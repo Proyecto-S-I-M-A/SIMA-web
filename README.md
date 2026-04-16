@@ -6,6 +6,7 @@ Una **API REST** construida con **Node.js**, **Express** y **PostgreSQL**, sigui
 
 - [Requisitos Previos](#requisitos-previos)
 - [Instalación](#instalación)
+- [Autenticación](#autenticación)
 - [Variables de Entorno](#variables-de-entorno)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Endpoints](#endpoints)
@@ -52,12 +53,12 @@ npm install
 cp .env.example .env
 ```
 
-Edita el archivo `.env` con tus credenciales de PostgreSQL (ver [Variables de Entorno](#variables-de-entorno)).
+Edita el archivo `.env` con tus credenciales de PostgreSQL y la configuración básica del entorno (ver [Variables de Entorno](#variables-de-entorno)).
 
 ### 4. Inicializar la base de datos
 
 ```bash
-# Inicia el servidor (sincronizará automáticamente las tablas)
+# Inicia el servidor y sincroniza las tablas automáticamente
 npm run dev
 ```
 
@@ -67,6 +68,33 @@ En los logs deberías ver:
 ✓ Database synchronized on schema: public
 Server running on port 3000
 ```
+
+### 5. Verificar el arranque
+
+Abre un cliente HTTP o una colección de pruebas y confirma que el servidor responda en `http://localhost:3000/api/v0`.
+
+Si necesitas ejecutar pruebas manuales, revisa primero [Session.http](httpTest/Session.http) para obtener un access token válido.
+
+---
+
+## Autenticación
+
+Este proyecto protege todas las rutas de negocio con `requireSupabaseAuth`. Eso significa que cualquier consulta a clientes, usuarios, fichas médicas, historiales, recetas, dosis, inventario, máquinas y accesos requiere un token Bearer válido.
+
+Flujo básico:
+
+1. Inicia sesión con `POST /api/v0/auth/login`.
+2. Copia el `access_token` devuelto por la respuesta.
+3. Usa ese token en el encabezado `Authorization: Bearer <token>`.
+4. Para refrescar sesión, envía el `refresh_token` a `POST /api/v0/auth/refresh-token`.
+
+Ejemplo de encabezado:
+
+```http
+Authorization: Bearer eyJhbGciOi...
+```
+
+Sin ese token, la API responde con `401`.
 
 ---
 
@@ -157,6 +185,8 @@ src/
 ---
 
 ## 🔌 Endpoints
+
+> Todas las rutas de este bloque requieren autenticación Bearer, excepto las rutas de sesión (`/auth/login`, `/auth/signup` y `/auth/refresh-token`).
 
 ### Clientes
 

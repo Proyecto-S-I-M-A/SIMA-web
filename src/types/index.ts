@@ -7,3 +7,4 @@ export * from "./Inventario.js";
 export * from "./Maquina.js";
 export * from "./Receta.js";
 export * from "./Usuario.js";
+export * from "./Login.js";
