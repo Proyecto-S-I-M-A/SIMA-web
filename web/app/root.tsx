@@ -12,6 +12,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import type { Route } from "./+types/root";
 import { theme } from "./theme";
 import "./app.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,8 +48,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Outlet />
+      <QueryClientProvider client={new QueryClient()}>
+         <CssBaseline />
+         <Outlet />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
