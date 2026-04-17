@@ -1,13 +1,13 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { Login } from "../components/Login";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "FarmaTic - Login" },
+    { name: "description", content: "Sistema de Gestión Farmacéutica" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return <Login />;
 }
