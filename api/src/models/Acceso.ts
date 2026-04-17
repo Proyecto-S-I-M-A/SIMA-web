@@ -11,9 +11,8 @@ class Acceso extends Model {
 Acceso.init(
   {
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING(255),
       primaryKey: true,
-      autoIncrement: true,
     },
     usuario: DataTypes.STRING(50),
     tipo: DataTypes.STRING(20),
