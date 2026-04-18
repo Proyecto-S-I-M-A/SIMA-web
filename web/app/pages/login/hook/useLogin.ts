@@ -20,10 +20,6 @@ export function useLogin() {
     return { token, refreshToken };
   }
 
-  function RememberMe({email, password}: {email: string, password: string}) {
-    localStorage.setItem('rememberMe', JSON.stringify({ email, password }));
-  }
-
   function SaveSession(sessionID: string){
     sessionStorage.setItem('sessionID', sessionID);
   }
@@ -32,7 +28,6 @@ export function useLogin() {
   return {
     SaveOnCokie,
     GetFromCookie,
-    RememberMe,
     SaveSession
   }
 }

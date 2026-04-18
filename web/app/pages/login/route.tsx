@@ -28,7 +28,7 @@ export default function Login() {
     resolver: zodResolver(LoginSchema),
   });
   const navigate = useNavigate();
-  const { SaveOnCokie, RememberMe, SaveSession } = useLogin();  
+  const { SaveOnCokie, SaveSession } = useLogin();  
   const { mutateAsync, isError, isSuccess, error } = useLoginMutation();
   const {mutateAsync: UpdateAccess} = useUpdateAccesoActivoMutation();
   const [sessionID, setSessionID] = useState<string | null>(null);
@@ -45,9 +45,6 @@ export default function Login() {
       if (result?.session?.access_token && result?.session?.refresh_token) {
         SaveOnCokie(result.session.access_token, result.session.refresh_token);
         setSessionID(result.session.user);
-      }
-      if (formData.rememberMe) {
-        RememberMe({ email: formData.email, password: formData.password });
       }
     } catch {
       // Errors are surfaced via react-query state (isError/error)
@@ -164,23 +161,6 @@ export default function Login() {
                       onChange={field.onChange}
                     />
                   </>
-                )}
-              />
-              <Controller
-                name="rememberMe"
-                control={control}
-                defaultValue={false}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={field.value}
-                        onChange={field.onChange}
-                        color="primary"
-                      />
-                    }
-                    label="Recuerda mis datos"
-                  />
                 )}
               />
               {isError && (
