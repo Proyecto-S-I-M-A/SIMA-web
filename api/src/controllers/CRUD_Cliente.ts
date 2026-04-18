@@ -37,7 +37,7 @@ async function READ(request: Request, response: Response) {
       }
       response.status(200).json(res);
     } else {
-      const res = await Cliente.findAll({ where: { activo: true } });
+      const res = await Cliente.findAll();
       response.status(200).json(res);
     }
   } catch (e: any) {

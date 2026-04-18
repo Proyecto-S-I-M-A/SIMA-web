@@ -41,19 +41,7 @@ export const useCreateClienteMutation = () => {
   });
 };
 
-export type CreateAccesoResponse = { message: string; acceso: { id: string } };
 
-export const useCreateAccesoMutation = () => {
-  return useMutation({
-    mutationFn: async (form: AccesoCreation): Promise<CreateAccesoResponse> => {
-      return apiJson<CreateAccesoResponse>("/accesos", {
-        method: "POST",
-        body: form,
-        auth: true,
-      });
-    },
-  });
-};
 
 export const useCreateUsuarioMutation = () => {
   return useMutation({

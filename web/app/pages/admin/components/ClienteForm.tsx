@@ -4,6 +4,7 @@ import { Stack, TextField, Typography, Button, FormControlLabel, Checkbox } from
 import type { ClienteCreation } from '~/types/cliente';
 import { ClienteCreationSchema } from '~/types/cliente';
 import { useCreateClienteMutation } from '~/lib/Query';
+import RefreshQuery from '~/lib/RefreshQuery';
 
 export function ClienteForm() {
   const {
@@ -21,6 +22,7 @@ export function ClienteForm() {
     mutate(data, {
       onSuccess: () => reset(),
     });
+    RefreshQuery(['clientes']);
   };
 
   return (

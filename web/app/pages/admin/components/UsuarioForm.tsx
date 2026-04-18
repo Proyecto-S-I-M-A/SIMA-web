@@ -4,6 +4,7 @@ import { Stack, TextField, Typography, Button } from '@mui/material';
 import type { UsuarioCreation } from '~/types/Usuario';
 import { UsuarioCreationSchema } from '~/types/Usuario';
 import { useCreateUsuarioMutation } from '~/lib/Query';
+import RefreshQuery from '~/lib/RefreshQuery';
 
 export function UsuarioForm() {
   const {
@@ -17,10 +18,8 @@ export function UsuarioForm() {
       nombre: '',
       apellido: '',
       rol: '',
-      password: '',
-      usuario: '',
+      id_acceso: '',
       ruc_doctor: '',
-      especialidades: '',
     },
   });
 
@@ -30,6 +29,7 @@ export function UsuarioForm() {
     mutate(data, {
       onSuccess: () => reset(),
     });
+    RefreshQuery(['usuarios']);
   };
 
   return (
@@ -84,49 +84,6 @@ export function UsuarioForm() {
         />
 
         <Controller
-          name="usuario"
-          control={control}
-          render={({ field }) => (
-            <>
-              {errors.usuario && (
-                <Typography variant="body2" sx={{ color: 'error.main' }}>
-                  {errors.usuario.message}
-                </Typography>
-              )}
-              <TextField
-                fullWidth
-                label="Usuario"
-                placeholder="juan_perez"
-                variant="outlined"
-                {...field}
-              />
-            </>
-          )}
-        />
-
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => (
-            <>
-              {errors.password && (
-                <Typography variant="body2" sx={{ color: 'error.main' }}>
-                  {errors.password.message}
-                </Typography>
-              )}
-              <TextField
-                fullWidth
-                label="Contraseña"
-                type="password"
-                placeholder="••••••••"
-                variant="outlined"
-                {...field}
-              />
-            </>
-          )}
-        />
-
-        <Controller
           name="rol"
           control={control}
           render={({ field }) => (
@@ -173,6 +130,21 @@ export function UsuarioForm() {
               variant="outlined"
               multiline
               rows={3}
+              {...field}
+              value={field.value || ''}
+            />
+          )}
+        />
+
+        <Controller
+          name="id_acceso"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              fullWidth
+              label="ID de Acceso"
+              placeholder="123456789"
+              variant="outlined"
               {...field}
               value={field.value || ''}
             />

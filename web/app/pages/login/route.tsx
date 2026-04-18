@@ -16,7 +16,8 @@ import { LoginSchema} from '~/types/login';
 import { useLogin } from './hook/useLogin';
 import { useLoginMutation} from '~/lib/Query';
 import { useNavigate } from 'react-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useUpdateAccesoActivoMutation } from '~/lib/api/QueryAcceso';
 
 export default function Login() {
   const {
@@ -27,10 +28,14 @@ export default function Login() {
     resolver: zodResolver(LoginSchema),
   });
   const navigate = useNavigate();
-  const { SaveOnCokie, RememberMe } = useLogin();  
-  const { mutateAsync, data, isError, isSuccess, error } = useLoginMutation();
+  const { SaveOnCokie, RememberMe, SaveSession } = useLogin();  
+  const { mutateAsync, isError, isSuccess, error } = useLoginMutation();
+  const {mutateAsync: UpdateAccess} = useUpdateAccesoActivoMutation();
+  const [sessionID, setSessionID] = useState<string | null>(null);
     useEffect(() => {
     if (isSuccess) {
+      SaveSession(sessionID ?? '');
+      UpdateAccess({id: sessionID ?? '', body: {ultimo_acceso: new Date()}});
       navigate("/home");
     }
   }, [isSuccess, navigate]);
@@ -39,6 +44,7 @@ export default function Login() {
       const result = await mutateAsync(formData);
       if (result?.session?.access_token && result?.session?.refresh_token) {
         SaveOnCokie(result.session.access_token, result.session.refresh_token);
+        setSessionID(result.session.user);
       }
       if (formData.rememberMe) {
         RememberMe({ email: formData.email, password: formData.password });

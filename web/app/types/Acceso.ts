@@ -7,7 +7,7 @@ export const AccesoSchema = z.object({
   usuario: z.string(),
   tipo: z.string(),
   ultimo_acceso: z.coerce.date().nullable(),
-  correo: z.string().email(),
+  correo: z.email('Email inválido'),
   activo: z.boolean(),
   updatedAt: z.coerce.date(),
 });
@@ -18,7 +18,7 @@ export const AccesoCreationSchema = z.object({
   usuario: z.string().min(1, 'El usuario es requerido'),
   tipo: z.string().min(1, 'El tipo es requerido'),
   ultimo_acceso: z.coerce.date().nullable().optional(),
-  correo: z.string().email('Email inválido'),
+  correo: z.email('Email inválido'),
   activo: z.boolean().optional().default(true),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),

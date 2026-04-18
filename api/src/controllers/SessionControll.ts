@@ -53,3 +53,4 @@ export async function RefreshToken(request: Request, response: Response) {
         return response.status(500).json({ error: 'Error interno del servidor' });
     }
 }
+

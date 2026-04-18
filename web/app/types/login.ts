@@ -11,6 +11,7 @@ export type LoginData = z.infer<typeof LoginSchema>;
 export const LoginResponse = z.object({
   message: z.string(),
   session: z.object({
+    user: z.string(),
     access_token: z.string(),
     refresh_token: z.string(),
   }).optional(),

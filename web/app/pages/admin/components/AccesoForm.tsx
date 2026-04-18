@@ -3,7 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Stack, TextField, Typography, Button, FormControlLabel, Checkbox } from '@mui/material';
 import type { AccesoCreation } from '~/types/Acceso';
 import { AccesoCreationSchema } from '~/types/Acceso';
-import { useCreateAccesoMutation } from '~/lib/Query';
+import { useCreateAccesoMutation } from '~/lib/api/QueryAcceso';
+import RefreshQuery from '~/lib/RefreshQuery';
 
 export function AccesoForm() {
   const {
@@ -27,6 +28,7 @@ export function AccesoForm() {
     mutate(data, {
       onSuccess: () => reset(),
     });
+    RefreshQuery(['accesos']); 
   };
 
   return (
@@ -56,7 +58,7 @@ export function AccesoForm() {
               )}
               <TextField
                 fullWidth
-                label="id"
+                label="ID supabase"
                 placeholder="UUID"
                 variant="outlined"
                 {...field}

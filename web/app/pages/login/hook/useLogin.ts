@@ -24,9 +24,15 @@ export function useLogin() {
     localStorage.setItem('rememberMe', JSON.stringify({ email, password }));
   }
 
+  function SaveSession(sessionID: string){
+    sessionStorage.setItem('sessionID', sessionID);
+  }
+
+
   return {
     SaveOnCokie,
     GetFromCookie,
-    RememberMe
+    RememberMe,
+    SaveSession
   }
 }

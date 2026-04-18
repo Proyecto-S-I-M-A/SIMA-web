@@ -2,13 +2,6 @@ import { body, validationResult } from 'express-validator';
 import type { Request, Response, NextFunction } from 'express';
 
 export const validateUsuarioCreation = [
-  body('usuario')
-    .trim()
-    .notEmpty()
-    .withMessage('El usuario es requerido')
-    .isLength({ min: 3, max: 20 })
-    .withMessage('El usuario debe tener entre 3 y 20 caracteres'),
-
   body('nombre')
     .trim()
     .optional({ checkFalsy: true })
@@ -20,11 +13,6 @@ export const validateUsuarioCreation = [
     .optional({ checkFalsy: true })
     .isLength({ min: 2, max: 20 })
     .withMessage('El apellido debe tener entre 2 y 20 caracteres'),
-
-  body('password')
-    .optional({ checkFalsy: true })
-    .isLength({ min: 6 })
-    .withMessage('La contraseña debe tener al menos 6 caracteres'),
 
   body('rol')
     .trim()

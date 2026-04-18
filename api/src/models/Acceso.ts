@@ -17,6 +17,11 @@ Acceso.init(
     usuario: DataTypes.STRING(50),
     correo: DataTypes.STRING(50),
     tipo: DataTypes.STRING(20),
+    id_acceso: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
+    },
     ultimo_acceso: DataTypes.DATE,
     activo: {
       type: DataTypes.BOOLEAN,
