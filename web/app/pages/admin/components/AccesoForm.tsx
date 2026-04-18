@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Stack, TextField, Typography, Button, FormControlLabel, Checkbox } from '@mui/material';
 import type { AccesoCreation } from '~/types/Acceso';
 import { AccesoCreationSchema } from '~/types/Acceso';
+import { useCreateAccesoMutation } from '~/lib/Query';
 
 export function AccesoForm() {
   const {
@@ -20,15 +21,29 @@ export function AccesoForm() {
     },
   });
 
+  const { mutate, isPending, isError, error, isSuccess, data } = useCreateAccesoMutation();
+
   const onSubmit = (data: AccesoCreation) => {
-    console.log('Acceso data:', data);
-    // Aquí irá la lógica de backend con fetch
-    reset();
+    mutate(data, {
+      onSuccess: () => reset(),
+    });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
+        {isSuccess && (
+          <Typography variant="body2" sx={{ color: 'success.main' }}>
+            {data?.message ?? 'Acceso creado exitosamente'}
+          </Typography>
+        )}
+
+        {isError && (
+          <Typography variant="body2" sx={{ color: 'error.main' }}>
+            {error instanceof Error ? error.message : 'Error al crear acceso'}
+          </Typography>
+        )}
+
         <Controller
           name="id"
           control={control}
@@ -127,9 +142,10 @@ export function AccesoForm() {
         <Button
           type="submit"
           variant="contained"
+          disabled={isPending}
           sx={{ mt: 2, bgcolor: '#2E7D32', '&:hover': { bgcolor: '#1b5e20' } }}
         >
-          Crear Acceso
+          {isPending ? 'Creando…' : 'Crear Acceso'}
         </Button>
       </Stack>
     </form>

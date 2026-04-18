@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Stack, TextField, Typography, Button, FormControlLabel, Checkbox } from '@mui/material';
 import type { ClienteCreation } from '~/types/cliente';
 import { ClienteCreationSchema } from '~/types/cliente';
+import { useCreateClienteMutation } from '~/lib/Query';
 
 export function ClienteForm() {
   const {
@@ -14,15 +15,29 @@ export function ClienteForm() {
     resolver: zodResolver(ClienteCreationSchema),
   });
 
+  const { mutate, isPending, isError, error, isSuccess, data } = useCreateClienteMutation();
+
   const onSubmit = (data: ClienteCreation) => {
-    console.log('Cliente data:', data);
-    // Aquí irá la lógica de backend con fetch
-    reset();
+    mutate(data, {
+      onSuccess: () => reset(),
+    });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
+        {isSuccess && (
+          <Typography variant="body2" sx={{ color: 'success.main' }}>
+            {data?.messages ?? 'Cliente creado exitosamente'}
+          </Typography>
+        )}
+
+        {isError && (
+          <Typography variant="body2" sx={{ color: 'error.main' }}>
+            {error instanceof Error ? error.message : 'Error al crear cliente'}
+          </Typography>
+        )}
+
         <Controller
           name="nombre"
           control={control}
@@ -131,8 +146,8 @@ export function ClienteForm() {
                 label="ID de Acceso"
                 type="number"
                 variant="outlined"
-                {...field}
-                value={field.value || 0}
+                value={field.value ?? ''}
+                onChange={(e) => field.onChange(Number(e.target.value))}
               />
             </>
           )}
@@ -141,9 +156,10 @@ export function ClienteForm() {
         <Button
           type="submit"
           variant="contained"
+          disabled={isPending}
           sx={{ mt: 2, bgcolor: '#2E7D32', '&:hover': { bgcolor: '#1b5e20' } }}
         >
-          Crear Cliente
+          {isPending ? 'Creando…' : 'Crear Cliente'}
         </Button>
       </Stack>
     </form>

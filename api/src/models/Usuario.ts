@@ -23,8 +23,6 @@ Usuario.init(
     nombre: DataTypes.STRING(20),
     apellido: DataTypes.STRING(20),
     rol: DataTypes.STRING(20),
-    password: DataTypes.STRING(100),
-    usuario: DataTypes.STRING(20),
     ruc_doctor: DataTypes.TEXT,
     especialidades: DataTypes.STRING(20),
     activo: {

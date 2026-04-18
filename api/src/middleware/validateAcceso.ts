@@ -3,6 +3,11 @@ import type { Request, Response, NextFunction } from 'express';
 
 // Reglas de validación para crear un Acceso
 export const validateAccesoCreation = [
+  body('id')
+    .trim()
+    .notEmpty()
+    .withMessage('El id es requerido'),
+
   body('usuario')
     .trim()
     .notEmpty()
@@ -10,11 +15,11 @@ export const validateAccesoCreation = [
     .isLength({ min: 3, max: 50 })
     .withMessage('El usuario debe tener entre 3 y 50 caracteres'),
 
-  body('password')
-    .notEmpty()
-    .withMessage('La contraseña es requerida')
-    .isLength({ min: 6 })
-    .withMessage('La contraseña debe tener al menos 6 caracteres'),
+  body('correo')
+    .trim()
+    .optional({ checkFalsy: true })
+    .isEmail()
+    .withMessage('El correo debe ser un email válido'),
 
   body('tipo')
     .trim()

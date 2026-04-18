@@ -15,6 +15,7 @@ Acceso.init(
       primaryKey: true,
     },
     usuario: DataTypes.STRING(50),
+    correo: DataTypes.STRING(50),
     tipo: DataTypes.STRING(20),
     ultimo_acceso: DataTypes.DATE,
     activo: {

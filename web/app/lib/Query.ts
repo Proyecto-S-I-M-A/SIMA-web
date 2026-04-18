@@ -1,22 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
-import { API_URL } from "~/config/ApiConfig";
 import type { LoginData, LoginResponseData } from "~/types/login";
+import type { ClienteCreation } from "~/types/cliente";
+import type { AccesoCreation } from "~/types/Acceso";
+import type { UsuarioCreation } from "~/types/Usuario";
+import { apiJson } from "~/lib/apiClient";
 
 export const useLoginMutation = () => {
   return useMutation({
     mutationFn: async (form: LoginData): Promise<LoginResponseData> => {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
+      return apiJson<LoginResponseData>("/auth/login", {
+        method: "POST",
+        body: form,
       });
-        const data: LoginResponseData = await response.json();
-        if (!response.ok) {
-          throw new Error(data.message || 'Login failed');
-        }
-        return data;
     }
   });
 };
@@ -24,18 +19,50 @@ export const useLoginMutation = () => {
 export const useSignupMutation = () => {
   return useMutation({
     mutationFn: async (form: LoginData): Promise<LoginResponseData> => {
-      const response = await fetch(`${API_URL}/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(form),
+      return apiJson<LoginResponseData>("/auth/signup", {
+        method: "POST",
+        body: form,
       });
-        const data: LoginResponseData = await response.json();
-        if (!response.ok) {
-          throw new Error(data.message || 'Signup failed');
-        }
-        return data;
     }
+  });
+};
+
+export type CreateClienteResponse = { messages: string };
+
+export const useCreateClienteMutation = () => {
+  return useMutation({
+    mutationFn: async (form: ClienteCreation): Promise<CreateClienteResponse> => {
+      return apiJson<CreateClienteResponse>("/clientes", {
+        method: "POST",
+        body: form,
+        auth: true,
+      });
+    },
+  });
+};
+
+export type CreateAccesoResponse = { message: string; acceso: { id: string } };
+
+export const useCreateAccesoMutation = () => {
+  return useMutation({
+    mutationFn: async (form: AccesoCreation): Promise<CreateAccesoResponse> => {
+      return apiJson<CreateAccesoResponse>("/accesos", {
+        method: "POST",
+        body: form,
+        auth: true,
+      });
+    },
+  });
+};
+
+export const useCreateUsuarioMutation = () => {
+  return useMutation({
+    mutationFn: async (form: UsuarioCreation): Promise<unknown> => {
+      return apiJson<unknown>("/usuarios", {
+        method: "POST",
+        body: form,
+        auth: true,
+      });
+    },
   });
 };

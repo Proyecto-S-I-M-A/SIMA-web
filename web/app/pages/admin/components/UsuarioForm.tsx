@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Stack, TextField, Typography, Button } from '@mui/material';
 import type { UsuarioCreation } from '~/types/Usuario';
 import { UsuarioCreationSchema } from '~/types/Usuario';
+import { useCreateUsuarioMutation } from '~/lib/Query';
 
 export function UsuarioForm() {
   const {
@@ -23,15 +24,29 @@ export function UsuarioForm() {
     },
   });
 
+  const { mutate, isPending, isError, error, isSuccess } = useCreateUsuarioMutation();
+
   const onSubmit = (data: UsuarioCreation) => {
-    console.log('Usuario data:', data);
-    // Aquí irá la lógica de backend con fetch
-    reset();
+    mutate(data, {
+      onSuccess: () => reset(),
+    });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={2}>
+        {isSuccess && (
+          <Typography variant="body2" sx={{ color: 'success.main' }}>
+            Usuario creado exitosamente
+          </Typography>
+        )}
+
+        {isError && (
+          <Typography variant="body2" sx={{ color: 'error.main' }}>
+            {error instanceof Error ? error.message : 'Error al crear usuario'}
+          </Typography>
+        )}
+
         <Controller
           name="nombre"
           control={control}
@@ -167,9 +182,10 @@ export function UsuarioForm() {
         <Button
           type="submit"
           variant="contained"
+          disabled={isPending}
           sx={{ mt: 2, bgcolor: '#2E7D32', '&:hover': { bgcolor: '#1b5e20' } }}
         >
-          Crear Usuario
+          {isPending ? 'Creando…' : 'Crear Usuario'}
         </Button>
       </Stack>
     </form>

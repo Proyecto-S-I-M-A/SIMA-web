@@ -34,16 +34,18 @@ export default function Login() {
       navigate("/home");
     }
   }, [isSuccess, navigate]);
-  const onSubmit = (formData: LoginData) => {
-    console.log('Form Data:', formData);
-    mutateAsync(formData);
-    if (isSuccess && data?.session) {
-      SaveOnCokie(data.session.access_token, data.session.refresh_token);
+  const onSubmit = async (formData: LoginData) => {
+    try {
+      const result = await mutateAsync(formData);
+      if (result?.session?.access_token && result?.session?.refresh_token) {
+        SaveOnCokie(result.session.access_token, result.session.refresh_token);
+      }
+      if (formData.rememberMe) {
+        RememberMe({ email: formData.email, password: formData.password });
+      }
+    } catch {
+      // Errors are surfaced via react-query state (isError/error)
     }
-    if (formData.rememberMe) {
-      RememberMe({ email: formData.email, password: formData.password });
-    }
-
   };
 
   return (
