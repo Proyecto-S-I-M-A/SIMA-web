@@ -20,3 +20,22 @@ export const useLoginMutation = () => {
     }
   });
 };
+
+export const useSignupMutation = () => {
+  return useMutation({
+    mutationFn: async (form: LoginData): Promise<LoginResponseData> => {
+      const response = await fetch(`${API_URL}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+        const data: LoginResponseData = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || 'Signup failed');
+        }
+        return data;
+    }
+  });
+};
