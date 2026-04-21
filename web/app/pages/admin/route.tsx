@@ -8,6 +8,10 @@ import { CreateSupabaseUserForm } from './components/CreateSupabaseUserForm';
 import { AccesoTable } from './components/AccesoTable';
 import { UsuarioTable } from './components/UsuarioTable';
 import { ClienteTable } from './components/ClienteTable';
+import { MaquinaForm } from './components/MaquinaForm';
+import { MaquinaTable } from './components/MaquinaTable';
+import { InventarioForm } from './components/InventarioForm';
+import { InventarioTable } from './components/InventarioTable';
 import { useGetAccesos } from '~/lib/api/QueryAcceso';
 import GetSession from '~/lib/GetSession';
 import CustomTabPanel from '~/components/CustomeTabPanel';
@@ -80,6 +84,8 @@ export default function AdminPanel() {
               <Tab label="Crear Acceso" id="admin-tab-1" aria-controls="admin-tabpanel-1" />
               <Tab label="Crear Usuario" id="admin-tab-2" aria-controls="admin-tabpanel-2" />
               <Tab label="Crear Cliente" id="admin-tab-3" aria-controls="admin-tabpanel-3" />
+              <Tab label="Administrar Máquinas" id="admin-tab-4" aria-controls="admin-tabpanel-4" />
+              <Tab label="Inventario de Máquinas" id="admin-tab-5" aria-controls="admin-tabpanel-5" />
             </Tabs>
           </Box>
 
@@ -100,6 +106,16 @@ export default function AdminPanel() {
           <CustomTabPanel value={tabValue} index={3}>
             <ClienteForm />
             <ClienteTable />
+          </CustomTabPanel>
+
+          <CustomTabPanel value={tabValue} index={4}>
+            <MaquinaForm />
+            <MaquinaTable />
+          </CustomTabPanel>
+
+          <CustomTabPanel value={tabValue} index={5}>
+            <InventarioForm />
+            <InventarioTable />
           </CustomTabPanel>
         </Paper>
       </Box>
