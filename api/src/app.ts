@@ -20,7 +20,7 @@ const prefix = "/api/v0";
 
 app.use(cors(
   {
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5173", // TODO: Cambiar por sistema de Variables de entorno
     credentials: true,
   }
 ))
