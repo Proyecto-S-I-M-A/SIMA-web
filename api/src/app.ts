@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import RouteAcceso from "./routes/Route_Acceso.js";
 import RouteCliente from "./routes/Route_Cliente.js";
 import RouteUsuario from "./routes/Route_Usuario.js";
@@ -15,6 +16,13 @@ import "./models/index.js";
 const app = express();
 
 const prefix = "/api/v0";
+
+app.use(cors(
+  {
+    origin: "http://localhost:5173",
+    credentials: true,
+  }
+))
 
 app.use(express.json());
 app.use(prefix, RouteSession);

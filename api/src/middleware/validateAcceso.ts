@@ -3,25 +3,18 @@ import type { Request, Response, NextFunction } from 'express';
 
 // Reglas de validación para crear un Acceso
 export const validateAccesoCreation = [
-  body('usuario')
+  body('id')
     .trim()
     .notEmpty()
-    .withMessage('El usuario es requerido')
-    .isLength({ min: 3, max: 50 })
-    .withMessage('El usuario debe tener entre 3 y 50 caracteres'),
-
-  body('password')
-    .notEmpty()
-    .withMessage('La contraseña es requerida')
-    .isLength({ min: 6 })
-    .withMessage('La contraseña debe tener al menos 6 caracteres'),
-
-  body('tipo')
+    .withMessage('El ID es requerido')
+    .isUUID()
+    .withMessage('El ID debe ser un UUID válido'),
+  
+  body('correo')
     .trim()
-    .notEmpty()
-    .withMessage('El tipo es requerido')
-    .isLength({ min: 2, max: 20 })
-    .withMessage('El tipo debe tener entre 2 y 20 caracteres'),
+    .optional({ checkFalsy: true })
+    .isEmail()
+    .withMessage('El correo debe ser un email válido'),
 ];
 
 // Middleware para manejar errores de validación

@@ -1,5 +1,5 @@
 export interface AccesoAttributes {
-  id: number;
+  id: string;
   usuario: string;
   tipo: string;
   ultimo_acceso: Date | null;

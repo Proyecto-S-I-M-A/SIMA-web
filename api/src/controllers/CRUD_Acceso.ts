@@ -45,10 +45,7 @@ async function READ(request: Request, response: Response) {
         return response.status(404).json({ error: 'Acceso no encontrado' });
       }
     } else {
-      res = await Acceso.findAll({
-        where: { activo: true },
-        attributes: { exclude: ['password'] },
-      });
+      res = await Acceso.findAll();
     }
 
     response.status(200).json(res);
