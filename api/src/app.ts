@@ -11,6 +11,7 @@ import RouteInventario from "./routes/Route_Inventario.js";
 import RouteMaquina from "./routes/Route_Maquina.js";
 import requireSupabaseAuth from "./middleware/requireSupabaseAuth.js";
 import RouteSession from "./routes/Route_Session.js";
+import RouteGetRecetaByCedula from "./routes/Route-GetRecetaByCedula.js";
 import "./models/index.js";
 
 const app = express();
@@ -26,8 +27,8 @@ app.use(cors(
 
 app.use(express.json());
 app.use(prefix, RouteSession);
+app.use(prefix, RouteGetRecetaByCedula);
 app.use(prefix, requireSupabaseAuth);
-
 app.use(prefix, RouteAcceso);
 app.use(prefix, RouteCliente);
 app.use(prefix, RouteUsuario);
