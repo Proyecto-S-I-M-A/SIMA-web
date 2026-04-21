@@ -13,6 +13,10 @@ import requireSupabaseAuth from "./middleware/requireSupabaseAuth.js";
 import RouteSession from "./routes/Route_Session.js";
 import RouteGetRecetaByCedula from "./routes/Route-GetRecetaByCedula.js";
 import "./models/index.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 const app = express();
 
@@ -20,7 +24,7 @@ const prefix = "/api/v0";
 
 app.use(cors(
   {
-    origin: "http://localhost:5173", // TODO: Cambiar por sistema de Variables de entorno
+    origin: process.env.CROSS_ORIGIN,
     credentials: true,
   }
 ))
