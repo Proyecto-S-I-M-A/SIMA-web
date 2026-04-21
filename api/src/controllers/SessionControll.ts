@@ -13,7 +13,7 @@ export async function Login(request: Request, response: Response) {
             return response.status(401).json({ error: 'Credenciales invalidas' });
         }
     
-        return response.status(200).json({ message: 'Inicio de sesión exitoso', session: {user: data.user?.id, access_token: data.session.access_token, refresh_token: data.session.refresh_token } });
+        return response.status(200).json({ message: 'Inicio de sesión exitoso', session: {user: {id: data.user?.id, email: data.user?.email}, access_token: data.session.access_token, refresh_token: data.session.refresh_token } });
 
     } catch (error) {
         return response.status(500).json({ error: 'Error interno del servidor' });
@@ -31,7 +31,7 @@ export async function SingUp(request: Request, response: Response) {
             return response.status(400).json({ error: 'Error al crear la cuenta', details: error.message });
         }
        
-        return response.status(201).json({ message: 'Cuenta creada exitosamente', session: { user: data.user?.id, access_token: data.session?.access_token, refresh_token: data.session?.refresh_token } });
+        return response.status(201).json({ message: 'Cuenta creada exitosamente', session: { user: { id: data.user?.id, email: data.user?.email }, access_token: data.session?.access_token, refresh_token: data.session?.refresh_token } });
     } catch (error) {
         return response.status(500).json({ error: 'Error interno del servidor' });
     }

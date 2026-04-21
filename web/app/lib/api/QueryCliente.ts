@@ -1,7 +1,22 @@
-import { id } from 'zod/v4/locales';
-import { useMutation, useQuery } from "@tanstack/react-query";
-import type { Cliente } from "~/types/cliente";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { Cliente, ClienteUpdate } from "~/types/cliente";
 import { apiJson } from "../apiClient";
+
+export const useUpdateClienteMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, body }: { id: number; body: ClienteUpdate }) => {
+      return apiJson<{ message: string }>(`/clientes/${id}`, {
+        method: "PUT",
+        body,
+        auth: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clientes"] });
+    },
+  });
+};
 
 export const useGetClientes = (id: string, enabled: boolean = true) => {
   const query = useQuery({

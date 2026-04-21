@@ -24,10 +24,15 @@ export function useLogin() {
     sessionStorage.setItem('sessionID', sessionID);
   }
 
+  function SaveID(ID: number){
+    sessionStorage.setItem('ID', ID.toString());
+  }
+
 
   return {
     SaveOnCokie,
     GetFromCookie,
-    SaveSession
+    SaveSession,
+    SaveID
   }
 }

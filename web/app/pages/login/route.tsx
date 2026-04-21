@@ -17,7 +17,7 @@ import { useLogin } from './hook/useLogin';
 import { useLoginMutation} from '~/lib/Query';
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
-import { useUpdateAccesoActivoMutation } from '~/lib/api/QueryAcceso';
+import { useCreateAccesoMutation, useUpdateAccesoActivoMutation } from '~/lib/api/QueryAcceso';
 
 export default function Login() {
   const {
@@ -30,7 +30,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { SaveOnCokie, SaveSession } = useLogin();  
   const { mutateAsync, isError, isSuccess, error } = useLoginMutation();
-  const {mutateAsync: UpdateAccess} = useUpdateAccesoActivoMutation();
+  const { mutateAsync: UpdateAccess } = useUpdateAccesoActivoMutation();
   const [sessionID, setSessionID] = useState<string | null>(null);
     useEffect(() => {
     if (isSuccess) {
@@ -44,7 +44,7 @@ export default function Login() {
       const result = await mutateAsync(formData);
       if (result?.session?.access_token && result?.session?.refresh_token) {
         SaveOnCokie(result.session.access_token, result.session.refresh_token);
-        setSessionID(result.session.user);
+        setSessionID(result.session.user.id);
       }
     } catch {
       // Errors are surfaced via react-query state (isError/error)
