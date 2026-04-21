@@ -4,6 +4,7 @@ import { Stack, TextField, Typography, Button } from '@mui/material';
 import type { LoginData } from '~/types/login';
 import { LoginSchema } from '~/types/login';
 import { useSignupMutation } from '~/lib/Query';
+import { useCreateAccesoMutation } from '~/lib/api/QueryAcceso';
 
 export function CreateSupabaseUserForm() {
   const {
@@ -20,13 +21,18 @@ export function CreateSupabaseUserForm() {
   });
 
   const { mutate: signup, error, isError } = useSignupMutation();
-
+  const { mutateAsync: CreateAccess } = useCreateAccesoMutation();
+  
   const onSubmit = (data: LoginData) => {
     console.log('Create Supabase User data:', data);
-    // TODO: Implementar lógica de crear usuario de Supabase con fetch
     signup(data, {
       onSuccess: (response) => {
         console.log('Usuario creado exitosamente:', response);
+        CreateAccess({
+          id: response.session?.user.id || "",
+          correo: response.session?.user.email || "",
+          activo: true,
+        });
       },
       onError: (error) => {
         console.error('Error al crear usuario:', error);

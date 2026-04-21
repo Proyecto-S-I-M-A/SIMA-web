@@ -9,8 +9,6 @@ import Maquina from "./Maquina.js";
 import Acceso from "./Acceso.js";
 
 /* Relaciones */
-Acceso.hasOne(Usuario, { foreignKey: "id_acceso",});
-Usuario.belongsTo(Acceso);
 
 Acceso.hasOne(Cliente, { foreignKey: "id_acceso" });
 Cliente.belongsTo(Acceso);

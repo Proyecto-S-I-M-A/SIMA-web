@@ -3,7 +3,7 @@ import { id } from 'zod/v4/locales';
 
 // Schema para lectura (todas las propiedades)
 export const AccesoSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   usuario: z.string(),
   tipo: z.string(),
   ultimo_acceso: z.coerce.date().nullable(),
@@ -14,9 +14,9 @@ export const AccesoSchema = z.object({
 
 // Schema para creación
 export const AccesoCreationSchema = z.object({
-  id: z.string().nonempty('El ID es requerido'),
-  usuario: z.string().min(1, 'El usuario es requerido'),
-  tipo: z.string().min(1, 'El tipo es requerido'),
+  id: z.uuid('ID inválido'),
+  usuario: z.string().min(1, 'El usuario es requerido').optional(),
+  tipo: z.string().min(1, 'El tipo es requerido').optional(),
   ultimo_acceso: z.coerce.date().nullable().optional(),
   correo: z.email('Email inválido'),
   activo: z.boolean().optional().default(true),

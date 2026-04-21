@@ -3,11 +3,6 @@ import type { Request, Response, NextFunction } from 'express';
 
 // Reglas de validación para crear un Acceso
 export const validateAccesoCreation = [
-  body('id')
-    .trim()
-    .notEmpty()
-    .withMessage('El id es requerido'),
-
   body('usuario')
     .trim()
     .notEmpty()
