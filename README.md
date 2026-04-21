@@ -1,6 +1,6 @@
 # FarmaTicAPI
 
-Una **API REST** construida con **Node.js**, **Express** y **PostgreSQL**, siguiendo el patrón **MVC** con validación de entrada completa.
+Una **API REST** ubicada en `api/`, construida con **Node.js**, **Express**, **PostgreSQL** y **Supabase Auth**, siguiendo el patrón **MVC** con validación de entrada completa.
 
 ## 📋 Tabla de Contenidos
 
@@ -10,6 +10,7 @@ Una **API REST** construida con **Node.js**, **Express** y **PostgreSQL**, sigui
 - [Variables de Entorno](#variables-de-entorno)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Endpoints](#endpoints)
+  - [Accesos](#accesos)
   - [Clientes](#clientes)
   - [Usuarios](#usuarios)
   - [Fichas Médicas](#fichas-médicas)
@@ -38,6 +39,7 @@ Una **API REST** construida con **Node.js**, **Express** y **PostgreSQL**, sigui
 ```bash
 git clone https://github.com/N0oCh1/FarmaTicAPI.git
 cd FarmaTicAPI
+cd api
 ```
 
 ### 2. Instalar dependencias
@@ -49,16 +51,16 @@ npm install
 ### 3. Configurar variables de entorno
 
 ```bash
-# Crear archivo .env en la raíz del proyecto
+# Crear archivo .env dentro de api/
 cp .env.example .env
 ```
 
-Edita el archivo `.env` con tus credenciales de PostgreSQL y la configuración básica del entorno (ver [Variables de Entorno](#variables-de-entorno)).
+Edita el archivo `.env` con tus credenciales de PostgreSQL, la URL del proyecto Supabase y la clave anonima (ver [Variables de Entorno](#variables-de-entorno)).
 
 ### 4. Inicializar la base de datos
 
 ```bash
-# Inicia el servidor y sincroniza las tablas automáticamente
+# Inicia el servidor; Sequelize autentica y sincroniza el schema public al arrancar
 npm run dev
 ```
 
@@ -66,27 +68,32 @@ En los logs deberías ver:
 ```
 ✓ Database connection authenticated
 ✓ Database synchronized on schema: public
-Server running on port 3000
+Server running on port 3000 [development]
 ```
 
 ### 5. Verificar el arranque
 
 Abre un cliente HTTP o una colección de pruebas y confirma que el servidor responda en `http://localhost:3000/api/v0`.
 
-Si necesitas ejecutar pruebas manuales, revisa primero [Session.http](httpTest/Session.http) para obtener un access token válido.
+Si necesitas ejecutar pruebas manuales, revisa primero [api/httpTest/Session.http](api/httpTest/Session.http) para obtener un access token válido.
 
 ---
 
 ## Autenticación
 
-Este proyecto protege todas las rutas de negocio con `requireSupabaseAuth`. Eso significa que cualquier consulta a clientes, usuarios, fichas médicas, historiales, recetas, dosis, inventario, máquinas y accesos requiere un token Bearer válido.
+Este proyecto protege las rutas de negocio con `requireSupabaseAuth`. Eso significa que cualquier consulta a clientes, usuarios, fichas médicas, historiales, recetas, dosis, inventario, máquinas y accesos requiere un token Bearer válido.
 
 Flujo básico:
 
 1. Inicia sesión con `POST /api/v0/auth/login`.
-2. Copia el `access_token` devuelto por la respuesta.
+2. Copia el `access_token` devuelto por la respuesta de Supabase.
 3. Usa ese token en el encabezado `Authorization: Bearer <token>`.
 4. Para refrescar sesión, envía el `refresh_token` a `POST /api/v0/auth/refresh-token`.
+
+Rutas públicas adicionales:
+
+1. `POST /api/v0/auth/signup`
+2. `GET /api/v0/recetas/cliente/:cedula`
 
 Ejemplo de encabezado:
 
@@ -100,7 +107,7 @@ Sin ese token, la API responde con `401`.
 
 ## 🔐 Variables de Entorno
 
-Crea un archivo `.env` en la raíz del proyecto con el siguiente contenido:
+Crea un archivo `.env` dentro de `api/` con el siguiente contenido:
 
 ```env
 # Puerto del servidor
@@ -110,9 +117,9 @@ NODE_ENV=development
 # Base de datos PostgreSQL
 DB_URL=postgres://usuario:contraseña@localhost:5432/farmatica
 
-# Autenticación (opcional, para futuras integraciones)
-JWT_SECRET=tu_secreto_seguro
-JWT_EXPIRES_IN=7d
+# Supabase
+PROJECT_URL=https://tu-proyecto.supabase.co
+SUPABASE_KEY=tu_clave_anon_publica
 ```
 
 ### Detalles de conexión a PostgreSQL
@@ -125,6 +132,13 @@ JWT_EXPIRES_IN=7d
 | `5432` | Puerto por defecto de PostgreSQL | `5432` |
 | `farmatica` | Nombre de la base de datos | `farmatica` |
 
+### Detalles de Supabase
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `PROJECT_URL` | URL del proyecto Supabase | `https://xxxx.supabase.co` |
+| `SUPABASE_KEY` | Clave anon pública del proyecto | `eyJhbGciOi...` |
+
 **Formato alternativo:**
 ```env
 DB_URL=postgresql://usuario:contraseña@host:puerto/base_datos
@@ -135,10 +149,13 @@ DB_URL=postgresql://usuario:contraseña@host:puerto/base_datos
 ## 📁 Estructura del Proyecto
 
 ```
-src/
+api/
+├── httpTest/
+├── src/
 ├── config/
 │   ├── database.ts          # Configuración de conexión a PostgreSQL
-│   └── sequelize.ts         # Configuración de Sequelize ORM
+│   ├── sequelize.ts         # Configuración de Sequelize ORM
+│   └── supabase.ts          # Cliente de Supabase Auth
 ├── controllers/
 │   ├── CRUD_Cliente.ts      # Controlador de Clientes
 │   ├── CRUD_Usuario.ts      # Controlador de Usuarios
@@ -147,8 +164,12 @@ src/
 │   ├── CRUD_Receta.ts
 │   ├── CRUD_Dosis.ts
 │   ├── CRUD_Inventario.ts
-│   └── CRUD_Maquina.ts
+│   ├── CRUD_Maquina.ts
+│   ├── CRUD_Acceso.ts
+│   ├── GetRecetaByCedula.ts
+│   └── PostRecetaByCedula.ts
 ├── middleware/
+│   ├── requireSupabaseAuth.ts
 │   ├── validateCliente.ts
 │   ├── validateUsuario.ts
 │   ├── validateFichaMedica.ts
@@ -166,8 +187,10 @@ src/
 │   ├── Dosis.ts
 │   ├── Inventario.ts
 │   ├── Maquina.ts
+│   ├── Usuario.ts
 │   └── index.ts
 ├── routes/
+│   ├── Route_Acceso.ts
 │   ├── Route_Cliente.ts
 │   ├── Route_Usuario.ts
 │   ├── Route_FichaMedica.ts
@@ -175,7 +198,9 @@ src/
 │   ├── Route_Receta.ts
 │   ├── Route_Dosis.ts
 │   ├── Route_Inventario.ts
-│   └── Route_Maquina.ts
+│   ├── Route_Maquina.ts
+│   ├── Route_Session.ts
+│   └── Route-GetRecetaByCedula.ts
 ├── types/
 │   └── ... (interfaces TypeScript para cada modelo)
 ├── app.ts                   # Configuración de Express
