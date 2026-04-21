@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useGetUsuarios, useUpdateUsuarioMutation } from '~/lib/api/QueryUsuario';
+import RefreshQuery from '~/lib/RefreshQuery';
 import type { UsuarioUpdate } from '~/types/Usuario';
 
 export function UsuarioTable() {
@@ -37,12 +38,12 @@ export function UsuarioTable() {
     if (updatingId) return;
     setEditingId(usuario.id);
     setEditForm({
-      nombre: usuario.nombre,
-      apellido: usuario.apellido,
-      rol: usuario.rol,
-      id_acceso: usuario.id_acceso,
-      ruc_doctor: usuario.ruc_doctor,
-      especialidades: usuario.especialidades,
+      nombre: usuario.nombre || "",
+      apellido: usuario.apellido || "",
+      rol: usuario.rol || "",
+      id_acceso: usuario.id_acceso || "",
+      ruc_doctor: usuario.ruc_doctor || "",
+      especialidades: usuario.especialidades || "",
     });
   };
 
@@ -60,6 +61,7 @@ export function UsuarioTable() {
     try {
       await updateMutation.mutateAsync({ id, body: editForm });
       handleCancelEdit();
+      RefreshQuery(['usuarios']); 
     } finally {
       setUpdatingId(null);
     }
