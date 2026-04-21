@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/sequelize.js';
 
 class Acceso extends Model {
-    declare id: number;
+    declare id: string;
     declare usuario: string;
     declare token: string;
     declare refresh: string;
@@ -11,11 +11,15 @@ class Acceso extends Model {
 Acceso.init(
   {
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING(255),
       primaryKey: true,
-      autoIncrement: true,
+      unique: true,
     },
-    usuario: DataTypes.STRING(50),
+    usuario: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    correo: DataTypes.STRING(50),
     tipo: DataTypes.STRING(20),
     ultimo_acceso: DataTypes.DATE,
     activo: {
