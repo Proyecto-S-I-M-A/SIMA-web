@@ -16,6 +16,7 @@ import { useGetAccesos } from '~/lib/api/QueryAcceso';
 import GetSession from '~/lib/GetSession';
 import CustomTabPanel from '~/components/CustomeTabPanel';
 import { useNavigate } from 'react-router';
+import type { Acceso } from '~/types/Acceso';
 
 export default function AdminPanel() {
   const [tabValue, setTabValue] = useState(0);
@@ -25,23 +26,20 @@ export default function AdminPanel() {
     setTabValue(newValue);
   };
   const sessionID = GetSession();
-  const { data, isError, refetch } = useGetAccesos(sessionID || "");
+  const { data, isError, isSuccess } = useGetAccesos(sessionID || "", true);
+
   useEffect(() => {
-    if(!sessionID){
-      navigate("/home");
-      return;
-    }
-    if(data && data?.length > 0) {
-      refetch();
-      const hasAdminAccess = data.some(acceso => acceso.tipo === 'admin');
-      if (!hasAdminAccess) {
+    if (isSuccess && !Array.isArray(data)) {
+      const acceso = data as Acceso
+      if (acceso?.tipo !== "admin") {
         navigate("/home");
       }
     }
-    if(isError){
+
+    if (isError) {
       navigate("/home");
     }
-  }, []);
+  }, [data, isError, isSuccess, navigate]);
 
   return (
     <Container component="main" maxWidth="lg">

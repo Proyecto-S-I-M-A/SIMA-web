@@ -1,7 +1,16 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-class Cliente extends Model {}
+class Cliente extends Model {
+  declare id: number;
+  declare nombre: string;
+  declare cedula: string;
+  declare apellido: string;
+  declare correo: string;
+  declare asegurado: boolean;
+  declare verificado: boolean;
+  declare sexo: string;
+}
 
 Cliente.init(
   {

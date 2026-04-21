@@ -32,6 +32,7 @@ export function CreateSupabaseUserForm() {
           id: response.session?.user.id || "",
           correo: response.session?.user.email || "",
           activo: true,
+          usuario: response.session?.user.email || "",
         });
       },
       onError: (error) => {

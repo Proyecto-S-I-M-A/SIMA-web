@@ -22,7 +22,7 @@ export const useUpdateAccesoActivoMutation = () => {
     mutationFn: async ({ id, body} : {id: string, body: AccesoUpdate}) => {
       return apiJson<{ message: string }>(`/accesos/${id}`, {
         method: "PUT",
-        body: JSON.stringify({body}),
+        body: {...body},
         auth: true,
       });
     },
