@@ -75,6 +75,7 @@ export async function apiJson<T>(path: string, options: ApiFetchOptions = {}): P
 
     if (refreshResponse?.session?.access_token) {
       await saveCookieStoreValue("token", refreshResponse.session.access_token);
+      await saveCookieStoreValue("refresh_token", refreshResponse.session.refresh_token);
       return apiJson(path, options);
     }
   }

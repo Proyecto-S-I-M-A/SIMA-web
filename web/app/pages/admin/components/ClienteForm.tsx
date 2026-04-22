@@ -5,6 +5,7 @@ import type { ClienteCreation } from '~/types/cliente';
 import { ClienteCreationSchema } from '~/types/cliente';
 import { useCreateClienteMutation } from '~/lib/Query';
 import RefreshQuery from '~/lib/RefreshQuery';
+import CustomeSelectQuery from '~/components/CustomeSelectQuery';
 
 export function ClienteForm() {
   const {
@@ -143,12 +144,15 @@ export function ClienteForm() {
                   {errors.id_acceso.message}
                 </Typography>
               )}
-              <TextField
-                fullWidth
-                label="ID de Acceso"
-                variant="outlined"
+              <CustomeSelectQuery
+                endpoint='accesos'
+                labelID='acceso1'
+                label="ID Acceso"
+                labelSelector='id'
+                secondaryLabelSelector='correo'
+                valueSelector='id'
                 value={field.value ?? ''}
-                onChange={(e) => field.onChange(e.target.value)}
+                onChange={field.onChange}
               />
             </>
           )}
