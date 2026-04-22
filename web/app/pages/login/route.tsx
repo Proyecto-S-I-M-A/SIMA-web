@@ -89,7 +89,7 @@ export default function Login() {
             }}
           >
             <Typography variant="h5" sx={{ color: 'white', fontWeight: 700 }}>
-              FT
+              FE
             </Typography>
           </Box>
 
@@ -98,7 +98,7 @@ export default function Login() {
             variant="h4"
             sx={{ mb: 0.5, fontWeight: 700 }}
           >
-            FarmaTic
+            FarmaExpress
           </Typography>
 
           <Typography
