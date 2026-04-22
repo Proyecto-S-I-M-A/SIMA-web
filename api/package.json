@@ -1,6 +1,6 @@
 {
-  "name": "farmaticapi",
-  "version": "1.0.0",
+  "name": "FarmaExpress",
+  "version": "1.0.2",
   "description": "Node.js Express MVC REST API with JWT authentication",
   "main": "src/server.ts",
   "scripts": {
