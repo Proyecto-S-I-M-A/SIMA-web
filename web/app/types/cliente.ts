@@ -10,7 +10,7 @@ export const ClienteSchema = z.object({
   asegurado: z.boolean(),
   verificado: z.boolean(),
   sexo: z.string().nullable(),
-  id_acceso: z.number(),
+  id_acceso: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
@@ -24,7 +24,7 @@ export const ClienteCreationSchema = z.object({
   asegurado: z.boolean().optional().default(false),
   verificado: z.boolean().optional().default(false),
   sexo: z.string().nullable().optional(),
-  id_acceso: z.number(),
+  id_acceso: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 });

@@ -146,10 +146,9 @@ export function ClienteForm() {
               <TextField
                 fullWidth
                 label="ID de Acceso"
-                type="number"
                 variant="outlined"
                 value={field.value ?? ''}
-                onChange={(e) => field.onChange(Number(e.target.value))}
+                onChange={(e) => field.onChange(e.target.value)}
               />
             </>
           )}
