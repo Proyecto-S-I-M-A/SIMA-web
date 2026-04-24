@@ -5,6 +5,7 @@ import type { UsuarioCreation } from '~/types/Usuario';
 import { UsuarioCreationSchema } from '~/types/Usuario';
 import { useCreateUsuarioMutation } from '~/lib/Query';
 import RefreshQuery from '~/lib/RefreshQuery';
+import CustomeSelectQuery from '~/components/CustomeSelectQuery';
 
 export function UsuarioForm() {
   const {
@@ -140,14 +141,16 @@ export function UsuarioForm() {
           name="id_acceso"
           control={control}
           render={({ field }) => (
-            <TextField
-              fullWidth
-              label="ID de Acceso"
-              placeholder="123456789"
-              variant="outlined"
-              {...field}
-              value={field.value || ''}
-            />
+          <CustomeSelectQuery
+                endpoint='accesos'
+                labelID='acceso'
+                label="ID Acceso"
+                labelSelector='id'
+                secondaryLabelSelector='correo'
+                valueSelector='id'
+                value={field.value ?? ''}
+                onChange={field.onChange}
+              />
           )}
         />
 

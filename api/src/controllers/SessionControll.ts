@@ -39,10 +39,14 @@ export async function SingUp(request: Request, response: Response) {
 
 export async function RefreshToken(request: Request, response: Response) {
     try {
-        const authHeader = request.headers.authorization;
-        const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+        // const authHeader = request.headers.authorization;
+        // const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+        // if (!token) {
+        //     return response.status(400).json({ error: 'Token Bearer requerido' });
+        // }
+        const { refresh_token: token } = request.body;
         if (!token) {
-            return response.status(400).json({ error: 'Token Bearer requerido' });
+            return response.status(400).json({ error: 'Token de refresco requerido' });
         }
         const { data, error } = await supabase.auth.refreshSession({ refresh_token: token });
         if (error || !data.session) {
