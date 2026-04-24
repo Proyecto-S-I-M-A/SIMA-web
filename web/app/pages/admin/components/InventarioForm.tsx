@@ -4,6 +4,7 @@ import { Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from
 import { useCreateInventarioMutation } from '~/lib/api/QueryInventario';
 import type { InventarioCreation } from '~/types/Inventario';
 import { InventarioCreationSchema } from '~/types/Inventario';
+import CustomeSelectQuery from '~/components/CustomeSelectQuery';
 
 export function InventarioForm() {
   const {
@@ -26,6 +27,7 @@ export function InventarioForm() {
   const { mutate, isPending, isError, error, isSuccess } = useCreateInventarioMutation();
 
   const onSubmit = (data: InventarioCreation) => {
+    console.log(data)
     mutate(data, {
       onSuccess: () => reset(),
     });
@@ -56,14 +58,16 @@ export function InventarioForm() {
                   {errors.id_maquina.message}
                 </Typography>
               )}
-              <TextField
-                fullWidth
-                label="ID de la máquina"
-                type="number"
-                variant="outlined"
-                value={field.value ?? ''}
-                onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
-              />
+             <CustomeSelectQuery
+             value={field.value || ''}
+              labelID='maquinas1'
+              label='ID Maquina'
+              labelSelector='ubicacion'
+              secondaryLabelSelector='id'
+              valueSelector='id'
+             endpoint='maquinas'
+             onChange={field.onChange}
+             />
             </>
           )}
         />
