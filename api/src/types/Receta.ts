@@ -1,4 +1,4 @@
-export interface RecetaAttributes {
+  export interface RecetaAttributes {
   id: number;
   id_cliente: number;
   doctor_remitente: string | null;
