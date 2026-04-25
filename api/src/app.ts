@@ -11,7 +11,12 @@ import RouteInventario from "./routes/Route_Inventario.js";
 import RouteMaquina from "./routes/Route_Maquina.js";
 import requireSupabaseAuth from "./middleware/requireSupabaseAuth.js";
 import RouteSession from "./routes/Route_Session.js";
+import RouteGetRecetaByCedula from "./routes/Route-GetRecetaByCedula.js";
 import "./models/index.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 const app = express();
 
@@ -19,15 +24,15 @@ const prefix = "/api/v0";
 
 app.use(cors(
   {
-    origin: "http://localhost:5173",
+    origin: process.env.CROSS_ORIGIN,
     credentials: true,
   }
 ))
 
 app.use(express.json());
 app.use(prefix, RouteSession);
+app.use(prefix, RouteGetRecetaByCedula);
 app.use(prefix, requireSupabaseAuth);
-
 app.use(prefix, RouteAcceso);
 app.use(prefix, RouteCliente);
 app.use(prefix, RouteUsuario);

@@ -21,6 +21,9 @@ export const UsuarioCreationSchema = z.object({
   especialidades: z.string().nullable().optional(),
 });
 
+export const UsuarioUpdateSchema = UsuarioCreationSchema.partial();
+
 // Types derivados
 export type Usuario = z.infer<typeof UsuarioSchema>;
 export type UsuarioCreation = z.infer<typeof UsuarioCreationSchema>;
+export type UsuarioUpdate = z.infer<typeof UsuarioUpdateSchema>;

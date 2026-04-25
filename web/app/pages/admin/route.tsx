@@ -8,10 +8,19 @@ import { CreateSupabaseUserForm } from './components/CreateSupabaseUserForm';
 import { AccesoTable } from './components/AccesoTable';
 import { UsuarioTable } from './components/UsuarioTable';
 import { ClienteTable } from './components/ClienteTable';
+import { MaquinaForm } from './components/MaquinaForm';
+import { MaquinaTable } from './components/MaquinaTable';
+import { InventarioForm } from './components/InventarioForm';
+import { InventarioTable } from './components/InventarioTable';
+import { RecetaForm } from './components/RecetaForm';
+import { RecetaTable } from './components/RecetaTable';
+import { DosisForm } from './components/DosisForm';
+import { DosisTable } from './components/DosisTable';
 import { useGetAccesos } from '~/lib/api/QueryAcceso';
 import GetSession from '~/lib/GetSession';
 import CustomTabPanel from '~/components/CustomeTabPanel';
 import { useNavigate } from 'react-router';
+import type { Acceso } from '~/types/Acceso';
 
 export default function AdminPanel() {
   const [tabValue, setTabValue] = useState(0);
@@ -21,23 +30,20 @@ export default function AdminPanel() {
     setTabValue(newValue);
   };
   const sessionID = GetSession();
-  const { data, isError, refetch } = useGetAccesos(sessionID || "");
+  const { data, isError, isSuccess } = useGetAccesos(sessionID || "", true);
+
   useEffect(() => {
-    if(!sessionID){
-      navigate("/home");
-      return;
-    }
-    if(data && data?.length > 0) {
-      refetch();
-      const hasAdminAccess = data.some(acceso => acceso.tipo === 'admin');
-      if (!hasAdminAccess) {
+    if (isSuccess && !Array.isArray(data)) {
+      const acceso = data as Acceso
+      if (acceso?.tipo !== "admin") {
         navigate("/home");
       }
     }
-    if(isError){
+
+    if (isError) {
       navigate("/home");
     }
-  }, []);
+  }, [data, isError, isSuccess, navigate]);
 
   return (
     <Container component="main" maxWidth="lg">
@@ -80,6 +86,9 @@ export default function AdminPanel() {
               <Tab label="Crear Acceso" id="admin-tab-1" aria-controls="admin-tabpanel-1" />
               <Tab label="Crear Usuario" id="admin-tab-2" aria-controls="admin-tabpanel-2" />
               <Tab label="Crear Cliente" id="admin-tab-3" aria-controls="admin-tabpanel-3" />
+              <Tab label="Administrar Máquinas" id="admin-tab-4" aria-controls="admin-tabpanel-4" />
+              <Tab label="Inventario de Máquinas" id="admin-tab-5" aria-controls="admin-tabpanel-5" />
+              <Tab label="Recetas y Dosis" id="admin-tab-6" aria-controls="admin-tabpanel-6" />
             </Tabs>
           </Box>
 
@@ -100,6 +109,23 @@ export default function AdminPanel() {
           <CustomTabPanel value={tabValue} index={3}>
             <ClienteForm />
             <ClienteTable />
+          </CustomTabPanel>
+
+          <CustomTabPanel value={tabValue} index={4}>
+            <MaquinaForm />
+            <MaquinaTable />
+          </CustomTabPanel>
+
+          <CustomTabPanel value={tabValue} index={5}>
+            <InventarioForm />
+            <InventarioTable />
+          </CustomTabPanel>
+
+          <CustomTabPanel value={tabValue} index={6}>
+            <RecetaForm />
+            <RecetaTable />
+            <DosisForm />
+            <DosisTable />
           </CustomTabPanel>
         </Paper>
       </Box>

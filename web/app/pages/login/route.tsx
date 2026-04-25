@@ -18,7 +18,10 @@ import { useLogin } from './hook/useLogin';
 import { useLoginMutation } from '~/lib/Query';
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
-import { useUpdateAccesoActivoMutation } from '~/lib/api/QueryAcceso';
+import {
+  useCreateAccesoMutation,
+  useUpdateAccesoActivoMutation,
+} from '~/lib/api/QueryAcceso';
 
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
@@ -57,7 +60,7 @@ export default function Login() {
       const result = await mutateAsync(formData);
       if (result?.session?.access_token && result?.session?.refresh_token) {
         SaveOnCokie(result.session.access_token, result.session.refresh_token);
-        setSessionID(result.session.user);
+        setSessionID(result.session.user.id);
       }
     } catch {
       // Errors are surfaced via react-query state (isError/error)
@@ -66,7 +69,7 @@ export default function Login() {
 
   return (
     <Box
-        sx={{
+      sx={{
         position: 'relative',
         minHeight: '100vh',
         display: 'flex',
@@ -84,7 +87,6 @@ export default function Login() {
           '100%': { backgroundPosition: '0% 50%' },
         },
       }}
-  
     >
       <Container
         component="main"
@@ -130,7 +132,7 @@ export default function Login() {
               }}
             >
               <Typography variant="h5" sx={{ color: 'white', fontWeight: 700 }}>
-                FT
+                FE
               </Typography>
             </Box>
 
@@ -140,17 +142,12 @@ export default function Login() {
               sx={{
                 mb: 0.5,
                 fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
                 textAlign: 'center',
                 width: '80%',
-                height: 'auto',
-
                 margin: '18px auto 10px auto',
               }}
             >
-              Farma Express
+              FarmaExpress
             </Typography>
 
             <Typography
@@ -159,7 +156,6 @@ export default function Login() {
             >
               Excelencia en el cuidado de tu salud.
             </Typography>
-
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>

@@ -1,6 +1,6 @@
 # FarmaTicAPI
 
-Una **API REST** construida con **Node.js**, **Express** y **PostgreSQL**, siguiendo el patrón **MVC** con validación de entrada completa.
+Una **API REST** ubicada en `api/`, construida con **Node.js**, **Express**, **PostgreSQL** y **Supabase Auth**, siguiendo el patrón **MVC** con validación de entrada completa.
 
 ## 📋 Tabla de Contenidos
 
@@ -10,6 +10,7 @@ Una **API REST** construida con **Node.js**, **Express** y **PostgreSQL**, sigui
 - [Variables de Entorno](#variables-de-entorno)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Endpoints](#endpoints)
+  - [Accesos](#accesos)
   - [Clientes](#clientes)
   - [Usuarios](#usuarios)
   - [Fichas Médicas](#fichas-médicas)
@@ -38,6 +39,7 @@ Una **API REST** construida con **Node.js**, **Express** y **PostgreSQL**, sigui
 ```bash
 git clone https://github.com/N0oCh1/FarmaTicAPI.git
 cd FarmaTicAPI
+cd api
 ```
 
 ### 2. Instalar dependencias
@@ -49,16 +51,16 @@ npm install
 ### 3. Configurar variables de entorno
 
 ```bash
-# Crear archivo .env en la raíz del proyecto
+# Crear archivo .env dentro de api/
 cp .env.example .env
 ```
 
-Edita el archivo `.env` con tus credenciales de PostgreSQL y la configuración básica del entorno (ver [Variables de Entorno](#variables-de-entorno)).
+Edita el archivo `.env` con tus credenciales de PostgreSQL, la URL del proyecto Supabase y la clave anonima (ver [Variables de Entorno](#variables-de-entorno)).
 
 ### 4. Inicializar la base de datos
 
 ```bash
-# Inicia el servidor y sincroniza las tablas automáticamente
+# Inicia el servidor; Sequelize autentica y sincroniza el schema public al arrancar
 npm run dev
 ```
 
@@ -66,27 +68,32 @@ En los logs deberías ver:
 ```
 ✓ Database connection authenticated
 ✓ Database synchronized on schema: public
-Server running on port 3000
+Server running on port 3000 [development]
 ```
 
 ### 5. Verificar el arranque
 
 Abre un cliente HTTP o una colección de pruebas y confirma que el servidor responda en `http://localhost:3000/api/v0`.
 
-Si necesitas ejecutar pruebas manuales, revisa primero [Session.http](httpTest/Session.http) para obtener un access token válido.
+Si necesitas ejecutar pruebas manuales, revisa primero [api/httpTest/Session.http](api/httpTest/Session.http) para obtener un access token válido.
 
 ---
 
 ## Autenticación
 
-Este proyecto protege todas las rutas de negocio con `requireSupabaseAuth`. Eso significa que cualquier consulta a clientes, usuarios, fichas médicas, historiales, recetas, dosis, inventario, máquinas y accesos requiere un token Bearer válido.
+Este proyecto protege las rutas de negocio con `requireSupabaseAuth`. Eso significa que cualquier consulta a clientes, usuarios, fichas médicas, historiales, recetas, dosis, inventario, máquinas y accesos requiere un token Bearer válido.
 
 Flujo básico:
 
 1. Inicia sesión con `POST /api/v0/auth/login`.
-2. Copia el `access_token` devuelto por la respuesta.
+2. Copia el `access_token` devuelto por la respuesta de Supabase.
 3. Usa ese token en el encabezado `Authorization: Bearer <token>`.
-4. Para refrescar sesión, envía el `refresh_token` a `POST /api/v0/auth/refresh-token`.
+4. Para refrescar sesión, envía el `refresh_token` en `Authorization: Bearer <refresh_token>` a `POST /api/v0/auth/refresh-token`.
+
+Rutas públicas adicionales:
+
+1. `POST /api/v0/auth/signup`
+2. `GET /api/v0/recetas/cliente/:cedula`
 
 Ejemplo de encabezado:
 
@@ -100,7 +107,7 @@ Sin ese token, la API responde con `401`.
 
 ## 🔐 Variables de Entorno
 
-Crea un archivo `.env` en la raíz del proyecto con el siguiente contenido:
+Crea un archivo `.env` dentro de `api/` con el siguiente contenido:
 
 ```env
 # Puerto del servidor
@@ -110,9 +117,9 @@ NODE_ENV=development
 # Base de datos PostgreSQL
 DB_URL=postgres://usuario:contraseña@localhost:5432/farmatica
 
-# Autenticación (opcional, para futuras integraciones)
-JWT_SECRET=tu_secreto_seguro
-JWT_EXPIRES_IN=7d
+# Supabase
+PROJECT_URL=https://tu-proyecto.supabase.co
+SUPABASE_KEY=tu_clave_anon_publica
 ```
 
 ### Detalles de conexión a PostgreSQL
@@ -125,6 +132,13 @@ JWT_EXPIRES_IN=7d
 | `5432` | Puerto por defecto de PostgreSQL | `5432` |
 | `farmatica` | Nombre de la base de datos | `farmatica` |
 
+### Detalles de Supabase
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `PROJECT_URL` | URL del proyecto Supabase | `https://xxxx.supabase.co` |
+| `SUPABASE_KEY` | Clave anon pública del proyecto | `eyJhbGciOi...` |
+
 **Formato alternativo:**
 ```env
 DB_URL=postgresql://usuario:contraseña@host:puerto/base_datos
@@ -135,243 +149,80 @@ DB_URL=postgresql://usuario:contraseña@host:puerto/base_datos
 ## 📁 Estructura del Proyecto
 
 ```
-src/
-├── config/
-│   ├── database.ts          # Configuración de conexión a PostgreSQL
-│   └── sequelize.ts         # Configuración de Sequelize ORM
-├── controllers/
-│   ├── CRUD_Cliente.ts      # Controlador de Clientes
-│   ├── CRUD_Usuario.ts      # Controlador de Usuarios
-│   ├── CRUD_FichaMedica.ts  # Controlador de Fichas Médicas
-│   ├── CRUD_HistorialMedico.ts
-│   ├── CRUD_Receta.ts
-│   ├── CRUD_Dosis.ts
-│   ├── CRUD_Inventario.ts
-│   └── CRUD_Maquina.ts
-├── middleware/
-│   ├── validateCliente.ts
-│   ├── validateUsuario.ts
-│   ├── validateFichaMedica.ts
-│   ├── validateHistorialMedico.ts
-│   ├── validateReceta.ts
-│   ├── validateDosis.ts
-│   ├── validateInventario.ts
-│   └── validateMaquina.ts
-├── models/
-│   ├── Cliente.ts
-│   ├── Usuario.ts
-│   ├── FichaMedica.ts
-│   ├── HistorialMedico.ts
-│   ├── Receta.ts
-│   ├── Dosis.ts
-│   ├── Inventario.ts
-│   ├── Maquina.ts
-│   └── index.ts
-├── routes/
-│   ├── Route_Cliente.ts
-│   ├── Route_Usuario.ts
-│   ├── Route_FichaMedica.ts
-│   ├── Route_HistorialMedico.ts
-│   ├── Route_Receta.ts
-│   ├── Route_Dosis.ts
-│   ├── Route_Inventario.ts
-│   └── Route_Maquina.ts
-├── types/
-│   └── ... (interfaces TypeScript para cada modelo)
-├── app.ts                   # Configuración de Express
-└── server.ts                # Punto de entrada
+api/
+├── httpTest/
+├── src/
+│   ├── config/
+│   │   ├── database.ts
+│   │   ├── sequelize.ts
+│   │   └── supabase.ts
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   ├── types/
+│   ├── app.ts               # Configuración de Express
+│   └── server.ts            # Punto de entrada
+├── package.json
+├── tsconfig.json
+└── jest.config.js
 ```
 
 ---
 
 ## 🔌 Endpoints
 
-> Todas las rutas de este bloque requieren autenticación Bearer, excepto las rutas de sesión (`/auth/login`, `/auth/signup` y `/auth/refresh-token`).
+> Todas las rutas de este bloque requieren autenticación Bearer, excepto:
+>
+> - `POST /api/v0/auth/login`
+> - `POST /api/v0/auth/signup`
+> - `POST /api/v0/auth/refresh-token`
+> - `GET /api/v0/recetas/cliente/:cedula`
 
-### Clientes
+### Sesión (públicas)
 
-#### POST `/api/v0/clientes` - Crear cliente
+#### POST `/api/v0/auth/login`
 
-**Body:**
+Body requerido:
 ```json
 {
-  "nombre": "Juan",
-  "apellido": "Pérez García",
-  "cedula": "12345678901",
-  "correo": "juan.perez@example.com",
-  "password": "MiPassword123",
-  "sexo": "M",
-  "asegurado": true,
-  "verificado": false
+  "email": "usuario@dominio.com",
+  "password": "Password123"
 }
 ```
 
-**Response (201):**
+#### POST `/api/v0/auth/signup`
+
+Body requerido:
 ```json
 {
-  "id": 1,
-  "nombre": "Juan",
-  "apellido": "Pérez García",
-  "cedula": "12345678901",
-  "correo": "juan.perez@example.com",
-  "password": "MiPassword123",
-  "sexo": "M",
-  "asegurado": true,
-  "verificado": false,
-  "createdAt": "2024-04-11T10:30:00.000Z",
-  "updatedAt": "2024-04-11T10:30:00.000Z"
+  "email": "usuario@dominio.com",
+  "password": "Password123"
 }
 ```
 
-#### GET `/api/v0/clientes` - Obtener todos los clientes
+#### POST `/api/v0/auth/refresh-token`
 
-**Response (200):**
-```json
-[
-  {
-    "id": 1,
-    "nombre": "Juan",
-    "apellido": "Pérez García",
-    ...
-  }
-]
+No usa body. Requiere header:
+
+```http
+Authorization: Bearer <refresh_token>
 ```
 
-#### GET `/api/v0/clientes/:id` - Obtener cliente por ID
+### Recetas por cédula
 
-**Response (200):**
-```json
-[
-  {
-    "id": 1,
-    "nombre": "Juan",
-    ...
-  }
-]
-```
+#### GET `/api/v0/recetas/cliente/:cedula` (pública)
 
-#### PUT `/api/v0/clientes/:id` - Actualizar cliente
+Busca la receta del cliente usando la cédula.
 
-**Body:** (cualquier campo que desees actualizar)
+#### POST `/api/v0/recetas/cedula/:cedula` (protegida)
+
+Crea receta tomando `id_cliente` desde la cédula de la URL.
+
+Body recomendado:
 ```json
 {
-  "nombre": "Juan Carlos",
-  "asegurado": false
-}
-```
-
-**Response (200):** Cliente actualizado
-
-#### DELETE `/api/v0/clientes/:id` - Eliminar cliente
-
-**Response (200):**
-```json
-{
-  "message": "Cliente eliminado",
-  "data": { ... }
-}
-```
-
----
-
-### Usuarios
-
-#### POST `/api/v0/usuarios` - Crear usuario
-
-**Body:**
-```json
-{
-  "usuario": "jperez_admin",
-  "nombre": "Juan",
-  "apellido": "Pérez",
-  "password": "ContraseñaSegura123",
-  "rol": "admin",
-  "ruc_doctor": "1701234567001",
-  "especialidades": "Cardiología"
-}
-```
-
-**Response (201):** Usuario creado
-
-#### GET `/api/v0/usuarios` - Obtener todos los usuarios
-
-#### GET `/api/v0/usuarios/:id` - Obtener usuario por ID
-
-#### PUT `/api/v0/usuarios/:id` - Actualizar usuario
-
-#### DELETE `/api/v0/usuarios/:id` - Eliminar usuario
-
----
-
-### Fichas Médicas
-
-#### POST `/api/v0/fichas-medicas` - Crear ficha médica
-
-**Body:**
-```json
-{
-  "id_cliente": 1,
-  "tipo_sanguineo": "O+",
-  "alergenos": "Penicilina, Paracetamol",
-  "enfermedad_cronica": "Diabetes tipo 2"
-}
-```
-
-**Response (201):** Ficha médica creada
-
-#### GET `/api/v0/fichas-medicas` - Obtener todas las fichas
-
-#### GET `/api/v0/fichas-medicas/:id` - Obtener ficha por ID
-
-#### PUT `/api/v0/fichas-medicas/:id` - Actualizar ficha
-
-#### DELETE `/api/v0/fichas-medicas/:id` - Eliminar ficha
-
----
-
-### Historiales Médicos
-
-#### POST `/api/v0/historiales-medicos` - Crear historial
-
-**Body:**
-```json
-{
-  "id_cliente": 1,
-  "fecha_consulta": "2024-04-11T10:30:00Z",
-  "motivo_consulta": "Control de presión arterial",
-  "diagnostico": "Hipertensión leve",
-  "tratamiento": "Medicación y dieta",
-  "observaciones": "Paciente en buen estado general",
-  "presion_arterial": "140/90",
-  "temperatura": 36.5,
-  "peso": 75.5,
-  "altura": 1.75,
-  "frecuencia_cardiaca": 72,
-  "medico": "Dr. Carlos López",
-  "fecha_registro": "2024-04-11T10:30:00Z"
-}
-```
-
-**Response (201):** Historial creado
-
-#### GET `/api/v0/historiales-medicos` - Obtener todos
-
-#### GET `/api/v0/historiales-medicos/:id` - Obtener por ID
-
-#### PUT `/api/v0/historiales-medicos/:id` - Actualizar
-
-#### DELETE `/api/v0/historiales-medicos/:id` - Eliminar
-
----
-
-### Recetas
-
-#### POST `/api/v0/recetas` - Crear receta
-
-**Body:**
-```json
-{
-  "id_cliente": 1,
   "doctor_remitente": "Dr. López",
   "ruc_doctor_remitente": "1701234567001",
   "hospital_remitente": "Hospital Central",
@@ -382,95 +233,104 @@ src/
 }
 ```
 
-**Response (201):** Receta creada
+### CRUD protegidos actuales
 
-#### GET `/api/v0/recetas` - Obtener todas
+Actualmente las rutas CRUD implementadas están orientadas a operaciones por `:id`:
 
-#### GET `/api/v0/recetas/:id` - Obtener por ID
+#### Accesos
+- `POST /api/v0/accesos`
+- `GET /api/v0/accesos/:id`
+- `PUT /api/v0/accesos/:id`
+- `DELETE /api/v0/accesos/:id`
 
-#### PUT `/api/v0/recetas/:id` - Actualizar
+#### Clientes
+- `POST /api/v0/clientes`
+- `GET /api/v0/clientes/:id`
+- `PUT /api/v0/clientes/:id`
+- `DELETE /api/v0/clientes/:id`
 
-#### DELETE `/api/v0/recetas/:id` - Eliminar
+#### Usuarios
+- `POST /api/v0/usuarios`
+- `GET /api/v0/usuarios/:id`
+- `PUT /api/v0/usuarios/:id`
+- `DELETE /api/v0/usuarios/:id`
 
----
+#### Fichas médicas
+- `POST /api/v0/fichas-medicas`
+- `GET /api/v0/fichas-medicas/:id`
+- `PUT /api/v0/fichas-medicas/:id`
+- `DELETE /api/v0/fichas-medicas/:id`
 
-### Dosis
+#### Historiales médicos
+- `POST /api/v0/historiales-medicos`
+- `GET /api/v0/historiales-medicos/:id`
+- `PUT /api/v0/historiales-medicos/:id`
+- `DELETE /api/v0/historiales-medicos/:id`
 
-#### POST `/api/v0/dosis` - Crear dosis
+#### Recetas
+- `POST /api/v0/recetas`
+- `GET /api/v0/recetas/:id`
+- `PUT /api/v0/recetas/:id`
+- `DELETE /api/v0/recetas/:id`
 
-**Body:**
+#### Dosis
+- `POST /api/v0/dosis`
+- `GET /api/v0/dosis/:id`
+- `PUT /api/v0/dosis/:id`
+- `DELETE /api/v0/dosis/:id`
+
+#### Inventario
+- `POST /api/v0/inventario`
+- `GET /api/v0/inventario/:id`
+- `PUT /api/v0/inventario/:id`
+- `DELETE /api/v0/inventario/:id`
+
+#### Máquinas
+- `POST /api/v0/maquinas`
+- `GET /api/v0/maquinas/:id`
+- `PUT /api/v0/maquinas/:id`
+- `DELETE /api/v0/maquinas/:id`
+
+### Ejemplos de body actualizados
+
+#### Cliente (POST `/api/v0/clientes`)
 ```json
 {
-  "id_receta": 1,
-  "id_medicamento": 5,
-  "cantidad": 30,
-  "instrucciones": "Tomar 1 comprimido cada 8 horas después de las comidas"
+  "nombre": "Juan",
+  "apellido": "Pérez García",
+  "cedula": "12345678901",
+  "correo": "juan.perez@example.com",
+  "sexo": "M",
+  "asegurado": true,
+  "verificado": false,
+  "id_acceso": 1
 }
 ```
 
-**Response (201):** Dosis creada
-
-#### GET `/api/v0/dosis` - Obtener todas
-
-#### GET `/api/v0/dosis/:id` - Obtener por ID
-
-#### PUT `/api/v0/dosis/:id` - Actualizar
-
-#### DELETE `/api/v0/dosis/:id` - Eliminar
-
----
-
-### Inventario
-
-#### POST `/api/v0/inventario` - Crear registro
-
-**Body:**
+#### Usuario (POST `/api/v0/usuarios`)
 ```json
 {
-  "id_maquina": 1,
-  "nombre_medicamento": "Amoxicilina",
-  "marca": "Amoxor",
-  "precio": 15.50,
-  "cantidad": 100,
-  "resetado": false
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "rol": "admin",
+  "ruc_doctor": "1701234567001",
+  "especialidades": "Cardiologia"
 }
 ```
 
-**Response (201):** Registro creado
-
-#### GET `/api/v0/inventario` - Obtener todos
-
-#### GET `/api/v0/inventario/:id` - Obtener por ID
-
-#### PUT `/api/v0/inventario/:id` - Actualizar
-
-#### DELETE `/api/v0/inventario/:id` - Eliminar
-
----
-
-### Máquinas
-
-#### POST `/api/v0/maquinas` - Crear máquina
-
-**Body:**
+#### Receta (POST `/api/v0/recetas`)
 ```json
 {
-  "ubicacion": "Farmacia Centro, Calle Principal 123",
-  "activo": true,
-  "latitud": -0.2184,
-  "longitud": -78.5158
+  "id_cliente": 1,
+  "doctor_remitente": "Dr. Lopez",
+  "ruc_doctor_remitente": "1701234567001",
+  "hospital_remitente": "Hospital Central",
+  "telefono_hospital": "+593-2-1234567",
+  "correo": "hospital@example.com",
+  "codigo": 12345,
+  "fecha": "2024-04-11T10:30:00Z"
 }
 ```
-
-**Response (201):** Máquina creada
-
-#### GET `/api/v0/maquinas` - Obtener todas
-
-#### GET `/api/v0/maquinas/:id` - Obtener por ID
-
-#### PUT `/api/v0/maquinas/:id` - Actualizar
-
-#### DELETE `/api/v0/maquinas/:id` - Eliminar
 
 ---
 
@@ -551,12 +411,12 @@ DB_URL=postgres://usuario:contraseña@localhost:5432/farmatica
 ## 📝 Notas
 
 - Todos los timestamps incluyen `createdAt` y `updatedAt` automáticamente
-- Los IDs son auto-incrementales de tipo BIGINT
+- La mayoría de IDs son numéricos auto-incrementales; valida cada recurso según su middleware
 - Las respuestas de error incluyen detalles para debugging
 - El schema utilizado es `public`
 
 ---
 
-**Versión:** 1.0.0  
-**Última actualización:** 2024-04-11
+**Versión:** 1.1.0  
+**Última actualización:** 2026-04-21
 

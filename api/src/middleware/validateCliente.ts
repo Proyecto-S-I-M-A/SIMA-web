@@ -47,8 +47,7 @@ export const validateClienteCreation = [
   body("id_acceso")
     .trim()
     .notEmpty()
-    .isNumeric()
-    .withMessage('el id_acceso es requerido y debe ser un número'),
+    .withMessage('el id_acceso es requerido'),
 ];
 
 // Middleware para manejar errores de validación

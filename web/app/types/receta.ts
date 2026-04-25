@@ -23,7 +23,7 @@ export const RecetaCreationSchema = z.object({
   telefono_hospital: z.string().nullable().optional(),
   correo: z.email().nullable().optional(),
   codigo: z.number().nullable().optional(),
-  fecha: z.coerce.date().nullable().optional(),
+  fecha: z.date().nullable().optional(),
 });
 
 // Schema para actualización (todos los campos opcionales excepto id)
