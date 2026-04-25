@@ -29,7 +29,7 @@ export default function CustomeSelectQuery(props: CustomSelectQueryProps) {
           <em>None</em>
         </MenuItem>
         {data?.map((item: any) => (
-          <MenuItem key={item.id} value={valueSelector ? item[valueSelector] : item.id}>
+          <MenuItem key={item.id} value={valueSelector ? parseInt(item[valueSelector]) : item.id}>
             {labelSelector ? <><strong>{labelSelector}:</strong> {item[labelSelector]} </> : "label"}
             <br/>
             {secondaryLabelSelector && 

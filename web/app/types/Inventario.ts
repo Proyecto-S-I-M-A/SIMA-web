@@ -12,7 +12,7 @@ export const InventarioSchema = z.object({
 
 export const InventarioCreationSchema = z.object({
   id: z.number().optional(),
-  id_maquina: z.string("ID de máquina es requerido"),
+  id_maquina: z.number("ID de máquina es requerido"),
   nombre_medicamento: z.string().nullable().optional(),
   marca: z.string().nullable().optional(),
   precio: z.number().nullable().optional(),
