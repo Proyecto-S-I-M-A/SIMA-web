@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Receta, RecetaCreation, RecetaUpdate } from '~/types/receta';
+import type { Receta, RecetaCreation, RecetaUpdate, RecetasDosisCreation } from '~/types/receta';
 import { apiJson } from '../apiClient';
 
 export const useCreateRecetaMutation = () => {
@@ -15,6 +15,24 @@ export const useCreateRecetaMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['recetas'] });
+    },
+  });
+};
+
+export const useCreateRecetaWithDosisMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (form: RecetasDosisCreation) => {
+      return apiJson<{ id: number }>('/recetas/dosis', {
+        method: 'POST',
+        body: form,
+        auth: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recetas'] });
+      queryClient.invalidateQueries({ queryKey: ['dosis'] });
     },
   });
 };
