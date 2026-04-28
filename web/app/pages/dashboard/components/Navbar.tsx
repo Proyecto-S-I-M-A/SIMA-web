@@ -36,7 +36,7 @@ export function Navbar({ rawSearch, onSearchChange }: Props) {
 
   const handleLogout = () => {
     handleMenuClose();
-    // aquí va tu lógica de cierre de sesión
+    // FALTA IMPLEMENTAR CIERRE DE SESIÓN REAL
     console.log('Cerrar sesión');
   };
 
@@ -44,7 +44,7 @@ export function Navbar({ rawSearch, onSearchChange }: Props) {
     <AppBar
       position="static"
       elevation={0}
-      sx={{ bgcolor: theme.palette.primary.dark, color: 'white' }}
+      sx={{ bgcolor: theme.palette.primary.main, color: 'white' }}
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
@@ -92,7 +92,7 @@ export function Navbar({ rawSearch, onSearchChange }: Props) {
           <Avatar
             onClick={handleAvatarClick}
             sx={{
-              bgcolor: '#5E81AC',
+              bgcolor: '#ffffff',
               cursor: 'pointer',
               transition: 'all 0.2s ease',
               '&:hover': {
@@ -102,8 +102,8 @@ export function Navbar({ rawSearch, onSearchChange }: Props) {
               },
             }}
           >
-            V
-          </Avatar>
+            <PersonIcon sx={{  color: theme.palette.primary.main,}}/>
+          </Avatar >
 
           {/* Menú desplegable */}
           <Menu
@@ -119,7 +119,7 @@ export function Navbar({ rawSearch, onSearchChange }: Props) {
                   borderRadius: 2,
                   overflow: 'visible',
                   filter: 'drop-shadow(0px 4px 12px rgba(0,0,0,0.12))',
-                  // flecha apuntando al avatar
+                  
                   '&::before': {
                     content: '""',
                     display: 'block',

@@ -5,11 +5,11 @@ export default [
   route("login", "pages/login/route.tsx"),
   route("autenticacion", "pages/autenticacion/route.tsx"),
   route("home", "pages/dashboard/route.tsx"),
-  
 
-  // route("home/paciente/:cedula", "pages/paciente/route.tsx"),
-  
-  route("details", "pages/detalles/route.tsx"),
+  // ruta dimamicamente para cada paciente, con su cedula como parametro
+  route("home/paciente/:cedula", "pages/detalles/route.tsx"),
+
   route("admin", "pages/admin/route.tsx"),
   route("*", "routes/catch-all.tsx"),
+
 ] satisfies RouteConfig;

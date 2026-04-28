@@ -22,19 +22,72 @@ export default function Autenticacion() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-
-        background: 'linear-gradient(270deg, #ffffff, #759cf2, #356be8)',
-
-        backgroundSize: '200% 600%',
-        animation: 'gradientMove 17s ease infinite',
+        overflow: 'hidden',
+        background:
+          'linear-gradient(270deg, #edf1f4, #a1c4fd, #c2e9fb, #ffffff)',
+        backgroundSize: '400% 400%',
+        animation: 'gradientMove 12s ease infinite',
 
         '@keyframes gradientMove': {
           '0%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
           '100%': { backgroundPosition: '0% 50%' },
         },
+
+        '@keyframes floatY': {
+          '0%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-30px)' },
+          '100%': { transform: 'translateY(0px)' },
+        },
+
+        '@keyframes floatXY': {
+          '0%': { transform: 'translate(0px, 0px)' },
+          '50%': { transform: 'translate(20px, -30px)' },
+          '100%': { transform: 'translate(0px, 0px)' },
+        },
+
+        '&::before, &::after': {
+          content: '""',
+          position: 'absolute',
+          width: 400,
+          height: 400,
+          borderRadius: '50%',
+          filter: 'blur(120px)',
+          opacity: 0.6,
+          zIndex: 0,
+        },
+
+        '&::before': {
+          background: '#4facfe',
+          top: '40%',
+          right: '10%',
+          animation: 'floatXY 10s ease-in-out infinite',
+        },
+
+        '&::after': {
+          background: '#43e97b',
+          top: '50%',
+          right: '25%',
+          animation: 'floatY 12s ease-in-out infinite',
+        },
       }}
     >
+      <Box
+        sx={{
+          position: 'absolute',
+          width: 420,
+          height: 420,
+          borderRadius: '50%',
+          filter: 'blur(120px)',
+          opacity: 0.5,
+          background: '#a1c4fd',
+          top: '10%',
+          left: '5%',
+          zIndex: 0,
+
+          animation: 'floatXY 14s ease-in-out infinite reverse',
+        }}
+      />
       <Container
         component="main"
         maxWidth="sm"
@@ -59,8 +112,15 @@ export default function Autenticacion() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              borderRadius: 2,
+
               width: '100%',
+
+              position: 'relative',
+              zIndex: 1,
+              backdropFilter: 'blur(20px)',
+              background: 'rgba(255,255,255,0.75)',
+              borderRadius: 3,
+              boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
             }}
           >
             {/* Logo/Title */}

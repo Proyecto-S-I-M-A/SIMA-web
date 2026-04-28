@@ -6,14 +6,16 @@ import {
   faPerson,
   faPersonDress,
 } from '@fortawesome/free-solid-svg-icons';
-import  { DATA } from '../data/patients';
+import type { Row } from '../types';
 import { cardStyle, iconStyle } from '../styles/cardStyles';
 
-export function StatsCards() {
-  const total      = DATA.length;
-  const asegurados = DATA.filter((d) => d.asegurado).length;
-  const masculinos = DATA.filter((d) => d.sexo === 'Masculino').length;
-  const femeninos  = DATA.filter((d) => d.sexo === 'Femenino').length;
+type Props = { data: Row[] };
+
+export function StatsCards({ data }: Props) {
+  const total      = data.length;
+  const asegurados = data.filter((d) => d.asegurado).length;
+  const masculinos = data.filter((d) => d.sexo === 'M').length;
+  const femeninos  = data.filter((d) => d.sexo === 'F').length;
 
   const cards = [
     {

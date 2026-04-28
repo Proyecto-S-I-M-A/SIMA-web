@@ -7,6 +7,7 @@ export const theme = createTheme({
       light: '#03A9F4',
       dark: '#01579B',
       contrastText: '#FFFFFF',
+      
     },
     secondary: {
       main: '#2E7D32', // Verde farmacia

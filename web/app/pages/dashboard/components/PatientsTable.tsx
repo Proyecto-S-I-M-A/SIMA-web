@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router';
 import type { Row, SortKey, SortDir } from '../types';
-
 import { SortCell } from './SortCell';
 
 type Props = {
@@ -84,8 +83,20 @@ export function PatientsTable({
                   '& th': { color: '#374151', fontWeight: 600 },
                 }}
               >
-                <SortCell label="Paciente" field="nombre" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
-                <SortCell label="Cédula"   field="cedula" sortKey={sortKey} sortDir={sortDir} onSort={onSort} />
+                <SortCell
+                  label="Paciente"
+                  field="nombre"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={onSort}
+                />
+                <SortCell
+                  label="Cédula"
+                  field="cedula"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={onSort}
+                />
                 <TableCell>Asegurado</TableCell>
                 <TableCell>Sexo</TableCell>
               </TableRow>
@@ -93,11 +104,11 @@ export function PatientsTable({
 
             <TableBody>
               {paginated.length > 0 ? (
-                paginated.map((row, i) => (
+                paginated.map((row) => (
                   <TableRow
-                    key={i}
+                    key={row.id}
                     hover
-                    onClick={() => handleRowClick(row.cedula)}
+                    onClick={() => handleRowClick(row.cedula ?? '')}
                     sx={{
                       cursor: 'pointer',
                       transition: 'background-color 0.2s',
@@ -105,7 +116,9 @@ export function PatientsTable({
                     }}
                   >
                     <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}
+                      >
                         <Avatar
                           sx={{
                             bgcolor: '#5E81AC',
@@ -115,11 +128,13 @@ export function PatientsTable({
                             marginRight: 2,
                           }}
                         >
-                          {row.nombre.charAt(0)}
-                          {row.apellido.charAt(0)}
+                          {row.nombre?.charAt(0)}
+                          {row.apellido?.charAt(0)}
                         </Avatar>
                         <Box>
-                          <Typography sx={{ fontWeight: 600, justifyContent: 'center' }}>
+                          <Typography
+                            sx={{ fontWeight: 600, justifyContent: 'center' }}
+                          >
                             {row.nombre} {row.apellido}
                           </Typography>
                           <Typography variant="body2" sx={{ color: '#6b7280' }}>
@@ -148,7 +163,11 @@ export function PatientsTable({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 4, color: '#999' }}>
+                  <TableCell
+                    colSpan={6}
+                    align="center"
+                    sx={{ py: 4, color: '#999' }}
+                  >
                     No se encontraron resultados para "{search}"
                   </TableCell>
                 </TableRow>
@@ -167,7 +186,9 @@ export function PatientsTable({
               onRowsPerPageChange(+e.target.value);
             }}
             labelRowsPerPage="Filas por página"
-            labelDisplayedRows={({ from, to, count }) => `${from}–${to} de ${count}`}
+            labelDisplayedRows={({ from, to, count }) =>
+              `${from}–${to} de ${count}`
+            }
           />
         </TableContainer>
       </Box>
