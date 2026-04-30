@@ -9,7 +9,6 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
-  Divider,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
