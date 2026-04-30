@@ -3,21 +3,20 @@ import { Navbar } from './components/Navbar';
 import { StatsCards } from './components/StatsCards';
 import { PatientsTable } from './components/PatientsTable';
 import { usePatientsTable } from './hooks/usePatientsTable';
-import { usePatients } from './hooks/usePatients';
 
 
 
 export default function Dashboard() {
-  const { data, loading, error, refetch } = usePatients();  
-
   const {
+    data,
     rawSearch, setRawSearch,
     search,
     sortKey, sortDir, handleSort,
     processedData, paginated,
     page, setPage,
     rowsPerPage, setRowsPerPage,
-  } = usePatientsTable(data); 
+    loading, error, refetch,
+  } = usePatientsTable(); 
 
   return (
 
@@ -37,7 +36,7 @@ export default function Dashboard() {
         <Box sx={{ px: 4, mt: 4 }}>
           <Alert
             severity="error"
-            action={<Button color="inherit" size="small" onClick={refetch}>Reintentar</Button>}
+            action={<Button color="inherit" size="small" onClick={() => void refetch()}>Reintentar</Button>}
           >
             {error}
           </Alert>
@@ -47,7 +46,7 @@ export default function Dashboard() {
       {/* Contenido */}
       {!loading && !error && (
         <>
-          <StatsCards data={data} />
+          <StatsCards data={data || []} />
           <PatientsTable
             search={search}
             processedData={processedData}
