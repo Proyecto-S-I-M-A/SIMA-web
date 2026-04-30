@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000/api/v0
-@accessToken = PEGA_AQUI_EL_ACCESS_TOKEN
+@accessToken = eyJhbGciOiJFUzI1NiIsImtpZCI6ImNhNDRkYjVkLWUzNmEtNGRkMC04ODliLTU0NGRlZjQ0MTY4YiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3VzdHF3aWhrbXN1bWdyY2ludHhsLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI4YWY4MDA1Ny04NjNmLTQzMjQtYjIyYy04MTM0ZTFlZmMxYjYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc3MTUyNDE0LCJpYXQiOjE3NzcxNDg4MTQsImVtYWlsIjoicnViZW5AYWRtaW4uY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzcxNDg4MTR9XSwic2Vzc2lvbl9pZCI6ImMxMjNiYTI2LWU1NzQtNGNjNS1hOWNmLTY4NjMwOGU0MDY1NiIsImlzX2Fub255bW91cyI6ZmFsc2V9.y1YDjjLBHUuR4pYTq7G7m_KixQKdyUqIufiMcGajSjabTexgY2yBCkVURdQCqrKI7GP_yADMoW_qH8d8cb3yBg
 
 ### CREATE nueva Receta
 POST {{baseUrl}}/recetas
@@ -42,3 +42,32 @@ Content-Type: application/json
 ### DELETE una Receta
 DELETE {{baseUrl}}/recetas/1
 Authorization: Bearer {{accessToken}}
+
+### Casos específicos
+POST {{baseUrl}}/recetas/dosis
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+{
+  "Receta": {
+    "id_cliente": 1,
+    "doctor_remitente": "Dr. Juan Pérez",
+    "ruc_doctor_remitente": "1234567890",
+    "hospital_remitente": "Hospital Central",
+    "telefono_hospital": "555-1234",
+    "correo": "doctor@hospital.com",
+    "codigo": 12345,
+    "fecha": "2025-04-25T10:30:00Z"
+  },
+  "Dosis": [
+    {
+      "id_medicamento": 1,
+      "cantidad": 2,
+      "instrucciones": "Tomar cada 8 horas con comida"
+    },
+    {
+      "id_medicamento": 2,
+      "cantidad": 1,
+      "instrucciones": "Tomar una vez al día por las noches"
+    }
+  ]
+}
