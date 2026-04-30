@@ -1,4 +1,6 @@
-  export interface RecetaAttributes {
+import { DosisCreationAttributes } from "./Dosis.js";
+
+export interface RecetaAttributes {
   id: number;
   id_cliente: number;
   doctor_remitente: string | null;
@@ -20,6 +22,11 @@ export interface RecetaCreationAttributes {
   correo?: string | null;
   codigo?: number | null;
   fecha?: Date | null;
+}
+
+export interface RecetasDosisAttributes {
+  Receta: RecetaCreationAttributes;
+  Dosis: DosisCreationAttributes[];
 }
 
 export type RecetaUpdateAttributes = Partial<Omit<RecetaAttributes, "id">>;

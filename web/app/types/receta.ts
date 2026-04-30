@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { DosisCreationSchema } from './Dosis';
+
+const DosisInRecetaCreationSchema = DosisCreationSchema.omit({ id_receta: true });
 
 // Schema para lectura (todas las propiedades)
 export const RecetaSchema = z.object({
@@ -29,7 +32,14 @@ export const RecetaCreationSchema = z.object({
 // Schema para actualización (todos los campos opcionales excepto id)
 export const RecetaUpdateSchema = RecetaCreationSchema.omit({ id: true }).partial();
 
+// Schema para receta con dosis (estructura combinada)
+export const RecetasDosisSchema = z.object({
+  Receta: RecetaCreationSchema,
+  Dosis: z.array(DosisInRecetaCreationSchema).min(1, 'Al menos una dosis es requerida'),
+});
+
 // Types derivados de los schemas
 export type Receta = z.infer<typeof RecetaSchema>;
 export type RecetaCreation = z.infer<typeof RecetaCreationSchema>;
 export type RecetaUpdate = z.infer<typeof RecetaUpdateSchema>;
+export type RecetasDosisCreation = z.infer<typeof RecetasDosisSchema>;
