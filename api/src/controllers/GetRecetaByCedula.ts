@@ -12,7 +12,7 @@ export default async function GetRecetaByCedula(request: Request, response: Resp
         if (!cliente) {
             return response.status(404).json({ error: 'Cliente no encontrado' });
         }
-        const res = await Receta.findOne({ where: { id_cliente: cliente.id } });
+        const res = await Receta.findAll({ where: { id_cliente: cliente.id } });
         if (!res) {
             return response.status(404).json({ error: 'Receta no encontrada' });
         }
