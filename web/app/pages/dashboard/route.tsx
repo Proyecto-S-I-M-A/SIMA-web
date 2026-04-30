@@ -3,7 +3,7 @@ import { Navbar } from './components/Navbar';
 import { StatsCards } from './components/StatsCards';
 import { PatientsTable } from './components/PatientsTable';
 import { usePatientsTable } from './hooks/usePatientsTable';
-import { usePatients } from './hooks/Usepatients';
+import { usePatients } from './hooks/usePatients';
 
 
 

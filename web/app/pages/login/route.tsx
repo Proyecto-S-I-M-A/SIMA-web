@@ -63,7 +63,7 @@ export default function Login() {
         setSessionID(result.session.user.id);
       }
     } catch {
-      // Errors are surfaced via react-query state (isError/error)
+      console.error('Error en el inicio de sesión');
     }
   };
 
