@@ -1,87 +1,119 @@
-# Welcome to React Router!
+# Web de FarmaTicAPI
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Interfaz web pensada para el uso exclusivo de doctores. Desde aquí se gestiona la consulta y creación de recetas electrónicas, así como el acceso a la información necesaria para operar el sistema de dispensación.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Descripción
 
-## Features
+Esta aplicación web funciona como panel médico del proyecto. Su foco es la gestión de recetas, la consulta de datos del paciente y la interacción con los flujos que alimentan la máquina expendedora de medicamentos.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## Tecnologías utilizadas
 
-## Getting Started
+- React 19
+- React Router 7
+- Vite
+- TypeScript
+- Material UI
+- Emotion
+- Tailwind CSS 4
+- React Hook Form
+- React Query
+- Zod
 
-### Installation
+## Estado actual
 
-Install the dependencies:
+- Base del frontend creada.
+- Interfaz orientada a doctores.
+- Integración con la API en progreso.
+- Proyecto general con backend completado.
+
+## Funcionalidades previstas
+
+- Inicio de sesión de doctores.
+- Gestión de recetas electrónicas.
+- Consulta de datos del paciente.
+- Vistas administrativas y de detalle.
+
+## Instalación
 
 ```bash
+cd web
 npm install
 ```
 
-### Development
-
-Start the development server with HMR:
+## Desarrollo
 
 ```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+La aplicación se ejecuta en `http://localhost:5173`.
 
-## Building for Production
-
-Create a production build:
+## Build de producción
 
 ```bash
 npm run build
 ```
 
-## Deployment
+## Estructura general
 
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+```text
+app/
+├── components/
+├── config/
+├── lib/
+├── pages/
+├── routes/
+├── types/
+├── root.tsx
+└── routes.ts
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+## Descripción de carpetas
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+### `app/components/`
+Componentes reutilizables de la interfaz, como botones, selectores y paneles visuales compartidos entre pantallas.
 
-### DIY Deployment
+### `app/config/`
+Configuración central de la aplicación, como URLs de API, constantes y valores de entorno.
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
+### `app/lib/`
+Funciones de apoyo para el consumo de la API, manejo de cookies, sesión, consultas y refresco de datos.
 
-Make sure to deploy the output of `npm run build`
+### `app/pages/`
+Pantallas principales del frontend organizadas por contexto funcional.
 
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
+- `admin/`: vistas administrativas para control interno.
+- `autenticacion/`: flujo de autenticación y acceso.
+- `dashboard/`: panel principal del doctor.
+- `detalles/`: vistas de detalle de pacientes, recetas o registros.
+- `login/`: pantalla de inicio de sesión.
 
-## Styling
+### `app/routes/`
+Definición de rutas de React Router y manejo de navegación de la aplicación.
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+### `app/types/`
+Tipos de TypeScript compartidos entre componentes, páginas y utilidades.
 
----
+### `app/root.tsx`
+Componente raíz de la aplicación, donde se define la estructura global y los proveedores principales.
 
-Built with ❤️ using React Router.
+### `app/routes.ts`
+Mapa o configuración central de rutas de la aplicación.
+
+### `app/app.css`
+Estilos globales de la interfaz.
+
+### `app/theme.ts`
+Definición del tema visual utilizado por Material UI y la consistencia de estilos.
+
+## Integrantes
+
+| Nombre | Rol | Correo | GitHub |
+| --- | --- | --- | --- |
+| Nombre integrante 1 | --- | --- | --- |
+| Nombre integrante 2 | --- | --- | --- |
+| Nombre integrante 3 | --- | --- | --- |
+
+## Nota
+
+La app móvil del cliente está contemplada aparte y se desarrollará con Expo y React Native.
