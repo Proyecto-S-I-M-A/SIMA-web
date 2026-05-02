@@ -12,6 +12,9 @@ import { MaquinaForm } from './components/MaquinaForm';
 import { MaquinaTable } from './components/MaquinaTable';
 import { InventarioForm } from './components/InventarioForm';
 import { InventarioTable } from './components/InventarioTable';
+import { RecetaAndDosisForm } from './components/RecetaAndDosisForm';
+import { RecetaTable } from './components/RecetaTable';
+import { DosisTable } from './components/DosisTable';
 import { useGetAccesos } from '~/lib/api/QueryAcceso';
 import GetSession from '~/lib/GetSession';
 import CustomTabPanel from '~/components/CustomeTabPanel';
@@ -84,6 +87,7 @@ export default function AdminPanel() {
               <Tab label="Crear Cliente" id="admin-tab-3" aria-controls="admin-tabpanel-3" />
               <Tab label="Administrar Máquinas" id="admin-tab-4" aria-controls="admin-tabpanel-4" />
               <Tab label="Inventario de Máquinas" id="admin-tab-5" aria-controls="admin-tabpanel-5" />
+              <Tab label="Recetas y Dosis" id="admin-tab-6" aria-controls="admin-tabpanel-6" />
             </Tabs>
           </Box>
 
@@ -114,6 +118,12 @@ export default function AdminPanel() {
           <CustomTabPanel value={tabValue} index={5}>
             <InventarioForm />
             <InventarioTable />
+          </CustomTabPanel>
+
+          <CustomTabPanel value={tabValue} index={6}>
+            <RecetaAndDosisForm />
+            <RecetaTable />
+            <DosisTable />
           </CustomTabPanel>
         </Paper>
       </Box>

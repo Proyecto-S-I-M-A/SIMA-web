@@ -27,7 +27,7 @@ export function InventarioTable() {
 
   const handleRowClick = (inventario: {
     id: number;
-    id_maquina: number;
+    id_maquina: number | string;
     nombre_medicamento: string | null;
     marca: string | null;
     precio: number | null;
@@ -38,7 +38,8 @@ export function InventarioTable() {
 
     setEditingId(inventario.id);
     setEditForm({
-      id_maquina: inventario.id_maquina,
+      id_maquina:
+        typeof inventario.id_maquina === 'string' ? Number(inventario.id_maquina) : inventario.id_maquina,
       nombre_medicamento: inventario.nombre_medicamento ?? '',
       marca: inventario.marca ?? '',
       precio: inventario.precio,

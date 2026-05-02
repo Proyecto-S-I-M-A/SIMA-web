@@ -1,6 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Cliente, ClienteUpdate } from "~/types/cliente";
+import type { Row } from "~/pages/dashboard/types";
 import { apiJson } from "../apiClient";
+
+export const useGetAllClientes = () => {
+  return useQuery({
+    queryKey: ["clientes-all"],
+    queryFn: async (): Promise<Row[]> => {
+      return apiJson<Row[]>(`/clientes/all`, {
+        method: "GET",
+        auth: true,
+      });
+    },
+  });
+};
 
 export const useUpdateClienteMutation = () => {
   const queryClient = useQueryClient();
@@ -14,6 +27,7 @@ export const useUpdateClienteMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["clientes"] });
+      queryClient.invalidateQueries({ queryKey: ["clientes-all"] });
     },
   });
 };
