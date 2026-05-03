@@ -21,6 +21,13 @@ async function CREATE(request: Request, response: Response) {
 async function READ(request: Request, response: Response) {
   try {
     const id = request.params.id;
+    const id_receta = request.params.id_receta;
+    
+    if (id_receta) {
+      const res = await Dosis.findAll({ where: { id_receta: parseInt(String(id_receta)) } });
+      return response.status(200).json(res);
+    }
+    
     if (id && id !== "all") {
       const res = await Dosis.findByPk(parseInt(String(id)));
       response.status(200).json(res);

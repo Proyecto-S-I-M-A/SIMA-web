@@ -5,6 +5,7 @@ import { Router } from "express";
 const router = Router();
 
 router.post("/clientes", validateClienteCreation, handleValidationErrors, CREATE);
+router.get("/clientes/cedula/:cedula", READ);
 router.put("/clientes/:id", handleValidationErrors, UPDATE);
 router.get("/clientes/:id", READ);
 router.delete("/clientes/:id", DELETE);

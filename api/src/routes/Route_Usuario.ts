@@ -5,6 +5,7 @@ import { Router } from 'express';
 const router = Router();
 
 router.post('/usuarios', validateUsuarioCreation, handleValidationErrors, CREATE);
+router.get('/usuarios/acceso/:id_acceso', READ);
 router.get('/usuarios/:id', READ);
 router.put('/usuarios/:id', validateUsuarioCreation, handleValidationErrors, UPDATE);
 router.delete('/usuarios/:id', DELETE);
