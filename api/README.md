@@ -10,21 +10,21 @@
 
 ## 📋 Tabla de Contenidos
 
-1. [Descripción General](#descripción-general)
-2. [Tecnologías y Dependencias](#tecnologías-y-dependencias)
+1. [Descripción General](#descripcion-general)
+2. [Tecnologías y Dependencias](#tecnologias-y-dependencias)
 3. [Requisitos Previos](#requisitos-previos)
-4. [Instalación](#instalación)
-5. [Configuración (Variables de Entorno)](#configuración-variables-de-entorno)
+4. [Instalación](#instalacion)
+5. [Configuración (Variables de Entorno)](#configuracion-variables-de-entorno)
 6. [Scripts Disponibles](#scripts-disponibles)
-7. [Autenticación](#autenticación)
-8. [Documentación de Endpoints](#documentación-de-endpoints)
+7. [Autenticación](#autenticacion)
+8. [Documentación de Endpoints](#documentacion-de-endpoints)
 9. [Ejemplos de Modelos](#ejemplos-de-modelos)
 10. [Estructura del Proyecto](#estructura-del-proyecto)
 11. [Relaciones de Base de Datos](#relaciones-de-base-de-datos)
 
 ---
 
-<a id="descripción-general"></a>
+<a id="descripcion-general"></a>
 ## 🎯 Descripción General
 
 FarmaTicAPI es una REST API desarrollada con **Express.js** y **TypeScript** que gestiona:
@@ -39,7 +39,7 @@ FarmaTicAPI es una REST API desarrollada con **Express.js** y **TypeScript** que
 
 ---
 
-<a id="tecnologías-y-dependencias"></a>
+<a id="tecnologias-y-dependencias"></a>
 ## 🛠 Tecnologías y Dependencias
 
 ### Core
@@ -89,7 +89,7 @@ psql --version
 
 ---
 
-<a id="instalación"></a>
+<a id="instalacion"></a>
 ## 📦 Instalación
 
 ### 1. Clonar o descargar el repositorio
@@ -139,7 +139,7 @@ El servidor estará disponible en `http://localhost:3000` (o el puerto configura
 
 ---
 
-<a id="configuración-variables-de-entorno"></a>
+<a id="configuracion-variables-de-entorno"></a>
 ## 🔑 Configuración (Variables de Entorno)
 
 ### .env Ejemplo Completo
@@ -218,7 +218,7 @@ npm run gen-types        # Genera types/database.types.ts desde Supabase
 
 ---
 
-<a id="autenticación"></a>
+<a id="autenticacion"></a>
 ## 🔐 Autenticación
 
 ### Flujo Estándar
@@ -254,7 +254,7 @@ Content-Type: application/json
 
 ---
 
-<a id="documentación-de-endpoints"></a>
+<a id="documentacion-de-endpoints"></a>
 ## 📚 Documentación de Endpoints
 
 ### Autenticación (Rutas Públicas)
