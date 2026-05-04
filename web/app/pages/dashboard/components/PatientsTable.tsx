@@ -11,10 +11,13 @@ import {
   Chip,
   TablePagination,
   Avatar,
+  Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router';
 import type { Row, SortKey, SortDir } from '../types';
 import { SortCell } from './SortCell';
+import AddIcon from '@mui/icons-material/Add';
+import HistoryIcon from '@mui/icons-material/History';
 
 type Props = {
   search: string;
@@ -97,8 +100,14 @@ export function PatientsTable({
                   sortDir={sortDir}
                   onSort={onSort}
                 />
-                <TableCell>Asegurado</TableCell>
-                <TableCell>Sexo</TableCell>
+                <SortCell
+                  label="Sexo"
+                  field="sexo"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={onSort}
+                />
+                <TableCell align="center">Acciones</TableCell>
               </TableRow>
             </TableHead>
 
@@ -159,6 +168,45 @@ export function PatientsTable({
                     </TableCell>
 
                     <TableCell align="center">{row.sexo}</TableCell>
+
+                    <TableCell align="center">
+                      <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                        <Button
+                          variant="contained"
+                          size="small"
+                          startIcon={<AddIcon />}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/home/nueva-receta?cedula=${row.cedula}`);
+                          }}
+                          sx={{
+                            bgcolor: '#0288D1',
+                            '&:hover': { bgcolor: '#01579B' },
+                            fontSize: '0.75rem',
+                            py: 0.5,
+                          }}
+                        >
+                          Receta
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<HistoryIcon />}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/home/historial?cedula=${row.cedula}`);
+                          }}
+                          sx={{
+                            color: '#0288D1',
+                            borderColor: '#0288D1',
+                            fontSize: '0.75rem',
+                            py: 0.5,
+                          }}
+                        >
+                          Historial
+                        </Button>
+                      </Box>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (

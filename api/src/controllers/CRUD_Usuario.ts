@@ -20,6 +20,16 @@ async function CREATE(request: Request, response: Response) {
 async function READ(request: Request, response: Response) {
   try {
     const id = request.params.id;
+    const id_acceso = request.params.id_acceso;
+    
+    if (id_acceso) {
+      const res = await Usuario.findOne({ where: { id_acceso } });
+      if (!res) {
+        return response.status(404).json({ error: 'Usuario no encontrado' });
+      }
+      return response.status(200).json([res]);
+    }
+    
     if (id && id !== "all") {
       const res = await Usuario.findByPk(parseInt(String(id)));
       response.status(200).json(res);

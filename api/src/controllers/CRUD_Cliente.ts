@@ -30,6 +30,16 @@ async function CREATE(request: Request, response: Response) {
 async function READ(request: Request, response: Response) {
   try {
     const id = request.params.id || null;
+    const cedula = request.params.cedula || null;
+    
+    if (cedula) {
+      const res = await Cliente.findOne({ where: { cedula } });
+      if (!res) {
+        return response.status(404).json({ error: 'Cliente no encontrado' });
+      }
+      return response.status(200).json(res);
+    }
+    
     if (id && id!=="all") {
       const res = await Cliente.findByPk(parseInt(String(id)));
       if (!res) {
