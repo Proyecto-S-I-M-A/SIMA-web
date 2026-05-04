@@ -24,6 +24,7 @@
 
 ---
 
+<a id="descripción-general"></a>
 ## 🎯 Descripción General
 
 FarmaTicAPI es una REST API desarrollada con **Express.js** y **TypeScript** que gestiona:
@@ -38,6 +39,7 @@ FarmaTicAPI es una REST API desarrollada con **Express.js** y **TypeScript** que
 
 ---
 
+<a id="tecnologías-y-dependencias"></a>
 ## 🛠 Tecnologías y Dependencias
 
 ### Core
@@ -67,6 +69,7 @@ FarmaTicAPI es una REST API desarrollada con **Express.js** y **TypeScript** que
 
 ---
 
+<a id="requisitos-previos"></a>
 ## ✅ Requisitos Previos
 
 Antes de instalar, asegúrate de tener:
@@ -86,6 +89,7 @@ psql --version
 
 ---
 
+<a id="instalación"></a>
 ## 📦 Instalación
 
 ### 1. Clonar o descargar el repositorio
@@ -135,6 +139,7 @@ El servidor estará disponible en `http://localhost:3000` (o el puerto configura
 
 ---
 
+<a id="configuración-variables-de-entorno"></a>
 ## 🔑 Configuración (Variables de Entorno)
 
 ### .env Ejemplo Completo
@@ -183,6 +188,7 @@ LOG_LEVEL=debug
 
 ---
 
+<a id="scripts-disponibles"></a>
 ## 📜 Scripts Disponibles
 
 ```bash
@@ -212,6 +218,7 @@ npm run gen-types        # Genera types/database.types.ts desde Supabase
 
 ---
 
+<a id="autenticación"></a>
 ## 🔐 Autenticación
 
 ### Flujo Estándar
@@ -247,6 +254,7 @@ Content-Type: application/json
 
 ---
 
+<a id="documentación-de-endpoints"></a>
 ## 📚 Documentación de Endpoints
 
 ### Autenticación (Rutas Públicas)
@@ -1245,6 +1253,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
+<a id="ejemplos-de-modelos"></a>
 ## 📊 Ejemplos de Modelos
 
 ### Completo: Acceso
@@ -1373,6 +1382,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
+<a id="estructura-del-proyecto"></a>
 ## 📁 Estructura del Proyecto
 
 ```
@@ -1471,6 +1481,7 @@ api/
 
 ---
 
+<a id="relaciones-de-base-de-datos"></a>
 ## 🗄️ Relaciones de Base de Datos
 
 ### Diagrama Conceptual
