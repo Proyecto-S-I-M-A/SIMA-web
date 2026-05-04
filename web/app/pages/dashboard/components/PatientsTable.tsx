@@ -101,6 +101,13 @@ export function PatientsTable({
                   onSort={onSort}
                 />
                 <SortCell
+                  label="Asegurado"
+                  field="asegurado"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={onSort}
+                />
+                <SortCell
                   label="Sexo"
                   field="sexo"
                   sortKey={sortKey}
