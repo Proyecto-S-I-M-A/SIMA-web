@@ -45,3 +45,16 @@ export const useGetClientes = (id: string, enabled: boolean = true) => {
   });
   return query;
 };
+
+export const useGetClienteByCedula = (cedula: string, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ["clientes", "cedula", cedula],
+    queryFn: async (): Promise<Cliente> => {
+      return apiJson<Cliente>(`/clientes/cedula/${cedula}`, {
+        method: "GET",
+        auth: true,
+      });
+    },
+    enabled,
+  });
+};

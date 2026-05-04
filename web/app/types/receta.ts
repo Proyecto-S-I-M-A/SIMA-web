@@ -7,13 +7,14 @@ const DosisInRecetaCreationSchema = DosisCreationSchema.omit({ id_receta: true }
 export const RecetaSchema = z.object({
   id: z.number(),
   id_cliente: z.number(),
+  activo: z.boolean().nullable(),
   doctor_remitente: z.string().nullable(),
   ruc_doctor_remitente: z.string().nullable(),
   hospital_remitente: z.string().nullable(),
   telefono_hospital: z.string().nullable(),
   correo: z.email().nullable(),
   codigo: z.number().nullable(),
-  fecha: z.coerce.date().nullable(),
+  fecha: z.date().nullable(),
 });
 
 // Schema para creación

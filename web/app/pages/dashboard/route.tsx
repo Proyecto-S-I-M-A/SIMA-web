@@ -21,7 +21,7 @@ export default function Dashboard() {
   return (
 
 
-    <Box sx={{ minHeight: '100vh', bgcolor: '#ffffff' }}>
+<Box sx={{ minHeight: '100vh', bgcolor: '#ffffff' }}>
       <Navbar rawSearch={rawSearch} onSearchChange={setRawSearch} />
 
       {/* Cargando */}

@@ -1,449 +1,1549 @@
 # API de FarmaTicAPI
 
-API REST encargada de la lógica central de la plataforma de recetas electrónicas y dispensación de medicamentos. Esta carpeta contiene el backend ya completado del proyecto.
+**Documentación completa de la API REST** para el sistema de recetas electrónicas y dispensación de medicamentos. 
 
-## Descripción
+**Versión**: 1.0.0  
+**Prefijo Base**: `/api/v0`  
+**Ambiente**: Production-ready
 
-La API administra autenticación, pacientes, doctores, recetas, historiales, inventario, dosis y la información asociada a la máquina expendedora. También expone rutas públicas para iniciar sesión y consultar recetas por cédula.
+---
 
-## Tecnologías utilizadas
+## 📋 Tabla de Contenidos
 
-- Node.js
-- Express 5
-- TypeScript
-- Sequelize
-- PostgreSQL
-- Supabase Auth
-- JWT
-- bcrypt
-- express-validator
-- CORS
+1. [Descripción General](#descripción-general)
+2. [Tecnologías y Dependencias](#tecnologías-y-dependencias)
+3. [Requisitos Previos](#requisitos-previos)
+4. [Instalación](#instalación)
+5. [Configuración (Variables de Entorno)](#configuración-variables-de-entorno)
+6. [Scripts Disponibles](#scripts-disponibles)
+7. [Autenticación](#autenticación)
+8. [Documentación de Endpoints](#documentación-de-endpoints)
+9. [Ejemplos de Modelos](#ejemplos-de-modelos)
+10. [Estructura del Proyecto](#estructura-del-proyecto)
+11. [Relaciones de Base de Datos](#relaciones-de-base-de-datos)
 
-## Estado actual
+---
 
-- Backend completado.
-- Rutas principales funcionales.
-- Integración con frontends aún dependiente del desarrollo de la web y la app móvil.
+## 🎯 Descripción General
 
-## Requisitos
+FarmaTicAPI es una REST API desarrollada con **Express.js** y **TypeScript** que gestiona:
 
-- Node.js 18 o superior.
-- npm 9 o superior.
-- PostgreSQL.
-- Variables de entorno configuradas.
+- 🔐 **Autenticación**: Integración con Supabase Auth (JWT)
+- 👥 **Gestión de Usuarios**: Pacientes, médicos y administradores
+- 📋 **Recetas Médicas**: Creación, consulta y asociación con pacientes
+- 💊 **Medicamentos**: Gestión de dosis e inventario
+- 📊 **Historiales Médicos**: Fichas clínicas y consultas
+- 🤖 **Máquinas Dispensadoras**: Control de ubicación y estado
+- 🔑 **Control de Acceso**: Auditoría de sesiones
 
-## Instalación
+---
+
+## 🛠 Tecnologías y Dependencias
+
+### Core
+- **Node.js** 18+
+- **Express.js** 5.2.1 — Framework HTTP
+- **TypeScript** 6.0.2 — Tipado estático
+- **Sequelize** 6.37.8 — ORM para PostgreSQL
+
+### Autenticación y Seguridad
+- **Supabase Auth** 2.103.0 — Autenticación con JWT
+- **bcrypt** 6.0.0 — Haseo de contraseñas
+- **jsonwebtoken** 9.0.3 — Manejo de JWT
+- **express-rate-limit** 8.3.2 — Rate limiting
+
+### Validación
+- **express-validator** 7.3.2 — Validación de datos
+
+### Base de Datos
+- **PostgreSQL** (cliente: pg 8.20.0)
+- **postgres** 3.4.9 — Driver alternativo
+
+### Desarrollo
+- **nodemon** 3.1.14 — Recarga automática
+- **jest** 30.3.0 — Testing
+- **prettier** 3.8.1 — Formateo de código
+- **ts-node** 10.9.2 — Ejecución de TS
+
+---
+
+## ✅ Requisitos Previos
+
+Antes de instalar, asegúrate de tener:
+
+- **Node.js** 18 o superior
+- **npm** 9 o superior (o yarn 3+)
+- **PostgreSQL** 12 o superior (localmente o servidor remoto)
+- **Supabase**: Cuenta en [supabase.com](https://supabase.com)
+- **Git** (opcional)
+
+Verifica versiones:
+```bash
+node --version
+npm --version
+psql --version
+```
+
+---
+
+## 📦 Instalación
+
+### 1. Clonar o descargar el repositorio
 
 ```bash
 cd api
+```
+
+### 2. Instalar dependencias
+
+```bash
 npm install
 ```
 
-## Variables de entorno
+### 3. Configurar variables de entorno
 
-Crear un archivo `.env` dentro de `api/` con valores similares a estos:
+Copia el archivo `.env.example` (o crea uno nuevo):
+
+```bash
+cp .env.example .env
+```
+
+Edita `.env` con tus valores reales (ver sección de configuración).
+
+### 4. Iniciar la base de datos
+
+Asegúrate que PostgreSQL esté corriendo y luego ejecuta las migraciones:
+
+```bash
+npm run migrate
+```
+
+### 5. Iniciar el servidor
+
+En **desarrollo**:
+```bash
+npm run dev
+```
+
+En **producción**:
+```bash
+npm run build
+npm run start
+```
+
+El servidor estará disponible en `http://localhost:3000` (o el puerto configurado).
+
+---
+
+## 🔑 Configuración (Variables de Entorno)
+
+### .env Ejemplo Completo
 
 ```env
+# === SERVIDOR ===
 PORT=3000
 NODE_ENV=development
+
+# === BASE DE DATOS ===
+# Formato: postgres://usuario:contraseña@host:puerto/base_datos
+DB_URL=postgres://farmatica_user:SecurePassword123@localhost:5432/farmatica
+
+# === SUPABASE ===
+# Tu proyecto de Supabase (obtén estos valores en supabase.com)
+PROJECT_URL=https://ustqwihkmsumgrcintxl.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# === CORS ===
+# URL del frontend que puede hacer requests a esta API
 CROSS_ORIGIN=http://localhost:5173
-DB_URL=postgres://usuario:contraseña@localhost:5432/farmatica
-PROJECT_URL=https://tu-proyecto.supabase.co
-SUPABASE_KEY=tu_clave_anon_publica
+
+# === JWT ===
+# Usado por express-validator y Supabase
+JWT_SECRET=your_jwt_secret_key_here_min_32_chars
+
+# === RATE LIMITING ===
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# === LOGS ===
+LOG_LEVEL=debug
 ```
 
-## Scripts
+### Descripción de Variables
 
-- `npm run dev`: compila TypeScript y levanta el servidor con nodemon.
-- `npm run build`: compila el proyecto.
-- `npm run start`: ejecuta la versión compilada.
-- `npm run test`: ejecuta pruebas con Jest.
-- `npm run lint`: valida el código con ESLint.
-- `npm run types`: ejecuta TypeScript en modo sin salida.
+| Variable | Valor Ejemplo | Descripción |
+|----------|--------------|-------------|
+| `PORT` | `3000` | Puerto en que escucha el servidor |
+| `NODE_ENV` | `development` o `production` | Ambiente de ejecución |
+| `DB_URL` | `postgres://...` | Conexión a PostgreSQL (incluye credenciales) |
+| `PROJECT_URL` | `https://...supabase.co` | URL de tu proyecto Supabase |
+| `SUPABASE_KEY` | `eyJ...` | Clave pública anónima de Supabase |
+| `CROSS_ORIGIN` | `http://localhost:5173` | Origen permitido para CORS |
+| `JWT_SECRET` | (mínimo 32 chars) | Clave para firmar JWT (si no usa Supabase) |
 
-## Autenticación
+---
 
-La mayoría de rutas de negocio requieren un token Bearer válido obtenido desde Supabase.
+## 📜 Scripts Disponibles
 
-Flujo general:
+```bash
+# Desarrollo
+npm run dev              # Compila TS y levanta con nodemon (recarga automática)
 
-1. Iniciar sesión con `POST /api/v0/auth/login`.
-2. Usar el `access_token` en el encabezado `Authorization: Bearer <token>`.
-3. Refrescar sesión con `POST /api/v0/auth/refresh-token` usando el `refresh_token`.
+# Build
+npm run build            # Compila TypeScript a JavaScript
 
-## Rutas públicas
+# Producción
+npm run start            # Ejecuta el servidor compilado
 
-### `POST /api/v0/auth/login`
+# Base de datos
+npm run migrate          # Ejecuta migraciones de Sequelize
 
-Inicia sesión con Supabase y devuelve `access_token` y `refresh_token`.
+# Testing
+npm run test             # Corre tests con Jest (detiene con --forceExit)
 
-Body:
+# Calidad de código
+npm run lint             # Valida código con ESLint
+npm run prettier         # Formatea código con Prettier
+npm run types            # Verifica tipos sin emitir código
 
+# Supabase (genera tipos)
+npm run gen-types        # Genera types/database.types.ts desde Supabase
+```
+
+---
+
+## 🔐 Autenticación
+
+### Flujo Estándar
+
+1. **Registro / Login** → Obtén `access_token` y `refresh_token`
+2. **Requests** → Incluye `Authorization: Bearer <access_token>` en headers
+3. **Token Expirado** → Usa `refresh_token` para obtener uno nuevo
+
+### Headers Requeridos (Rutas Protegidas)
+
+Todas las rutas protegidas requieren:
+
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+```
+
+### Rutas Públicas (Sin Autenticación)
+
+- `POST /api/v0/auth/login`
+- `POST /api/v0/auth/signup`
+- `POST /api/v0/auth/refresh-token`
+- `GET /api/v0/recetas/cliente/:cedula` (solo consulta, sin modificación)
+
+### Códigos de Error de Autenticación
+
+| Código | Mensaje | Solución |
+|--------|---------|----------|
+| 401 | Credenciales inválidas | Verifica email y contraseña |
+| 401 | Token inválido o expirado | Usa `refresh-token` para obtener uno nuevo |
+| 400 | Email y contraseña requeridos | Incluye ambos campos en el body |
+| 403 | Acceso prohibido | Tienes rol insuficiente |
+
+---
+
+## 📚 Documentación de Endpoints
+
+### Autenticación (Rutas Públicas)
+
+#### POST /api/v0/auth/login
+**Inicia sesión con Supabase y devuelve tokens.**
+
+- **Auth**: No requerida (pública)
+- **Body (requerido)**:
+  ```json
+  {
+    "email": "doctor@correo.com",
+    "password": "Password123"
+  }
+  ```
+
+**Request Completo**:
+```bash
+curl -X POST http://localhost:3000/api/v0/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "doctor@correo.com",
+    "password": "Password123"
+  }'
+```
+
+**Response 200 OK**:
 ```json
 {
-	"email": "doctor@correo.com",
-	"password": "Password123"
+  "message": "Inicio de sesión exitoso",
+  "session": {
+    "user": {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "email": "doctor@correo.com"
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
 }
 ```
 
-### `POST /api/v0/auth/signup`
-
-Crea una cuenta de autenticación en Supabase.
-
-Body:
-
+**Response 401 Unauthorized**:
 ```json
 {
-	"email": "doctor@correo.com",
-	"password": "Password123"
+  "error": "Credenciales inválidas"
 }
 ```
 
-### `POST /api/v0/auth/refresh-token`
-
-Renueva la sesión usando el token de refresco.
-
-Body:
-
+**Response 400 Bad Request**:
 ```json
 {
-	"refresh_token": "eyJhbGciOi..."
+  "error": "Email y contraseña son requeridos"
 }
 ```
 
-### `GET /api/v0/recetas/cliente/:cedula`
+---
 
-Busca la receta asociada a la cédula del cliente. Es un endpoint público para consulta rápida desde la app o la máquina.
+#### POST /api/v0/auth/signup
+**Crea una nueva cuenta de usuario en Supabase.**
 
-## Rutas principales protegidas
+- **Auth**: No requerida (pública)
+- **Body (requerido)**:
+  ```json
+  {
+    "email": "newuser@correo.com",
+    "password": "SecurePass123"
+  }
+  ```
 
-### Accesos
+**Request Completo**:
+```bash
+curl -X POST http://localhost:3000/api/v0/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "newuser@correo.com",
+    "password": "SecurePass123"
+  }'
+```
 
-Modelo base: [Acceso](src/models/Acceso.ts)
-
-#### `POST /api/v0/accesos`
-
-Registra un acceso o sesión interna.
-
-Body:
-
+**Response 201 Created**:
 ```json
 {
-	"id": "supabase-user-id",
-	"usuario": "Dr. Juan Pérez",
-	"correo": "doctor@correo.com",
-	"tipo": "doctor",
-	"ultimo_acceso": "2026-05-02T12:00:00Z",
-	"activo": true
+  "message": "Cuenta creada exitosamente",
+  "session": {
+    "user": {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "email": "newuser@correo.com"
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
 }
 ```
 
-#### `GET /api/v0/accesos/:id`
-
-Consulta un acceso por su identificador string.
-
-#### `PUT /api/v0/accesos/:id`
-
-Actualiza los datos del acceso.
-
-#### `DELETE /api/v0/accesos/:id`
-
-Elimina un acceso por `id`.
-
-### Clientes
-
-Modelo base: [Cliente](src/models/Cliente.ts)
-
-#### `POST /api/v0/clientes`
-
-Crea un paciente para el flujo de recetas.
-
-Body:
-
+**Response 400 Bad Request**:
 ```json
 {
-	"nombre": "Juan",
-	"apellido": "Pérez",
-	"cedula": "1234567890",
-	"correo": "juan.perez@email.com",
-	"asegurado": true,
-	"verificado": false,
-	"sexo": "M"
+  "error": "Error al crear la cuenta",
+  "details": "User already registered"
 }
 ```
 
-#### `GET /api/v0/clientes/:id`
+---
 
-Consulta un cliente por `id`.
+#### POST /api/v0/auth/refresh-token
+**Renueva los tokens usando el refresh_token.**
 
-#### `PUT /api/v0/clientes/:id`
+- **Auth**: No requerida (pública)
+- **Body (requerido)**:
+  ```json
+  {
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+  ```
 
-Actualiza nombre, apellido, cédula, correo, asegurado, verificado y sexo.
+**Request Completo**:
+```bash
+curl -X POST http://localhost:3000/api/v0/auth/refresh-token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }'
+```
 
-#### `DELETE /api/v0/clientes/:id`
-
-Elimina un cliente por `id`.
-
-### Usuarios
-
-Modelo base: [Usuario](src/models/Usuario.ts)
-
-#### `POST /api/v0/usuarios`
-
-Registra un usuario interno, normalmente un doctor o administrador.
-
-Body:
-
+**Response 200 OK**:
 ```json
 {
-	"nombre": "Juan",
-	"apellido": "Pérez",
-	"rol": "doctor",
-	"ruc_doctor": "1701234567001",
-	"especialidades": "Medicina general",
-	"activo": true
+  "message": "Token actualizado exitosamente",
+  "session": {
+    "user": {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "email": "doctor@correo.com"
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
 }
 ```
 
-#### `GET /api/v0/usuarios/:id`
-
-Consulta un usuario por `id`.
-
-#### `PUT /api/v0/usuarios/:id`
-
-Actualiza nombre, apellido, rol, RUC y especialidades.
-
-#### `DELETE /api/v0/usuarios/:id`
-
-Elimina un usuario por `id`.
-
-### Fichas médicas
-
-Modelo base: [FichaMedica](src/models/FichaMedica.ts)
-
-#### `POST /api/v0/fichas-medicas`
-
-Guarda la ficha clínica básica del cliente.
-
-Body:
-
+**Response 401 Unauthorized**:
 ```json
 {
-	"tipo_sanguineo": "O+",
-	"alergenos": "Penicilina",
-	"enfermedad_cronica": "Hipertension"
+  "error": "Token inválido o expirado"
 }
 ```
 
-#### `GET /api/v0/fichas-medicas/:id`
+---
 
-Consulta una ficha por `id`.
+### Accesos (Protegidas)
 
-#### `PUT /api/v0/fichas-medicas/:id`
+#### POST /api/v0/accesos
+**Crea un registro de acceso (auditoría de sesiones).**
 
-Actualiza tipo sanguíneo, alérgenos o enfermedad crónica.
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "usuario": "Dr. Juan Pérez",
+    "correo": "doctor@correo.com",
+    "tipo": "doctor",
+    "ultimo_acceso": "2026-05-02T12:00:00Z",
+    "activo": true
+  }
+  ```
 
-#### `DELETE /api/v0/fichas-medicas/:id`
+**Request Completo**:
+```bash
+curl -X POST http://localhost:3000/api/v0/accesos \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "usuario": "Dr. Juan Pérez",
+    "correo": "doctor@correo.com",
+    "tipo": "doctor",
+    "activo": true
+  }'
+```
 
-Elimina una ficha por `id`.
-
-### Historiales médicos
-
-Modelo base: [HistorialMedico](src/models/HistorialMedico.ts)
-
-#### `POST /api/v0/historiales-medicos`
-
-Registra una consulta médica y sus signos vitales.
-
-Body:
-
+**Response 201 Created**:
 ```json
 {
-	"fecha_consulta": "2026-05-02T10:30:00Z",
-	"motivo_consulta": "Fiebre y dolor de garganta",
-	"diagnostico": "Faringitis",
-	"tratamiento": "Reposo e hidratacion",
-	"observaciones": "Control en 48 horas",
-	"presion_arterial": "120/80",
-	"temperatura": 37.5,
-	"peso": 70,
-	"altura": 1.72,
-	"frecuencia_cardiaca": 82,
-	"medico": "Dr. Juan Pérez",
-	"fecha_registro": "2026-05-02T10:35:00Z"
+  "message": "Acceso creado exitosamente"
 }
 ```
 
-#### `GET /api/v0/historiales-medicos/:id`
+---
 
-Consulta un historial por `id`.
+#### GET /api/v0/accesos/:id
+**Obtiene un acceso por su identificador (UUID).**
 
-#### `PUT /api/v0/historiales-medicos/:id`
+- **Auth**: Bearer token requerido
+- **Parámetros**:
+  - `:id` (path, string, requerido): UUID del acceso
 
-Actualiza la consulta médica registrada.
+**Request Completo**:
+```bash
+curl -X GET http://localhost:3000/api/v0/accesos/550e8400-e29b-41d4-a716-446655440000 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
 
-#### `DELETE /api/v0/historiales-medicos/:id`
+**Response 200 OK**:
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "usuario": "Dr. Juan Pérez",
+  "correo": "doctor@correo.com",
+  "tipo": "doctor",
+  "ultimo_acceso": "2026-05-02T12:00:00Z",
+  "activo": true,
+  "updatedAt": "2026-05-02T12:00:00Z"
+}
+```
 
-Elimina un historial por `id`.
+---
+
+#### PUT /api/v0/accesos/:id
+**Actualiza un acceso existente.**
+
+- **Auth**: Bearer token requerido
+- **Parámetros**: `:id` (path, string, requerido)
+- **Body (parcial)**:
+  ```json
+  {
+    "usuario": "Dr. Juan Pérez (Actualizado)",
+    "ultimo_acceso": "2026-05-02T14:30:00Z"
+  }
+  ```
+
+**Response 200 OK**:
+```json
+{
+  "message": "Acceso actualizado exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/accesos/:id
+**Elimina un acceso (soft delete: marca como inactivo).**
+
+- **Auth**: Bearer token requerido
+- **Efecto**: Desactiva el acceso y todos los clientes relacionados
+
+**Response 200 OK**:
+```json
+{
+  "message": "Acceso eliminado exitosamente"
+}
+```
+
+---
+
+### Clientes (Protegidas)
+
+#### POST /api/v0/clientes
+**Crea un nuevo cliente (paciente).**
+
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "cedula": "1234567890",
+    "correo": "juan.perez@email.com",
+    "asegurado": true,
+    "verificado": false,
+    "sexo": "M",
+    "id_acceso": 1
+  }
+  ```
+
+**Request Completo**:
+```bash
+curl -X POST http://localhost:3000/api/v0/clientes \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Juan",
+    "apellido": "Pérez",
+    "cedula": "1234567890",
+    "correo": "juan.perez@email.com",
+    "asegurado": true,
+    "sexo": "M",
+    "id_acceso": 1
+  }'
+```
+
+**Response 201 Created**:
+```json
+{
+  "message": "Cliente creado exitosamente"
+}
+```
+
+**Response 409 Conflict**:
+```json
+{
+  "error": "El correo ya está registrado"
+}
+```
+
+---
+
+#### GET /api/v0/clientes/:id
+**Obtiene un cliente por ID o todos si no especifica ID.**
+
+- **Auth**: Bearer token requerido
+- **Parámetros**: `:id` (path, integer, opcional)
+
+**Request (un cliente)**:
+```bash
+curl -X GET http://localhost:3000/api/v0/clientes/1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Response 200 OK**:
+```json
+{
+  "id": 1,
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "cedula": "1234567890",
+  "correo": "juan.perez@email.com",
+  "asegurado": true,
+  "verificado": false,
+  "sexo": "M",
+  "id_acceso": 1,
+  "createdAt": "2026-05-02T10:00:00Z",
+  "updatedAt": "2026-05-02T10:00:00Z"
+}
+```
+
+---
+
+#### PUT /api/v0/clientes/:id
+**Actualiza un cliente.**
+
+- **Auth**: Bearer token requerido
+- **Body (parcial)**:
+  ```json
+  {
+    "nombre": "Juan Carlos",
+    "verificado": true
+  }
+  ```
+
+**Response 200 OK**:
+```json
+{
+  "message": "Cliente actualizado exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/clientes/:id
+**Elimina un cliente (soft delete).**
+
+- **Auth**: Bearer token requerido
+
+**Response 200 OK**:
+```json
+{
+  "message": "Cliente eliminado exitosamente"
+}
+```
+
+---
+
+### Usuarios (Protegidas)
+
+#### POST /api/v0/usuarios
+**Crea un nuevo usuario (doctor, admin).**
+
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "nombre": "María",
+    "apellido": "Gómez",
+    "rol": "doctor",
+    "ruc_doctor": "1701234567001",
+    "especialidades": "Medicina General",
+    "activo": true
+  }
+  ```
+
+**Request Completo**:
+```bash
+curl -X POST http://localhost:3000/api/v0/usuarios \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "María",
+    "apellido": "Gómez",
+    "rol": "doctor",
+    "ruc_doctor": "1701234567001",
+    "especialidades": "Medicina General",
+    "activo": true
+  }'
+```
+
+**Response 201 Created**:
+```json
+{
+  "message": "Usuario creado exitosamente"
+}
+```
+
+---
+
+#### GET /api/v0/usuarios/:id
+**Obtiene un usuario por ID.**
+
+- **Auth**: Bearer token requerido
+
+**Response 200 OK**:
+```json
+{
+  "id": 1,
+  "nombre": "María",
+  "apellido": "Gómez",
+  "rol": "doctor",
+  "ruc_doctor": "1701234567001",
+  "especialidades": "Medicina General",
+  "activo": true
+}
+```
+
+---
+
+#### PUT /api/v0/usuarios/:id
+**Actualiza un usuario.**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Usuario actualizado exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/usuarios/:id
+**Elimina un usuario (soft delete).**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Usuario eliminado exitosamente"
+}
+```
+
+---
+
+### Fichas Médicas (Protegidas)
+
+#### POST /api/v0/fichas-medicas
+**Crea una ficha médica de un cliente.**
+
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "id_cliente": 1,
+    "tipo_sanguineo": "O+",
+    "alergenos": "Penicilina, Amoxicilina",
+    "enfermedad_cronica": "Hipertensión"
+  }
+  ```
+
+**Response 201 Created**:
+```json
+{
+  "message": "Ficha médica creada exitosamente"
+}
+```
+
+---
+
+#### GET /api/v0/fichas-medicas/:id
+**Obtiene una ficha médica por ID.**
+
+**Response 200 OK**:
+```json
+{
+  "id": 1,
+  "id_cliente": 1,
+  "tipo_sanguineo": "O+",
+  "alergenos": "Penicilina, Amoxicilina",
+  "enfermedad_cronica": "Hipertensión"
+}
+```
+
+---
+
+#### PUT /api/v0/fichas-medicas/:id
+**Actualiza una ficha médica.**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Ficha médica actualizada exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/fichas-medicas/:id
+**Elimina una ficha médica (hard delete).**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Ficha médica eliminada exitosamente"
+}
+```
+
+---
+
+### Historiales Médicos (Protegidas)
+
+#### POST /api/v0/historiales-medicos
+**Registra una consulta médica con signos vitales.**
+
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "id_cliente": 1,
+    "fecha_consulta": "2026-05-02T10:30:00Z",
+    "motivo_consulta": "Fiebre y dolor de garganta",
+    "diagnostico": "Faringitis",
+    "tratamiento": "Reposo e hidratación",
+    "observaciones": "Control en 48 horas",
+    "presion_arterial": "120/80",
+    "temperatura": 37.5,
+    "peso": 70,
+    "altura": 1.72,
+    "frecuencia_cardiaca": 82,
+    "medico": "Dr. Juan Pérez",
+    "fecha_registro": "2026-05-02T10:35:00Z"
+  }
+  ```
+
+**Response 201 Created**:
+```json
+{
+  "message": "Historial médico creado exitosamente"
+}
+```
+
+---
+
+#### GET /api/v0/historiales-medicos/:id
+**Obtiene un historial médico por ID.**
+
+**Response 200 OK**:
+```json
+{
+  "id": 1,
+  "id_cliente": 1,
+  "fecha_consulta": "2026-05-02T10:30:00Z",
+  "motivo_consulta": "Fiebre y dolor de garganta",
+  "diagnostico": "Faringitis",
+  "tratamiento": "Reposo e hidratación",
+  "presion_arterial": "120/80",
+  "temperatura": 37.5,
+  "peso": 70,
+  "altura": 1.72,
+  "frecuencia_cardiaca": 82,
+  "medico": "Dr. Juan Pérez"
+}
+```
+
+---
+
+#### PUT /api/v0/historiales-medicos/:id
+**Actualiza un historial médico.**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Historial médico actualizado exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/historiales-medicos/:id
+**Elimina un historial médico (hard delete).**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Historial médico eliminado exitosamente"
+}
+```
+
+---
 
 ### Recetas
 
-Modelo base: [Receta](src/models/Receta.ts)
+#### POST /api/v0/recetas
+**Crea una receta para un cliente (usando id_cliente en body).**
 
-#### `POST /api/v0/recetas/cedula/:cedula`
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "id_cliente": 1,
+    "doctor_remitente": "Dr. Juan Pérez",
+    "ruc_doctor_remitente": "1701234567001",
+    "hospital_remitente": "Hospital Central",
+    "telefono_hospital": "+593-2-1234567",
+    "correo": "hospital@example.com",
+    "codigo": 12345,
+    "fecha": "2026-05-02T10:30:00Z"
+  }
+  ```
 
-Crea una receta asociando el cliente por su cédula.
-
-Body:
-
+**Response 201 Created**:
 ```json
 {
-	"doctor_remitente": "Dr. Juan Pérez",
-	"ruc_doctor_remitente": "1701234567001",
-	"hospital_remitente": "Hospital Central",
-	"telefono_hospital": "+593-2-1234567",
-	"correo": "hospital@example.com",
-	"codigo": 12345,
-	"fecha": "2026-05-02T10:30:00Z"
+  "message": "Receta creada exitosamente"
 }
 ```
 
-#### `POST /api/v0/recetas`
+---
 
-Registra una receta usando el `id_cliente` en el body.
+#### POST /api/v0/recetas/cedula/:cedula
+**Crea una receta buscando el cliente por cédula.**
 
-#### `GET /api/v0/recetas/:id`
+- **Auth**: Bearer token requerido
+- **Parámetros**: `:cedula` (path, string, requerido)
+- **Body**:
+  ```json
+  {
+    "doctor_remitente": "Dr. Juan Pérez",
+    "ruc_doctor_remitente": "1701234567001",
+    "hospital_remitente": "Hospital Central",
+    "telefono_hospital": "+593-2-1234567",
+    "correo": "hospital@example.com",
+    "codigo": 12345,
+    "fecha": "2026-05-02T10:30:00Z"
+  }
+  ```
 
-Consulta una receta por `id`.
+**Request Completo**:
+```bash
+curl -X POST http://localhost:3000/api/v0/recetas/cedula/1234567890 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "doctor_remitente": "Dr. Juan Pérez",
+    "ruc_doctor_remitente": "1701234567001",
+    "hospital_remitente": "Hospital Central",
+    "telefono_hospital": "+593-2-1234567",
+    "correo": "hospital@example.com",
+    "codigo": 12345,
+    "fecha": "2026-05-02T10:30:00Z"
+  }'
+```
 
-#### `PUT /api/v0/recetas/:id`
-
-Actualiza los datos de la receta.
-
-#### `DELETE /api/v0/recetas/:id`
-
-Elimina una receta por `id`.
-
-### Dosis
-
-Modelo base: [Dosis](src/models/Dosis.ts)
-
-#### `POST /api/v0/dosis`
-
-Define la pauta de administración de un medicamento.
-
-Body:
-
+**Response 201 Created**:
 ```json
 {
-	"id_medicamento": 1,
-	"cantidad": 2,
-	"instrucciones": "Tomar una tableta cada 8 horas"
+  "message": "Receta creada exitosamente"
 }
 ```
 
-#### `GET /api/v0/dosis/:id`
-
-Consulta una dosis por `id`.
-
-#### `PUT /api/v0/dosis/:id`
-
-Actualiza el medicamento, cantidad o instrucciones.
-
-#### `DELETE /api/v0/dosis/:id`
-
-Elimina una dosis por `id`.
-
-### Inventario
-
-Modelo base: [Inventario](src/models/Inventario.ts)
-
-#### `POST /api/v0/inventario`
-
-Registra un medicamento disponible para dispensación.
-
-Body:
-
+**Response 404 Not Found**:
 ```json
 {
-	"nombre_medicamento": "Paracetamol 500 mg",
-	"marca": "Genfar",
-	"precio": 2.5,
-	"cantidad": 100,
-	"resetado": false
+  "message": "Cliente no encontrado"
 }
 ```
 
-#### `GET /api/v0/inventario/:id`
+---
 
-Consulta un medicamento por `id`.
+#### POST /api/v0/recetas/dosis
+**Crea una receta con múltiples dosis en una sola operación.**
 
-#### `PUT /api/v0/inventario/:id`
+- **Auth**: Bearer token requerido
+- **Body**:
+  ```json
+  {
+    "id_cliente": 1,
+    "doctor_remitente": "Dr. Juan Pérez",
+    "dosis": [
+      {
+        "id_medicamento": 1,
+        "cantidad": 2,
+        "instrucciones": "Tomar una tableta cada 8 horas"
+      },
+      {
+        "id_medicamento": 2,
+        "cantidad": 1,
+        "instrucciones": "Una vez al día por la noche"
+      }
+    ]
+  }
+  ```
 
-Actualiza nombre, marca, precio, cantidad o estado de reseteo.
-
-#### `DELETE /api/v0/inventario/:id`
-
-Elimina un registro del inventario.
-
-### Máquinas
-
-Modelo base: [Maquina](src/models/Maquina.ts)
-
-#### `POST /api/v0/maquinas`
-
-Registra una máquina expendedora dentro de la red del sistema.
-
-Body:
-
+**Response 201 Created**:
 ```json
 {
-	"ubicacion": "Hospital Central - Planta baja",
-	"activo": true,
-	"latitud": -0.1807,
-	"longitud": -78.4678
+  "message": "Receta con dosis creada exitosamente"
 }
 ```
 
-#### `GET /api/v0/maquinas/:id`
+---
 
-Consulta una máquina por `id`.
+#### GET /api/v0/recetas/:id
+**Obtiene una receta por ID.**
 
-#### `PUT /api/v0/maquinas/:id`
+- **Auth**: Bearer token requerido
 
-Actualiza la ubicación, estado o coordenadas de la máquina.
-
-#### `DELETE /api/v0/maquinas/:id`
-
-Elimina una máquina por `id`.
-
-## Referencia de modelos
-
-- [Acceso](src/models/Acceso.ts): acceso, usuario, correo, tipo, ultimo_acceso, activo.
-- [Cliente](src/models/Cliente.ts): nombre, apellido, cédula, correo, asegurado, verificado y sexo.
-- [Usuario](src/models/Usuario.ts): nombre, apellido, rol, ruc_doctor, especialidades y activo.
-- [FichaMedica](src/models/FichaMedica.ts): tipo_sanguineo, alergenos y enfermedad_cronica.
-- [HistorialMedico](src/models/HistorialMedico.ts): consulta, diagnóstico, tratamiento y signos vitales.
-- [Receta](src/models/Receta.ts): doctor_remitente, ruc_doctor_remitente, hospital_remitente, telefono_hospital, correo, codigo y fecha.
-- [Dosis](src/models/Dosis.ts): id_medicamento, cantidad e instrucciones.
-- [Inventario](src/models/Inventario.ts): nombre_medicamento, marca, precio, cantidad y resetado.
-- [Maquina](src/models/Maquina.ts): ubicacion, activo, latitud y longitud.
-
-## Estructura
-
-```text
-src/
-├── config/
-├── controllers/
-├── middleware/
-├── models/
-├── routes/
-├── services/
-├── types/
-├── app.ts
-└── server.ts
+**Response 200 OK**:
+```json
+{
+  "id": 1,
+  "id_cliente": 1,
+  "doctor_remitente": "Dr. Juan Pérez",
+  "ruc_doctor_remitente": "1701234567001",
+  "hospital_remitente": "Hospital Central",
+  "telefono_hospital": "+593-2-1234567",
+  "correo": "hospital@example.com",
+  "codigo": 12345,
+  "fecha": "2026-05-02T10:30:00Z"
+}
 ```
 
-## Observación
+---
 
-Las rutas están organizadas bajo el prefijo `/api/v0`.
+#### GET /api/v0/recetas/cliente/:cedula
+**Obtiene todas las recetas de un cliente por cédula (PÚBLICA - sin autenticación).**
+
+- **Auth**: No requerida
+- **Parámetros**: `:cedula` (path, string, requerido)
+
+**Request Completo**:
+```bash
+curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
+```
+
+**Response 200 OK**:
+```json
+[
+  {
+    "id": 1,
+    "id_cliente": 1,
+    "doctor_remitente": "Dr. Juan Pérez",
+    "codigo": 12345,
+    "fecha": "2026-05-02T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "id_cliente": 1,
+    "doctor_remitente": "Dra. María Gómez",
+    "codigo": 12346,
+    "fecha": "2026-04-30T14:00:00Z"
+  }
+]
+```
+
+---
+
+#### PUT /api/v0/recetas/:id
+**Actualiza una receta.**
+
+- **Auth**: Bearer token requerido
+
+**Response 200 OK**:
+```json
+{
+  "message": "Receta actualizada exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/recetas/:id
+**Elimina una receta (hard delete).**
+
+- **Auth**: Bearer token requerido
+
+**Response 200 OK**:
+```json
+{
+  "message": "Receta eliminada exitosamente"
+}
+```
+
+---
+
+### Dosis (Protegidas)
+
+#### POST /api/v0/dosis
+**Crea una dosis de medicamento para una receta.**
+
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "id_receta": 1,
+    "id_medicamento": 1,
+    "cantidad": 2,
+    "instrucciones": "Tomar una tableta cada 8 horas"
+  }
+  ```
+
+**Response 201 Created**:
+```json
+{
+  "message": "Dosis creada exitosamente"
+}
+```
+
+---
+
+#### GET /api/v0/dosis/:id
+**Obtiene una dosis por ID.**
+
+**Response 200 OK**:
+```json
+{
+  "id": 1,
+  "id_receta": 1,
+  "id_medicamento": 1,
+  "cantidad": 2,
+  "instrucciones": "Tomar una tableta cada 8 horas"
+}
+```
+
+---
+
+#### PUT /api/v0/dosis/:id
+**Actualiza una dosis.**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Dosis actualizada exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/dosis/:id
+**Elimina una dosis (hard delete).**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Dosis eliminada exitosamente"
+}
+```
+
+---
+
+### Inventario (Protegidas)
+
+#### POST /api/v0/inventario
+**Registra un medicamento en inventario (asociado a una máquina).**
+
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "id_maquina": 1,
+    "nombre_medicamento": "Paracetamol 500 mg",
+    "marca": "Genfar",
+    "precio": 2.5,
+    "cantidad": 100,
+    "resetado": false
+  }
+  ```
+
+**Response 201 Created**:
+```json
+{
+  "message": "Producto de inventario creado exitosamente"
+}
+```
+
+---
+
+#### GET /api/v0/inventario/:id
+**Obtiene un producto del inventario por ID.**
+
+**Response 200 OK**:
+```json
+{
+  "id": 1,
+  "id_maquina": 1,
+  "nombre_medicamento": "Paracetamol 500 mg",
+  "marca": "Genfar",
+  "precio": 2.5,
+  "cantidad": 100,
+  "resetado": false
+}
+```
+
+---
+
+#### PUT /api/v0/inventario/:id
+**Actualiza un producto del inventario.**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Producto actualizado exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/inventario/:id
+**Elimina un producto del inventario (hard delete).**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Producto eliminado exitosamente"
+}
+```
+
+---
+
+### Máquinas (Protegidas)
+
+#### POST /api/v0/maquinas
+**Registra una máquina dispensadora en el sistema.**
+
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "ubicacion": "Hospital Central - Planta baja",
+    "activo": true,
+    "latitud": -0.1807,
+    "longitud": -78.4678
+  }
+  ```
+
+**Response 201 Created**:
+```json
+{
+  "message": "Máquina creada exitosamente"
+}
+```
+
+---
+
+#### GET /api/v0/maquinas/:id
+**Obtiene una máquina por ID.**
+
+**Response 200 OK**:
+```json
+{
+  "id": 1,
+  "ubicacion": "Hospital Central - Planta baja",
+  "activo": true,
+  "latitud": -0.1807,
+  "longitud": -78.4678
+}
+```
+
+---
+
+#### PUT /api/v0/maquinas/:id
+**Actualiza una máquina (ubicación, estado, coordenadas).**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Máquina actualizada exitosamente"
+}
+```
+
+---
+
+#### DELETE /api/v0/maquinas/:id
+**Elimina una máquina (soft delete).**
+
+**Response 200 OK**:
+```json
+{
+  "message": "Máquina eliminada exitosamente"
+}
+```
+
+---
+
+## 📊 Ejemplos de Modelos
+
+### Completo: Acceso
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "usuario": "Dr. Juan Pérez",
+  "correo": "doctor@correo.com",
+  "tipo": "doctor",
+  "ultimo_acceso": "2026-05-02T12:00:00Z",
+  "activo": true,
+  "updatedAt": "2026-05-02T12:00:00Z"
+}
+```
+
+### Completo: Cliente
+```json
+{
+  "id": 1,
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "cedula": "1234567890",
+  "correo": "juan.perez@example.com",
+  "asegurado": true,
+  "verificado": false,
+  "sexo": "M",
+  "id_acceso": 1,
+  "createdAt": "2026-05-02T10:00:00Z",
+  "updatedAt": "2026-05-02T10:00:00Z"
+}
+```
+
+### Completo: Usuario
+```json
+{
+  "id": 1,
+  "nombre": "María",
+  "apellido": "Gómez",
+  "rol": "doctor",
+  "ruc_doctor": "1701234567001",
+  "especialidades": "Medicina General, Cardiología",
+  "activo": true
+}
+```
+
+### Completo: FichaMedica
+```json
+{
+  "id": 1,
+  "id_cliente": 1,
+  "tipo_sanguineo": "O+",
+  "alergenos": "Penicilina, Amoxicilina",
+  "enfermedad_cronica": "Hipertensión"
+}
+```
+
+### Completo: HistorialMedico
+```json
+{
+  "id": 1,
+  "id_cliente": 1,
+  "fecha_consulta": "2026-05-02T10:30:00Z",
+  "motivo_consulta": "Fiebre y dolor de garganta",
+  "diagnostico": "Faringitis",
+  "tratamiento": "Reposo e hidratación",
+  "observaciones": "Control en 48 horas",
+  "presion_arterial": "120/80",
+  "temperatura": 37.5,
+  "peso": 70,
+  "altura": 1.72,
+  "frecuencia_cardiaca": 82,
+  "medico": "Dr. Juan Pérez",
+  "fecha_registro": "2026-05-02T10:35:00Z"
+}
+```
+
+### Completo: Receta
+```json
+{
+  "id": 1,
+  "id_cliente": 1,
+  "doctor_remitente": "Dr. Juan Pérez",
+  "ruc_doctor_remitente": "1701234567001",
+  "hospital_remitente": "Hospital Central",
+  "telefono_hospital": "+593-2-1234567",
+  "correo": "hospital@example.com",
+  "codigo": 12345,
+  "fecha": "2026-05-02T10:30:00Z"
+}
+```
+
+### Completo: Dosis
+```json
+{
+  "id": 1,
+  "id_receta": 1,
+  "id_medicamento": 1,
+  "cantidad": 2,
+  "instrucciones": "Tomar una tableta cada 8 horas por 7 días"
+}
+```
+
+### Completo: Inventario
+```json
+{
+  "id": 1,
+  "id_maquina": 1,
+  "nombre_medicamento": "Paracetamol 500 mg",
+  "marca": "Genfar",
+  "precio": 2.5,
+  "cantidad": 100,
+  "resetado": false
+}
+```
+
+### Completo: Maquina
+```json
+{
+  "id": 1,
+  "ubicacion": "Hospital Central - Planta baja",
+  "activo": true,
+  "latitud": -0.1807,
+  "longitud": -78.4678
+}
+```
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+api/
+├── src/
+│   ├── config/
+│   │   ├── database.ts          # Configuración de base de datos
+│   │   ├── sequelize.ts         # Inicialización de Sequelize
+│   │   └── supabase.ts          # Cliente Supabase
+│   ├── controllers/
+│   │   ├── CRUD_Acceso.ts       # Operaciones CRUD: Acceso
+│   │   ├── CRUD_Cliente.ts      # Operaciones CRUD: Cliente
+│   │   ├── CRUD_Dosis.ts        # Operaciones CRUD: Dosis
+│   │   ├── CRUD_FichaMedica.ts  # Operaciones CRUD: FichaMedica
+│   │   ├── CRUD_HistorialMedico.ts
+│   │   ├── CRUD_Inventario.ts
+│   │   ├── CRUD_Maquina.ts
+│   │   ├── CRUD_Receta.ts
+│   │   ├── CRUD_Usuario.ts
+│   │   ├── SessionControll.ts   # Login, SignUp, RefreshToken
+│   │   ├── GetRecetaByCedula.ts # GET: Receta por cédula
+│   │   ├── PostRecetaByCedula.ts # POST: Receta por cédula
+│   │   └── PostRecetasYDosis.ts # POST: Receta con dosis
+│   ├── middleware/
+│   │   ├── requireSupabaseAuth.ts  # Validación de token Supabase
+│   │   ├── validateAcceso.ts
+│   │   ├── validateCliente.ts
+│   │   ├── validateDosis.ts
+│   │   ├── validateFichaMedica.ts
+│   │   ├── validateHistorialMedico.ts
+│   │   ├── validateInventario.ts
+│   │   ├── validateMaquina.ts
+│   │   ├── validateReceta.ts
+│   │   └── validateUsuario.ts
+│   ├── models/
+│   │   ├── Acceso.ts
+│   │   ├── Cliente.ts
+│   │   ├── Dosis.ts
+│   │   ├── FichaMedica.ts
+│   │   ├── HistorialMedico.ts
+│   │   ├── Inventario.ts
+│   │   ├── Maquina.ts
+│   │   ├── Receta.ts
+│   │   ├── Usuario.ts
+│   │   └── index.ts
+│   ├── routes/
+│   │   ├── Route_Acceso.ts
+│   │   ├── Route_Cliente.ts
+│   │   ├── Route_Dosis.ts
+│   │   ├── Route_FichaMedica.ts
+│   │   ├── Route_HistorialMedico.ts
+│   │   ├── Route_Inventario.ts
+│   │   ├── Route_Maquina.ts
+│   │   ├── Route_Receta.ts
+│   │   ├── Route_Session.ts
+│   │   ├── Route_Usuario.ts
+│   │   └── Route-GetRecetaByCedula.ts
+│   ├── services/
+│   │   ├── Decode.ts
+│   │   ├── Encode.ts
+│   │   └── Salt.ts
+│   ├── types/
+│   │   ├── Acceso.ts
+│   │   ├── Cliente.ts
+│   │   ├── Dosis.ts
+│   │   ├── FichaMedica.ts
+│   │   ├── HistorialMedico.ts
+│   │   ├── Inventario.ts
+│   │   ├── Login.ts
+│   │   ├── Maquina.ts
+│   │   ├── Receta.ts
+│   │   ├── Usuario.ts
+│   │   ├── database.types.ts
+│   │   └── index.ts
+│   ├── app.ts                  # Instancia de Express
+│   └── server.ts               # Punto de entrada
+├── supabase/
+│   └── config.toml             # Configuración local de Supabase
+├── httpTest/                   # Archivos .http para testing
+│   ├── Acceso.http
+│   ├── Cliente.http
+│   ├── Dosis.http
+│   ├── FichaMedica.http
+│   ├── HistorialMedico.http
+│   ├── Inventario.http
+│   ├── Maquina.http
+│   ├── Receta.http
+│   └── Session.http
+├── .env.example                # Template de variables de entorno
+├── .gitignore
+├── package.json
+├── tsconfig.json
+├── jest.config.js
+└── README.md
+```
+
+---
+
+## 🗄️ Relaciones de Base de Datos
+
+### Diagrama Conceptual
+
+```
+Acceso (1) ──────────────────── (n) Cliente
+                                   |
+                                   ├── (1) FichaMedica
+                                   ├── (n) HistorialMedico
+                                   └── (n) Receta
+                                           |
+                                           └── (n) Dosis
+
+Maquina (1) ──────────────────── (n) Inventario
+```
+
+### Foreign Keys
+
+| Tabla | Campo | Referencia | Cascada |
+|-------|-------|-----------|---------|
+| `Cliente` | `id_acceso` | `Acceso.id` | ON DELETE SET NULL |
+| `FichaMedica` | `id_cliente` | `Cliente.id` | ON DELETE CASCADE |
+| `HistorialMedico` | `id_cliente` | `Cliente.id` | ON DELETE CASCADE |
+| `Receta` | `id_cliente` | `Cliente.id` | ON DELETE CASCADE |
+| `Dosis` | `id_receta` | `Receta.id` | ON DELETE CASCADE |
+| `Inventario` | `id_maquina` | `Maquina.id` | ON DELETE CASCADE |
+
+---
+
+## 🚀 Deployment
+
+### Deploy a Producción
+
+1. **Compilar**:
+   ```bash
+   npm run build
+   ```
+
+2. **Configurar variables de producción** en el servidor:
+   ```bash
+   export NODE_ENV=production
+   export PORT=3000
+   export DB_URL=postgres://...
+   export PROJECT_URL=https://...
+   export SUPABASE_KEY=...
+   ```
+
+3. **Ejecutar**:
+   ```bash
+   npm run start
+   ```
+
+### Monitoreo Recomendado
+
+- **PM2**: Mantener el proceso activo
+- **Nginx**: Proxy reverso
+- **CloudFlare**: CDN y DDoS protection
+- **Sentry**: Error tracking
+
+---
+
+## 🤝 Contribuciones
+
+Para reportar problemas o sugerir mejoras, contacta al equipo de desarrollo.
+
+---
+
+## 📝 Licencia
+
+ISC — Ver `LICENSE` en el repositorio.
+
+---
+
+**Última actualización**: 02 de mayo de 2026  
+**Versión API**: 1.0.0  
+**Versión Node.js soportada**: 18+

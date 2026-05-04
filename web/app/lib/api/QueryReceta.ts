@@ -66,3 +66,15 @@ export const useGetRecetas = (id: string, enabled: boolean = true) => {
     enabled,
   });
 };
+
+export const useGetRecetasByCedula = (cedula: string, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ['recetas', 'cliente', cedula],
+    queryFn: async (): Promise<Receta[]> => {
+      return apiJson<Receta[]>(`/recetas/cliente/${cedula}`, {
+        method: 'GET',
+      });
+    },
+    enabled,
+  });
+};

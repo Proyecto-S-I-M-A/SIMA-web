@@ -5,6 +5,7 @@ import { Router } from 'express';
 const router = Router();
 
 router.post('/dosis', validateDosisCreation, handleValidationErrors, CREATE);
+router.get('/dosis/receta/:id_receta', READ);
 router.get('/dosis/:id', READ);
 router.put('/dosis/:id', validateDosisCreation, handleValidationErrors, UPDATE);
 router.delete('/dosis/:id', DELETE);
