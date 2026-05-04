@@ -1475,17 +1475,8 @@ api/
 
 ### Diagrama Conceptual
 
-```
-Acceso (1) ──────────────────── (n) Cliente
-                                   |
-                                   ├── (1) FichaMedica
-                                   ├── (n) HistorialMedico
-                                   └── (n) Receta
-                                           |
-                                           └── (n) Dosis
+<img width="1615" height="829" alt="Diagrama DB" src="https://github.com/user-attachments/assets/bff01c4e-53e5-48ea-b74a-ecb4199bf5f4" />
 
-Maquina (1) ──────────────────── (n) Inventario
-```
 
 ### Foreign Keys
 
