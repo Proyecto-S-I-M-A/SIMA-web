@@ -1,10 +1,10 @@
-# Web de FarmaTicAPI
+# Web de S.I.M.A.
 
-Interfaz web pensada para el uso exclusivo de doctores. Desde aquí se gestiona la consulta y creación de recetas electrónicas, así como el acceso a la información necesaria para operar el sistema de dispensación.
+Interfaz web pensada para el uso exclusivo de doctores. Desde aquí se gestiona la consulta y creación de recetas electrónicas, así como el acceso a la información necesaria para operar el sistema de dispensación de S.I.M.A.
 
 ## Descripción
 
-Esta aplicación web funciona como panel médico del proyecto. Su foco es la gestión de recetas, la consulta de datos del paciente y la interacción con los flujos que alimentan la máquina expendedora de medicamentos.
+Esta aplicación web funciona como panel médico del Sistema Inteligente de Máquina Automatizada. Su foco es la gestión de recetas, la consulta de datos del paciente y la interacción con los flujos que alimentan la máquina expendedora de medicamentos.
 
 ## Tecnologías utilizadas
 

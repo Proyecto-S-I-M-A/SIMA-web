@@ -1,6 +1,6 @@
-# API de FarmaTicAPI
+# API de S.I.M.A.
 
-**Documentación completa de la API REST** para el sistema de recetas electrónicas y dispensación de medicamentos. 
+**Documentación completa de la API REST** para el Sistema Inteligente Medica Asistida de recetas electrónicas y dispensación de medicamentos. 
 
 **Versión**: 1.0.0  
 **Prefijo Base**: `/api/v0`  
@@ -26,7 +26,7 @@
 
 ## 🎯 Descripción General
 
-FarmaTicAPI es una REST API desarrollada con **Express.js** y **TypeScript** que gestiona:
+API de S.I.M.A. es una REST API desarrollada con **Express.js** y **TypeScript** que gestiona:
 
 - 🔐 **Autenticación**: Integración con Supabase Auth (JWT)
 - 👥 **Gestión de Usuarios**: Pacientes, médicos y administradores

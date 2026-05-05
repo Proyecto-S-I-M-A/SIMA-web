@@ -1,5 +1,5 @@
 {
-  "name": "FarmaExpressApi",
+  "name": "s.i.m.a.-api",
   "version": "1.0.0",
   "description": "Node.js Express MVC REST API with JWT authentication",
   "main": "src/server.ts",
