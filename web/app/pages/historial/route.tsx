@@ -1,18 +1,11 @@
 import { useSearchParams } from 'react-router';
-import { useGetRecetasByCedula } from '~/lib/api/QueryReceta';
+import { useGetRecetasYDosisByCedula } from '~/lib/api/QueryReceta';
 import { useGetClienteByCedula } from '~/lib/api/QueryCliente';
-import { useGetDosisByReceta } from '~/lib/api/QueryDosis';
 import {
   Box,
   Container,
   Typography,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   CircularProgress,
   Alert,
   Button,
@@ -26,41 +19,8 @@ import { useNavigate } from 'react-router';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Navbar } from '../dashboard/components/Navbar';
+import RecetaDosisList from './components/DosisTable';
 
-function RecetaDosisList({ idReceta }: { idReceta: number }) {
-  const { data: dosis, isLoading } = useGetDosisByReceta(String(idReceta), !!idReceta);
-
-  if (isLoading) {
-    return <CircularProgress size={20} />;
-  }
-
-  if (!dosis || dosis.length === 0) {
-    return <Typography variant="body2">No hay dosis registradas.</Typography>;
-  }
-
-  return (
-    <TableContainer>
-      <Table size="small">
-        <TableHead>
-          <TableRow sx={{ bgcolor: '#f8f9fa' }}>
-            <TableCell sx={{ fontWeight: 600 }}>ID Medicamento</TableCell>
-            <TableCell sx={{ fontWeight: 600 }}>Cantidad</TableCell>
-            <TableCell sx={{ fontWeight: 600 }}>Instrucciones</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {dosis.map((d) => (
-            <TableRow key={d.id}>
-              <TableCell>{d.id_medicamento || '-'}</TableCell>
-              <TableCell>{d.cantidad || '-'}</TableCell>
-              <TableCell>{d.instrucciones || '-'}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
 
 export default function Historial() {
   const [searchParams] = useSearchParams();
@@ -76,8 +36,10 @@ export default function Historial() {
   const {
     data: recetas,
     isLoading: loadingRecetas,
-    error: errorRecetas,
-  } = useGetRecetasByCedula(cedula, !!cedula);
+    isError: errorRecetas,
+  } = useGetRecetasYDosisByCedula(cedula, !!cedula);
+
+  console.log('Recetas con dosis e inventario:', recetas);
 
   const loading = loadingCliente || loadingRecetas;
   const error = errorCliente || errorRecetas;
@@ -119,7 +81,7 @@ export default function Historial() {
 
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
-            Error al cargar el historial: {error.message}
+            Error al cargar el historial
           </Alert>
         )}
 
@@ -159,7 +121,7 @@ export default function Historial() {
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
                         <Typography sx={{ fontWeight: 600, flex: 1 }}>
-                          {receta.doctor_remitente || 'Doctor no especificado'}
+                          {receta.doctor_remitente ?? 'Doctor no especificado'}
                         </Typography>
                         <Chip
                           label={receta.activo ? 'Activa' : 'Inactiva'}
@@ -189,7 +151,7 @@ export default function Historial() {
                         <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                           Dosis recetadas:
                         </Typography>
-                        <RecetaDosisList idReceta={receta.id} />
+                        <RecetaDosisList dosis={receta.dosis} isLoading={loading} />
                       </Box>
                     </AccordionDetails>
                   </Accordion>
