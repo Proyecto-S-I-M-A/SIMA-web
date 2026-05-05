@@ -31,10 +31,10 @@ app.use(cors(
 
 app.use(express.json());
 app.use(prefix, RouteSession);
-app.use(prefix, RouteGetRecetaByCedula);
 
 app.use(prefix, requireSupabaseAuth);
 // Rutas protegidas por autenticación
+app.use(prefix, RouteGetRecetaByCedula);
 app.use(prefix, RouteAcceso);
 app.use(prefix, RouteCliente);
 app.use(prefix, RouteUsuario);
