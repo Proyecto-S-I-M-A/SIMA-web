@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Receta, RecetaCreation, RecetaUpdate, RecetasDosisCreation } from '~/types/receta';
 import { apiJson } from '../apiClient';
+import type { RecetasYDosisResponse } from '~/types/RecetasYDosis';
 
 export const useCreateRecetaMutation = () => {
   const queryClient = useQueryClient();
@@ -72,6 +73,18 @@ export const useGetRecetasByCedula = (cedula: string, enabled: boolean = true) =
     queryKey: ['recetas', 'cliente', cedula],
     queryFn: async (): Promise<Receta[]> => {
       return apiJson<Receta[]>(`/recetas/cliente/${cedula}`, {
+        method: 'GET',
+      });
+    },
+    enabled,
+  });
+};
+
+export const useGetRecetasYDosisByCedula = (cedula: string, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ['recetas', 'dosis', 'cliente', cedula],
+    queryFn: async (): Promise<RecetasYDosisResponse> => {
+      return apiJson<RecetasYDosisResponse>(`/recetas/dosis/cliente/${cedula}`, {
         method: 'GET',
       });
     },
