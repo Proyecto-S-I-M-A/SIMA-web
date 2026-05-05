@@ -86,6 +86,7 @@ export const useGetRecetasYDosisByCedula = (cedula: string, enabled: boolean = t
     queryFn: async (): Promise<RecetasYDosisResponse> => {
       return apiJson<RecetasYDosisResponse>(`/recetas/dosis/cliente/${cedula}`, {
         method: 'GET',
+        auth: true,
       });
     },
     enabled,
