@@ -1,5 +1,4 @@
 import { useSearchParams, useNavigate } from 'react-router';
-import { useGetRecetasByCedula } from '~/lib/api/QueryReceta';
 import { useGetClienteByCedula } from '~/lib/api/QueryCliente';
 import { useGetUsuario } from '~/lib/api/QueryUsuario';
 import { useCreateRecetaWithDosisMutation } from '~/lib/api/QueryReceta';
@@ -14,120 +13,17 @@ import {
   Button,
   CircularProgress,
   Alert,
-  MenuItem,
-  IconButton,
+  InputLabel,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import { RecetasDosisSchema, type RecetasDosisCreation } from '~/types/receta';
 import { useState, useEffect } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Navbar } from '../dashboard/components/Navbar';
-
-const DosisSchema = z.object({
-  id_medicamento: z.number().nullable().optional(),
-  cantidad: z.number().nullable().optional(),
-  instrucciones: z.string().nullable().optional(),
-});
-
-const RecetaFormSchema = z.object({
-  id_cliente: z.number(),
-  doctor_remitente: z.string().min(1, 'El nombre del doctor es requerido'),
-  ruc_doctor_remitente: z.string().nullable().optional(),
-  hospital_remitente: z.string().min(1, 'El hospital es requerido'),
-  telefono_hospital: z.string().nullable().optional(),
-  codigo: z.number().nullable().optional(),
-  fecha: z.date().nullable().optional(),
-  Dosis: z.array(DosisSchema).min(1, 'Al menos una medicina es requerida'),
-});
-
-type RecetaFormData = z.infer<typeof RecetaFormSchema>;
-
-function DosisField({ index, control, errors, inventarios, onRemove }: {
-  index: number;
-  control: any;
-  errors: any;
-  inventarios: any[];
-  onRemove: () => void;
-}) {
-  return (
-    <Paper sx={{ p: 2, mb: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          Medicina #{index + 1}
-        </Typography>
-        <IconButton onClick={onRemove} color="error">
-          <DeleteIcon />
-        </IconButton>
-      </Box>
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr 1fr' }, gap: 2 }}>
-        <Box>
-          <Controller
-            name={`Dosis.${index}.id_medicamento`}
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                select
-                fullWidth
-                label="Medicina"
-                value={field.value ?? ''}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                error={!!errors?.Dosis?.[index]?.id_medicamento}
-                helperText={errors?.Dosis?.[index]?.id_medicamento?.message}
-              >
-                <MenuItem value="">Seleccionar medicina</MenuItem>
-                {inventarios?.map((inv: any) => (
-                  <MenuItem key={inv.id} value={inv.id}>
-                    {inv.nombre_medicamento} - {inv.marca}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Box>
-        <Box>
-          <Controller
-            name={`Dosis.${index}.cantidad`}
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Cantidad"
-                type="number"
-                value={field.value ?? ''}
-                onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)}
-                error={!!errors?.Dosis?.[index]?.cantidad}
-                helperText={errors?.Dosis?.[index]?.cantidad?.message}
-              />
-            )}
-          />
-        </Box>
-        <Box>
-          <Controller
-            name={`Dosis.${index}.instrucciones`}
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Instrucciones"
-                value={field.value ?? ''}
-                onChange={(e) => field.onChange(e.target.value)}
-                error={!!errors?.Dosis?.[index]?.instrucciones}
-                helperText={errors?.Dosis?.[index]?.instrucciones?.message}
-              />
-            )}
-          />
-        </Box>
-      </Box>
-    </Paper>
-  );
-}
+import DosisField from './components/DosisField';
 
 export default function NuevaReceta() {
   const [searchParams] = useSearchParams();
@@ -158,16 +54,19 @@ export default function NuevaReceta() {
     control,
     formState: { errors },
     setValue,
-  } = useForm<RecetaFormData>({
-    resolver: zodResolver(RecetaFormSchema),
+  } = useForm<RecetasDosisCreation>({
+    resolver: zodResolver(RecetasDosisSchema),
     defaultValues: {
-      id_cliente: 0,
-      doctor_remitente: '',
-      ruc_doctor_remitente: '',
-      hospital_remitente: '',
-      telefono_hospital: '',
-      codigo: Math.floor(Math.random() * 90000) + 10000,
-      fecha: new Date(),
+      Receta: {
+        id_cliente: 0,
+        doctor_remitente: '',
+        ruc_doctor_remitente: '',
+        hospital_remitente: '',
+        telefono_hospital: '',
+        codigo: Math.floor(Math.random() * 90000) + 10000,
+        fecha: new Date(),
+        estado: 'Pendiente',
+      },
       Dosis: [
         {
           id_medicamento: null,
@@ -185,25 +84,23 @@ export default function NuevaReceta() {
 
   useEffect(() => {
     if (cliente) {
-      setValue('id_cliente', Number(cliente.id));
+      setValue('Receta.id_cliente', Number(cliente.id));
     }
   }, [cliente, setValue]);
 
   useEffect(() => {
     if (usuario && usuario.length > 0) {
       const doc = usuario[0];
-      setValue('doctor_remitente', `${doc.nombre} ${doc.apellido}`.trim());
-      setValue('ruc_doctor_remitente', doc.ruc_doctor || '');
+      setValue('Receta.doctor_remitente', `${doc.nombre} ${doc.apellido}`.trim());
+      setValue('Receta.ruc_doctor_remitente', doc.ruc_doctor || '');
     }
   }, [usuario, setValue]);
 
-  const onSubmit = async (data: RecetaFormData) => {
+  const onSubmit = async (data: RecetasDosisCreation) => {
     try {
       await createRecetaMutation.mutateAsync({
         Receta: {
-          ...data,
-          codigo: data.codigo || Math.floor(Math.random() * 90000) + 10000,
-          fecha: new Date(),
+          ...data.Receta,
         },
         Dosis: data.Dosis.map((d) => ({
           ...d,
@@ -282,7 +179,7 @@ export default function NuevaReceta() {
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 3 }}>
               <Box>
                 <Controller
-                  name="doctor_remitente"
+                  name="Receta.doctor_remitente"
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -296,7 +193,7 @@ export default function NuevaReceta() {
               </Box>
               <Box>
                 <Controller
-                  name="ruc_doctor_remitente"
+                  name="Receta.ruc_doctor_remitente"
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -310,35 +207,51 @@ export default function NuevaReceta() {
               </Box>
               <Box>
                 <Controller
-                  name="hospital_remitente"
+                  name="Receta.hospital_remitente"
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
                       label="Hospital"
-                      error={!!errors.hospital_remitente}
-                      helperText={errors.hospital_remitente?.message}
+                      error={!!errors.Receta?.hospital_remitente}
+                      helperText={errors.Receta?.hospital_remitente?.message}
                     />
                   )}
                 />
               </Box>
               <Box>
                 <Controller
-                  name="telefono_hospital"
+                  name="Receta.telefono_hospital"
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       fullWidth
                       label="Teléfono Hospital"
+                      error={!!errors.Receta?.telefono_hospital}
+                      helperText={errors.Receta?.telefono_hospital?.message}
+                    />
+                  )}
+                />
+              </Box>
+              <Box>
+                <InputLabel sx={{ mb: 1 }}>Expiración de la receta</InputLabel>
+                <Controller
+                  name="Receta.fecha"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      type="date"
                     />
                   )}
                 />
               </Box>
               <Box>
                 <Controller
-                  name="codigo"
+                  name="Receta.codigo"
                   control={control}
                   render={({ field }) => (
                     <TextField
