@@ -177,22 +177,6 @@ export default function Login() {
             }}
           >
             {/* Logo/Title */}
-            <Box
-              sx={{
-                width: 60,
-                height: 60,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #0095ff 0%, #1e00ff 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mb: 2,
-              }}
-            >
-              <Typography variant="h5" sx={{ color: 'white', fontWeight: 700 }}>
-                FE
-              </Typography>
-            </Box>
 
             <Typography
               component="h1"
@@ -205,14 +189,14 @@ export default function Login() {
                 margin: '18px auto 10px auto',
               }}
             >
-              FarmaExpress
+              S.I.M.A.
             </Typography>
 
             <Typography
               variant="body2"
               sx={{ color: 'text.secondary', mb: 3, textAlign: 'center' }}
             >
-              Excelencia en el cuidado de tu salud.
+              Sistema Inteligente Medica Asistida
             </Typography>
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)}>
