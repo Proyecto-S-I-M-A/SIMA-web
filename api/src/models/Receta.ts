@@ -10,6 +10,7 @@ class Receta extends Model {
   declare correo: string
   declare codigo: number;
   declare fecha: Date;
+  declare estado: string;
 }
 
 Receta.init(
@@ -26,6 +27,7 @@ Receta.init(
     correo: DataTypes.STRING(50),
     codigo: DataTypes.INTEGER,
     fecha: DataTypes.DATE,
+    estado: DataTypes.STRING(50),
   },
   {
     sequelize,

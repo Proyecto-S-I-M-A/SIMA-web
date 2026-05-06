@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { DosisCreationSchema } from './Dosis';
+import { es } from 'zod/v4/locales';
 
 const DosisInRecetaCreationSchema = DosisCreationSchema.omit({ id_receta: true });
 
@@ -15,6 +16,7 @@ export const RecetaSchema = z.object({
   correo: z.email().nullable(),
   codigo: z.number().nullable(),
   fecha: z.date().nullable(),
+  estado: z.string().nullable(),
 });
 
 // Schema para creación
@@ -28,6 +30,7 @@ export const RecetaCreationSchema = z.object({
   correo: z.email().nullable().optional(),
   codigo: z.number().nullable().optional(),
   fecha: z.date().nullable().optional(),
+  estado: z.enum(["Pendiente", "Retirado", "Vencido"]).nullable().optional(),
 });
 
 // Schema para actualización (todos los campos opcionales excepto id)

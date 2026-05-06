@@ -39,8 +39,6 @@ export default function Historial() {
     isError: errorRecetas,
   } = useGetRecetasYDosisByCedula(cedula, !!cedula);
 
-  console.log('Recetas con dosis e inventario:', recetas);
-
   const loading = loadingCliente || loadingRecetas;
   const error = errorCliente || errorRecetas;
 
@@ -124,8 +122,8 @@ export default function Historial() {
                           {receta.doctor_remitente ?? 'Doctor no especificado'}
                         </Typography>
                         <Chip
-                          label={receta.activo ? 'Activa' : 'Inactiva'}
-                          color={receta.activo ? 'success' : 'default'}
+                          label={receta.estado || 'Estado desconocido'}
+                          color={receta.estado === 'Pendiente' ? 'warning' : receta.estado === 'Retirado' ? 'success' : receta.estado === 'Vencido' ? 'error' : 'default'}
                           size="small"
                         />
                       </Box>
