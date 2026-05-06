@@ -3,7 +3,9 @@ import {
   Box,
   Button,
   CircularProgress,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -16,6 +18,7 @@ import {
 import { useState } from 'react';
 import { useGetRecetas, useUpdateRecetaMutation } from '~/lib/api/QueryReceta';
 import type { RecetaUpdate } from '~/types/receta';
+import type { Receta } from '~/types/receta';
 
 function formatDateForInput(value: string | Date | null | undefined) {
   if (!value) return '';
@@ -31,17 +34,7 @@ export function RecetaTable() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<RecetaUpdate>({});
 
-  const handleRowClick = (receta: {
-    id: number;
-    id_cliente: number;
-    doctor_remitente: string | null;
-    ruc_doctor_remitente: string | null;
-    hospital_remitente: string | null;
-    telefono_hospital: string | null;
-    correo: string | null;
-    codigo: number | null;
-    fecha: string | Date | null;
-  }) => {
+  const handleRowClick = (receta: Receta) => {
     if (updatingId) return;
 
     setEditingId(receta.id);
@@ -54,6 +47,7 @@ export function RecetaTable() {
       correo: receta.correo ?? '',
       codigo: receta.codigo,
       fecha: receta.fecha ? new Date(receta.fecha) : null,
+      estado: (receta.estado as "Pendiente" | "Retirado" | "Vencido" | null | undefined) ?? null,
     });
   };
 
@@ -106,6 +100,7 @@ export function RecetaTable() {
             <TableCell><strong>Correo</strong></TableCell>
             <TableCell><strong>Código</strong></TableCell>
             <TableCell><strong>Fecha</strong></TableCell>
+            <TableCell><strong>Estado</strong></TableCell>
             <TableCell><strong>Acciones</strong></TableCell>
           </TableRow>
         </TableHead>
@@ -215,6 +210,23 @@ export function RecetaTable() {
                   />
                 ) : (
                   formatDateForInput(receta.fecha) || 'N/A'
+                )}
+              </TableCell>
+              <TableCell>
+                {editingId === receta.id ? (
+                  <Select
+                    value={formatDateForInput(editForm.estado)}
+                    size="small"
+                    type='text'
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => handleFieldChange('estado', e.target.value ? e.target.value as "Pendiente" | "Retirado" | "Vencido" : null)}
+                  >
+                    <MenuItem value="Pendiente">Pendiente</MenuItem>
+                    <MenuItem value="Retirado">Retirado</MenuItem>
+                    <MenuItem value="Vencido">Vencido</MenuItem>
+                  </Select>
+                ) : (
+                  receta.estado || 'N/A'
                 )}
               </TableCell>
               <TableCell>
