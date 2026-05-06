@@ -117,7 +117,6 @@ export function PatientsTable({
                   <TableRow
                     key={row.id}
                     hover
-                    onClick={() => handleRowClick(row.cedula ?? '')}
                     sx={{
                       cursor: 'pointer',
                       transition: 'background-color 0.2s',
