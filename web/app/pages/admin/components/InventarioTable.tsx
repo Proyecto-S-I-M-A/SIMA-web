@@ -27,23 +27,18 @@ export function InventarioTable() {
 
   const handleRowClick = (inventario: {
     id: number;
-    id_maquina: number | string;
     nombre_medicamento: string | null;
     marca: string | null;
     precio: number | null;
-    cantidad: number | null;
     resetado: boolean | null;
   }) => {
     if (updatingId) return;
 
     setEditingId(inventario.id);
     setEditForm({
-      id_maquina:
-        typeof inventario.id_maquina === 'string' ? Number(inventario.id_maquina) : inventario.id_maquina,
       nombre_medicamento: inventario.nombre_medicamento ?? '',
       marca: inventario.marca ?? '',
       precio: inventario.precio,
-      cantidad: inventario.cantidad,
       resetado: inventario.resetado ?? false,
     });
   };
@@ -89,11 +84,9 @@ export function InventarioTable() {
         <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
           <TableRow>
             <TableCell><strong>ID</strong></TableCell>
-            <TableCell><strong>ID Máquina</strong></TableCell>
             <TableCell><strong>Medicamento</strong></TableCell>
             <TableCell><strong>Marca</strong></TableCell>
             <TableCell><strong>Precio</strong></TableCell>
-            <TableCell><strong>Cantidad</strong></TableCell>
             <TableCell><strong>Resetado</strong></TableCell>
             <TableCell><strong>Acciones</strong></TableCell>
           </TableRow>
@@ -107,19 +100,6 @@ export function InventarioTable() {
               sx={{ cursor: updatingId ? 'wait' : 'pointer' }}
             >
               <TableCell>{inventario.id}</TableCell>
-              <TableCell>
-                {editingId === inventario.id ? (
-                  <TextField
-                    value={editForm.id_maquina ?? ''}
-                    size="small"
-                    type="number"
-                    disabled
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                ) : (
-                  inventario.id_maquina
-                )}
-              </TableCell>
               <TableCell>
                 {editingId === inventario.id ? (
                   <TextField
@@ -157,21 +137,6 @@ export function InventarioTable() {
                   />
                 ) : (
                   inventario.precio ?? 'N/A'
-                )}
-              </TableCell>
-              <TableCell>
-                {editingId === inventario.id ? (
-                  <TextField
-                    value={editForm.cantidad ?? ''}
-                    size="small"
-                    type="number"
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) =>
-                      handleFieldChange('cantidad', e.target.value === '' ? null : Number(e.target.value))
-                    }
-                  />
-                ) : (
-                  inventario.cantidad ?? 'N/A'
                 )}
               </TableCell>
               <TableCell>

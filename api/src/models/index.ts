@@ -7,6 +7,7 @@ import Dosis from "./Dosis.js";
 import Inventario from "./Inventario.js";
 import Maquina from "./Maquina.js";
 import Acceso from "./Acceso.js";
+import MaquinaInventario from "./MaquinaInventario.js";
 
 /* Relaciones */
 
@@ -28,8 +29,20 @@ Receta.belongsTo(Cliente);
 Receta.hasMany(Dosis, { foreignKey: "id_receta" });
 Dosis.belongsTo(Receta);
 
-Maquina.hasMany(Inventario, { foreignKey: "id_maquina" });
-Inventario.belongsTo(Maquina);
+// Relación many-to-many entre Maquina e Inventario
+Maquina.belongsToMany(Inventario, {
+  through: MaquinaInventario,
+  foreignKey: "id_maquina",
+  otherKey: "id_inventario",
+  as: "medicamentos",
+});
+
+Inventario.belongsToMany(Maquina, {
+  through: MaquinaInventario,
+  foreignKey: "id_inventario",
+  otherKey: "id_maquina",
+  as: "maquinas",
+});
 
 export {
   Cliente,
@@ -40,4 +53,5 @@ export {
   Dosis,
   Inventario,
   Maquina,
+  MaquinaInventario,
 };

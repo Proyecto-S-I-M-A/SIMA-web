@@ -1,30 +1,6 @@
 import { body, validationResult } from 'express-validator';
 import type { Request, Response, NextFunction } from 'express';
 
-export const validateInventarioCreation = [
-  body('nombre_medicamento')
-    .trim()
-    .optional({ checkFalsy: true })
-    .isLength({ max: 40 })
-    .withMessage('El nombre del medicamento no puede exceder 40 caracteres'),
-
-  body('marca')
-    .trim()
-    .optional({ checkFalsy: true })
-    .isLength({ max: 40 })
-    .withMessage('La marca no puede exceder 40 caracteres'),
-
-  body('precio')
-    .optional({ checkFalsy: true })
-    .isDecimal()
-    .withMessage('El precio debe ser un número decimal'),
-
-  body('resetado')
-    .optional()
-    .isBoolean()
-    .withMessage('Resetado debe ser un booleano'),
-];
-
 export const validateMaquinaInventarioCreation = [
   body('id_maquina')
     .notEmpty()

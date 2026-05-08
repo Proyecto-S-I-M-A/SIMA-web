@@ -9,6 +9,7 @@ import RouteReceta from "./routes/Route_Receta.js";
 import RouteDosis from "./routes/Route_Dosis.js";
 import RouteInventario from "./routes/Route_Inventario.js";
 import RouteMaquina from "./routes/Route_Maquina.js";
+import RouteMaquinaInventario from "./routes/Route_MaquinaInventario.js";
 import requireSupabaseAuth from "./middleware/requireSupabaseAuth.js";
 import RouteSession from "./routes/Route_Session.js";
 import RouteGetRecetaByCedula from "./routes/Route-GetRecetaByCedula.js";
@@ -44,5 +45,6 @@ app.use(prefix, RouteReceta);
 app.use(prefix, RouteDosis);
 app.use(prefix, RouteInventario);
 app.use(prefix, RouteMaquina);
+app.use(prefix, RouteMaquinaInventario);
 
 export default app;
