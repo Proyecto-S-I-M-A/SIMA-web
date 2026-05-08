@@ -1,6 +1,6 @@
 # S.I.M.A.
 
-**Sistema Inteligente de Máquina Automatizada** - Plataforma completa para una máquina expendedora de medicamentos con recetas electrónicas. El proyecto contempla tres frentes: una API para la lógica de negocio, una web para doctores, una app móvil para clientes y un panel para el retiro de medicamentos en la máquina.
+**Sisteam Inteligente Medicación Asistida** - Plataforma completa para una máquina expendedora de medicamentos con recetas electrónicas. El proyecto contempla tres frentes: una API para la lógica de negocio, una web para doctores, una app móvil para clientes y un panel para el retiro de medicamentos en la máquina.
 
 ## Descripción
 

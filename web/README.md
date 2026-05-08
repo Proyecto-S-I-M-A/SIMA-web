@@ -4,7 +4,7 @@ Interfaz web pensada para el uso exclusivo de doctores. Desde aquí se gestiona 
 
 ## Descripción
 
-Esta aplicación web funciona como panel médico del Sistema Inteligente de Máquina Automatizada. Su foco es la gestión de recetas, la consulta de datos del paciente y la interacción con los flujos que alimentan la máquina expendedora de medicamentos.
+Esta aplicación web funciona como panel médico de Sisteam Inteligente Medicación Asistida. Su foco es la gestión de recetas, la consulta de datos del paciente y la interacción con los flujos que alimentan la máquina expendedora de medicamentos.
 
 ## Tecnologías utilizadas
 

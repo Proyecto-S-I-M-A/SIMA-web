@@ -1,6 +1,6 @@
 # API de S.I.M.A.
 
-**Documentación completa de la API REST** para el Sistema Inteligente Medica Asistida de recetas electrónicas y dispensación de medicamentos. 
+**Documentación completa de la API REST** para Sisteam Inteligente Medicación Asistida de recetas electrónicas y dispensación de medicamentos. 
 
 **Versión**: 1.0.0  
 **Prefijo Base**: `/api/v0`  
