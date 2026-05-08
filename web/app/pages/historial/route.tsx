@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router';
 import { useGetRecetasYDosisByCedula } from '~/lib/api/QueryReceta';
 import { useGetClienteByCedula } from '~/lib/api/QueryCliente';
+import { useProtectedRoute } from '~/lib/useProtectedRoute';
 import {
   Box,
   Container,
@@ -23,6 +24,8 @@ import RecetaDosisList from './components/DosisTable';
 
 
 export default function Historial() {
+  // Validar autenticación
+  useProtectedRoute();
   const [searchParams] = useSearchParams();
   const cedula = searchParams.get('cedula') || '';
   const navigate = useNavigate();

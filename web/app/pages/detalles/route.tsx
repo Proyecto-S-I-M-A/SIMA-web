@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
+import { useProtectedRoute } from '~/lib/useProtectedRoute';
 
 export default function Detalles() {
+  // Validar autenticación
+  useProtectedRoute();
   const { cedula } = useParams();
   console.log('Cédula recibida:', cedula);
 

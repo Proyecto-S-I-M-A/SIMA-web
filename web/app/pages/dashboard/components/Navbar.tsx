@@ -16,6 +16,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import { useState } from 'react';
 import { theme } from '~/theme';
+import { DeleteSession } from '~/lib/GetSession';
+import { deleteAllCookieStoreValue } from '~/lib/GetCookie';
+import { useNavigate } from 'react-router';
 
 type Props = {
   rawSearch: string;
@@ -26,6 +29,7 @@ export function Navbar({ rawSearch, onSearchChange }: Props) {
   const [focused, setFocused] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
+  const route = useNavigate();
 
   const handleAvatarClick = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -33,10 +37,12 @@ export function Navbar({ rawSearch, onSearchChange }: Props) {
 
   const handleMenuClose = () => setAnchorEl(null);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     handleMenuClose();
-    // FALTA IMPLEMENTAR CIERRE DE SESIÓN REAL
-    console.log('Cerrar sesión');
+    // Limpiar sesión y tokens de forma segura
+    DeleteSession();
+    await deleteAllCookieStoreValue();
+    route('/login');
   };
 
   return (
@@ -47,7 +53,7 @@ export function Navbar({ rawSearch, onSearchChange }: Props) {
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          FARMA EXPRESS
+          Sistema Inteligente Medicacion Asistida
         </Typography>
 
         <Box

@@ -16,12 +16,16 @@ import { RecetaAndDosisForm } from './components/RecetaAndDosisForm';
 import { RecetaTable } from './components/RecetaTable';
 import { DosisTable } from './components/DosisTable';
 import { useGetAccesos } from '~/lib/api/QueryAcceso';
-import GetSession from '~/lib/GetSession';
+import { useProtectedRoute } from '~/lib/useProtectedRoute';
+import {GetSession} from '~/lib/GetSession';
 import CustomTabPanel from '~/components/CustomeTabPanel';
 import { useNavigate } from 'react-router';
 import type { Acceso } from '~/types/Acceso';
 
 export default function AdminPanel() {
+  // Validar autenticación
+  useProtectedRoute();
+
   const [tabValue, setTabValue] = useState(0);
   const navigate = useNavigate();
 

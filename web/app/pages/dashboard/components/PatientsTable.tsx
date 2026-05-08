@@ -46,10 +46,6 @@ export function PatientsTable({
 }: Props) {
   const navigate = useNavigate();
 
-  const handleRowClick = (cedula: string) => {
-    navigate(`/home/paciente/${cedula}`);
-  };
-
   return (
     <>
       <Box sx={{ px: 4, mt: 3, mb: 2 }}>
@@ -96,6 +92,13 @@ export function PatientsTable({
                 <SortCell
                   label="Cédula"
                   field="cedula"
+                  sortKey={sortKey}
+                  sortDir={sortDir}
+                  onSort={onSort}
+                />
+                <SortCell
+                  label="Asegurado"
+                  field="asegurado"
                   sortKey={sortKey}
                   sortDir={sortDir}
                   onSort={onSort}
