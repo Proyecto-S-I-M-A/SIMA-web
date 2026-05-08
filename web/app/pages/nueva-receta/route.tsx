@@ -3,7 +3,8 @@ import { useGetClienteByCedula } from '~/lib/api/QueryCliente';
 import { useGetUsuario } from '~/lib/api/QueryUsuario';
 import { useCreateRecetaWithDosisMutation } from '~/lib/api/QueryReceta';
 import { useGetInventario } from '~/lib/api/QueryInventario';
-import GetSession from '~/lib/GetSession';
+import { useProtectedRoute } from '~/lib/useProtectedRoute';
+import {GetSession} from '~/lib/GetSession';
 import {
   Box,
   Container,
@@ -26,6 +27,8 @@ import { Navbar } from '../dashboard/components/Navbar';
 import DosisField from './components/DosisField';
 
 export default function NuevaReceta() {
+  // Validar autenticación
+  useProtectedRoute();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const cedula = searchParams.get('cedula') || '';

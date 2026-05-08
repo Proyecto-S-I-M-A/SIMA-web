@@ -1,4 +1,9 @@
 
+/**
+ * Utilidades seguras para manejar cookies (tokens)
+ * IMPORTANTE: Los tokens NUNCA se guardan en localStorage
+ * Se usan cookies httpOnly cuando es posible (backend) o cookieStore API
+ */
 
 export async function readCookieStoreValue(key: string): Promise<string | null> {
   if (typeof window === "undefined") return null;
@@ -14,26 +19,54 @@ export async function readCookieStoreValue(key: string): Promise<string | null> 
 
 export async function getAccessToken(): Promise<string | null> {
   const fromCookieStore = await readCookieStoreValue("token");
-  if (fromCookieStore) return fromCookieStore;
-
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("token");
+  return fromCookieStore || null;
 }
 
 export async function getRefreshToken(): Promise<string | null> {
   const fromCookieStore = await readCookieStoreValue("refresh_token");
-  if (fromCookieStore) return fromCookieStore;
-
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("refresh_token");
+  return fromCookieStore || null;
 }
 
-export async function saveCookieStoreValue(key: string, value: string) {
+export async function saveCookieStoreValue(key: string, value: string): Promise<void> {
   if (typeof window === "undefined") return;
   const anyWindow = window as any;
   if (anyWindow.cookieStore?.set) {
     try {
-      await anyWindow.cookieStore.set({ name: key, value, path: "/" });
+      await anyWindow.cookieStore.set({
+        name: key,
+        value,
+        path: "/",
+        sameSite: "strict",
+        // httpOnly no puede ser seteado desde el cliente por seguridad
+        // El servidor debe setear httpOnly al enviar el token
+      });
+    } catch {
+      // Ignore errors
+    }
+  }
+}
+
+export async function deleteCookieStoreValue(key: string): Promise<void> {
+  if (typeof window === "undefined") return;
+  const anyWindow = window as any;
+  if (anyWindow.cookieStore?.delete) {
+    try {
+      await anyWindow.cookieStore.delete(key);
+    } catch {
+      // Ignore errors
+    }
+  }
+}
+
+export async function deleteAllCookieStoreValue(): Promise<void> {
+  if (typeof window === "undefined") return;
+  const anyWindow = window as any;
+  if (anyWindow.cookieStore?.delete) {
+    try {
+      const cookies = await anyWindow.cookieStore.getAll();
+      for (const cookie of cookies) {
+        await anyWindow.cookieStore.delete(cookie.name);
+      }
     } catch {
       // Ignore errors
     }

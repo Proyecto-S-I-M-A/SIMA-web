@@ -38,7 +38,7 @@ export default function Login() {
     resolver: zodResolver(LoginSchema),
   });
   const navigate = useNavigate();
-  const { SaveOnCokie, SaveSession } = useLogin();
+  const { SaveOnCookie, SaveSession } = useLogin();
   const { mutateAsync, isError, isSuccess, error } = useLoginMutation();
   const { mutateAsync: UpdateAccess } = useUpdateAccesoActivoMutation();
   const [sessionID, setSessionID] = useState<string | null>(null);
@@ -54,12 +54,14 @@ export default function Login() {
       });
       navigate('/home');
     }
-  }, [isSuccess, navigate]);
+  }, [sessionID]);
+
   const onSubmit = async (formData: LoginData) => {
     try {
       const result = await mutateAsync(formData);
       if (result?.session?.access_token && result?.session?.refresh_token) {
-        SaveOnCokie(result.session.access_token, result.session.refresh_token);
+        // Guardar tokens en cookies seguras
+        await SaveOnCookie(result.session.access_token, result.session.refresh_token);
         setSessionID(result.session.user.id);
       }
     } catch {
