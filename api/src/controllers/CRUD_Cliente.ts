@@ -41,7 +41,7 @@ async function READ(request: Request, response: Response) {
     }
     
     if (id && id!=="all") {
-      const res = await Cliente.findByPk(parseInt(String(id)));
+      const res = await Cliente.findOne({where: {id_acceso: id}});
       if (!res) {
         return response.status(404).json({ error: 'Cliente no encontrado' });
       }
