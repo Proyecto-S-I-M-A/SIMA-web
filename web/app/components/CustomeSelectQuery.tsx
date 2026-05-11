@@ -1,4 +1,4 @@
-import { InputLabel, MenuItem, Select } from "@mui/material";
+import { InputLabel, MenuItem, Select, Stack } from "@mui/material";
 import { useQueryAll } from "~/lib/api/QueryAll";
 
 interface CustomSelectQueryProps {
@@ -17,28 +17,62 @@ export default function CustomeSelectQuery(props: CustomSelectQueryProps) {
   const { All } = useQueryAll(endpoint || '');
   const { data } = All;
   return(
-    <>
-    <InputLabel id={labelID}>{label}</InputLabel>
+    <Stack spacing={1} sx={{ width: "100%" }}>
+      <InputLabel
+        id={labelID}
+        sx={{ fontSize: 14, fontWeight: 600, color: 'text.secondary' }}
+      >
+        {label}
+      </InputLabel>
       <Select
         labelId={labelID}
-        value={value}
+        value={value ?? ''}
         onChange={onChange}
-        
+        size="small"
+        fullWidth
+        displayEmpty
+        sx={{
+          bgcolor: 'background.paper',
+          '& .MuiSelect-select': { py: 1.1 },
+        }}
+        MenuProps={{
+            sx: {
+              borderRadius: 2,
+              mt: 1,
+              boxShadow: '0 12px 30px rgba(0,0,0,0.12)',
+            },
+        }}
       >
         <MenuItem value="">
-          <em>None</em>
+          <em>Seleccionar</em>
         </MenuItem>
         {data?.map((item: any) => (
-          <MenuItem key={item.id} value={valueSelector ? parseInt(item[valueSelector]) : item.id}>
-            {labelSelector ? <><strong>{labelSelector}:</strong> {item[labelSelector]} </> : "label"}
-            <br/>
-            {secondaryLabelSelector && 
-              item[secondaryLabelSelector]
-            }
+          <MenuItem
+            key={item.id}
+            value={valueSelector ? parseInt(item[valueSelector]) : item.id}
+            sx={{
+              whiteSpace: 'normal',
+              alignItems: 'flex-start',
+              py: 1,
+            }}
+          >
+            <Stack spacing={0.5} sx={{ lineHeight: 1.2 }}>
+              {labelSelector ? (
+                <span>
+                  <strong>{labelSelector}:</strong> {item[labelSelector]}
+                </span>
+              ) : (
+                "label"
+              )}
+              {secondaryLabelSelector && (
+                <span style={{ color: 'rgba(0,0,0,0.6)', fontSize: 12 }}>
+                  {item[secondaryLabelSelector]}
+                </span>
+              )}
+            </Stack>
           </MenuItem>
         ))}
-
       </Select>
-    </>
+    </Stack>
   )
 }

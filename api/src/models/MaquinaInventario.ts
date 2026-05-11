@@ -3,7 +3,8 @@ import sequelize from "../config/sequelize.js";
 
 class MaquinaInventario extends Model {
   declare id: number;
-  declare id_maquina: string;
+  declare id_maquina: number;
+  declare codigo_maquina: string;
   declare id_inventario: number;
   declare cantidad: number;
 }
@@ -24,7 +25,7 @@ MaquinaInventario.init(
       allowNull: false,
       references: {
         model: "maquinas",
-        key: "id_maquina",
+        key: "id",
       },
       onDelete: "CASCADE",
       onUpdate: "CASCADE",

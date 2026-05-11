@@ -21,6 +21,8 @@
 9. [Ejemplos de Modelos](#ejemplos-de-modelos)
 10. [Estructura del Proyecto](#estructura-del-proyecto)
 11. [Relaciones de Base de Datos](#relaciones-de-base-de-datos)
+12. [Validación de Inputs](#validación-de-inputs)
+13. [Deploy (API)](#deploy-api)
 
 ---
 
@@ -234,7 +236,8 @@ Content-Type: application/json
 - `POST /api/v0/auth/login`
 - `POST /api/v0/auth/signup`
 - `POST /api/v0/auth/refresh-token`
-- `GET /api/v0/recetas/cliente/:cedula` (solo consulta, sin modificación)
+
+> Todas las demás rutas bajo `/api/v0` están protegidas por el middleware `requireSupabaseAuth`.
 
 ### Códigos de Error de Autenticación
 
@@ -247,7 +250,58 @@ Content-Type: application/json
 
 ---
 
+## ✅ Validación de Inputs
+
+La API usa **express-validator** con middlewares por recurso. Cada ruta de creación/actualización aplica el validador correspondiente y luego `handleValidationErrors`.
+
+**Middleware disponibles (api/src/middleware):**
+- `validateAccesoCreation`
+- `validateClienteCreation`
+- `validateDosisCreation`
+- `validateFichaMedicaCreation`
+- `validateHistorialMedicoCreation`
+- `validateInventarioCreation`
+- `validateMaquinaCreation`
+- `validateMaquinaInventarioCreation`
+- `validateRecetaCreation`
+- `validateUsuarioCreation`
+
+**Patrón de uso:**
+```ts
+router.post('/recurso', validateRecursoCreation, handleValidationErrors, CREATE);
+router.put('/recurso/:id', validateRecursoCreation, handleValidationErrors, UPDATE);
+```
+
+---
+
 ## 📚 Documentación de Endpoints
+
+### Resumen de Endpoints y Controladores
+
+**Rutas públicas**
+- `POST /auth/login` → `SessionControll.Login`
+- `POST /auth/signup` → `SessionControll.SingUp`
+- `POST /auth/refresh-token` → `SessionControll.RefreshToken`
+
+**Rutas protegidas (Bearer token requerido)**
+- **Accesos** (`CRUD_Acceso`): `POST /accesos`, `GET /accesos/:id`, `PUT /accesos/:id`, `DELETE /accesos/:id`
+- **Clientes** (`CRUD_Cliente`): `POST /clientes`, `GET /clientes/:id`, `GET /clientes/cedula/:cedula`, `PUT /clientes/:id`, `DELETE /clientes/:id`
+- **Usuarios** (`CRUD_Usuario`): `POST /usuarios`, `GET /usuarios/:id`, `GET /usuarios/acceso/:id_acceso`, `PUT /usuarios/:id`, `DELETE /usuarios/:id`
+- **Ficha Medica** (`CRUD_FichaMedica`): `POST /fichas-medicas`, `GET /fichas-medicas/:id`, `PUT /fichas-medicas/:id`, `DELETE /fichas-medicas/:id`
+- **Historial Medico** (`CRUD_HistorialMedico`): `POST /historiales-medicos`, `GET /historiales-medicos/:id`, `PUT /historiales-medicos/:id`, `DELETE /historiales-medicos/:id`
+- **Recetas** (`CRUD_Receta`): `POST /recetas`, `GET /recetas/:id`, `PUT /recetas/:id`, `DELETE /recetas/:id`
+- **Recetas (especiales)**: `GET /recetas/cliente/:cedula` (`GetRecetaByCedula`), `GET /recetas/dosis/cliente/:cedula` (`GetRecetasyDosis`), `POST /recetas/cedula/:cedula` (`PostRecetaByCedula`), `POST /recetas/dosis` (`PostRecetasYDosis`)
+- **Dosis** (`CRUD_Dosis`): `POST /dosis`, `GET /dosis/:id`, `GET /dosis/receta/:id_receta`, `PUT /dosis/:id`, `DELETE /dosis/:id`
+- **Inventario** (`CRUD_Inventario`): `POST /inventario`, `GET /inventario/:id`, `PUT /inventario/:id`, `DELETE /inventario/:id`
+- **Maquinas** (`CRUD_Maquina`): `POST /maquinas`, `GET /maquinas/:id`, `PUT /maquinas/:id`, `DELETE /maquinas/:id`
+- **Maquina-Inventario** (`CRUD_MaquinaInventario`):
+  - `POST /maquina-inventario`
+  - `GET /maquina-inventario`, `GET /maquina-inventario/:id`
+  - `GET /maquina-inventario/maquina/:id_maquina`
+  - `GET /maquina-inventario/inventario/:id_inventario`
+  - `GET /maquina-inventario/inventario-maquina/:id_maquina`
+  - `PUT /maquina-inventario/:id`
+  - `DELETE /maquina-inventario/:id`
 
 ### Autenticación (Rutas Públicas)
 
@@ -1351,12 +1405,33 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 ```json
 {
   "id": 1,
-  "id_maquina": 1,
   "nombre_medicamento": "Paracetamol 500 mg",
   "marca": "Genfar",
   "precio": 2.5,
-  "cantidad": 100,
   "resetado": false
+}
+```
+
+### Completo: Maquina
+```json
+{
+  "id": 1,
+  "id_maquina": "M-001",
+  "ubicacion": "Hospital Central - Piso 2",
+  "activo": true,
+  "latitud": -0.2101,
+  "longitud": -78.4932
+}
+```
+
+### Completo: MaquinaInventario
+```json
+{
+  "id": 10,
+  "codigo_maquina": "M-001",
+  "id_maquina": 1,
+  "id_inventario": 3,
+  "cantidad": 50
 }
 ```
 
@@ -1477,14 +1552,14 @@ api/
 
 ```
 Acceso (1) ──────────────────── (n) Cliente
-                                   |
-                                   ├── (1) FichaMedica
-                                   ├── (n) HistorialMedico
-                                   └── (n) Receta
-                                           |
-                                           └── (n) Dosis
+           |
+           ├── (1) FichaMedica
+           ├── (n) HistorialMedico
+           └── (n) Receta
+             |
+             └── (n) Dosis
 
-Maquina (1) ──────────────────── (n) Inventario
+Maquina (1) ── (n) MaquinaInventario (n) ── (1) Inventario
 ```
 
 ### Foreign Keys
@@ -1496,6 +1571,35 @@ Maquina (1) ──────────────────── (n) Inv
 | `HistorialMedico` | `id_cliente` | `Cliente.id` | ON DELETE CASCADE |
 | `Receta` | `id_cliente` | `Cliente.id` | ON DELETE CASCADE |
 | `Dosis` | `id_receta` | `Receta.id` | ON DELETE CASCADE |
+| `MaquinaInventario` | `id_maquina` | `Maquina.id` | ON DELETE CASCADE |
+| `MaquinaInventario` | `id_inventario` | `Inventario.id` | ON DELETE CASCADE |
+
+---
+
+## 🚀 Deploy (API)
+
+1. Configura variables de entorno de produccion en `.env` (ver seccion de configuracion).
+2. Instala dependencias:
+  ```bash
+  npm install
+  ```
+3. Compila TypeScript:
+  ```bash
+  npm run build
+  ```
+4. Ejecuta migraciones de base de datos:
+  ```bash
+  npm run migrate
+  ```
+5. Inicia el servidor:
+  ```bash
+  npm run start
+  ```
+
+**Notas de despliegue**
+- Configura `CROSS_ORIGIN` con el dominio de la web.
+- Asegura `PROJECT_URL` y `SUPABASE_KEY` validos para Supabase Auth.
+- Usa un process manager (PM2, systemd, Docker) para procesos persistentes.
 | `Inventario` | `id_maquina` | `Maquina.id` | ON DELETE CASCADE |
 
 ---

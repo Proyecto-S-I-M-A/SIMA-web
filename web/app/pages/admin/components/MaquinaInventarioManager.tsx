@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  MenuItem,
   Paper,
   Stack,
   Table,
@@ -15,7 +14,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
   useCreateMaquinaInventarioMutation,
   useDeleteMaquinaInventarioMutation,
@@ -25,21 +26,18 @@ import {
 import { useGetMaquinas } from '~/lib/api/QueryMaquina';
 import { useGetInventarios } from '~/lib/api/QueryInventario';
 import type { Inventario, MaquinaInventarioCreation } from '~/types/Inventario';
+import { MaquinaInventarioCreationSchema } from '~/types/Inventario';
 import type { Maquina } from '~/types/Maquina';
+import CustomeSelectQuery from '~/components/CustomeSelectQuery';
 
-type FormState = {
-  codigo_maquina: string;
-  id_maquina: number | '';
-  id_inventario: number | '';
-  cantidad: number | null;
-};
-
-const INITIAL_FORM: FormState = {
-    codigo_maquina: '',
-  id_maquina: '',
-  id_inventario: '',
-  cantidad: null,
-};
+const FormSchema = MaquinaInventarioCreationSchema.extend({
+  id_maquina: MaquinaInventarioCreationSchema.shape.id_maquina
+    .int('Selecciona una maquina')
+    .positive('Selecciona una maquina'),
+  id_inventario: MaquinaInventarioCreationSchema.shape.id_inventario
+    .int('Selecciona un medicamento')
+    .positive('Selecciona un medicamento'),
+});
 
 export function MaquinaInventarioManager() {
   const { data: relaciones, isLoading, isError, error } = useGetMaquinaInventarios('all');
@@ -50,10 +48,22 @@ export function MaquinaInventarioManager() {
   const updateMutation = useUpdateMaquinaInventarioMutation();
   const deleteMutation = useDeleteMaquinaInventarioMutation();
 
-  const [form, setForm] = useState<FormState>(INITIAL_FORM);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [formError, setFormError] = useState<string | null>(null);
-
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm<MaquinaInventarioCreation>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      codigo_maquina: '',
+      id_maquina: 0,
+      id_inventario: 0,
+      cantidad: null,
+    },
+  });
   const maquinasByCode = useMemo(() => {
     return new Map((maquinas ?? []).map((m) => [m.id_maquina, m]));
   }, [maquinas]);
@@ -65,32 +75,21 @@ export function MaquinaInventarioManager() {
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   const resetForm = () => {
-    setForm(INITIAL_FORM);
+    reset({
+      codigo_maquina: '',
+      id_maquina: 0,
+      id_inventario: 0,
+      cantidad: null,
+    });
     setEditingId(null);
-    setFormError(null);
   };
 
-  const validateForm = (current: FormState) => {
-    if (!current.id_maquina) return 'Selecciona una maquina';
-    if (current.id_inventario === '') return 'Selecciona un medicamento';
-    return null;
-  };
-
-  const buildBody = (current: FormState): MaquinaInventarioCreation => ({
-    codigo_maquina: current.codigo_maquina,
-    id_maquina: Number(current.id_maquina),
-    id_inventario: Number(current.id_inventario),
-    cantidad: current.cantidad,
-  });
-
-  const handleSubmit = async () => {
-    const validationError = validateForm(form);
-    if (validationError) {
-      setFormError(validationError);
-      return;
-    }
-
-    const body = buildBody(form);
+  const onSubmit = async (data: MaquinaInventarioCreation) => {
+    const body: MaquinaInventarioCreation = {
+      ...data,
+      id_maquina: Number(data.id_maquina),
+      id_inventario: Number(data.id_inventario),
+    };
 
     try {
       if (editingId === null) {
@@ -99,20 +98,25 @@ export function MaquinaInventarioManager() {
         await updateMutation.mutateAsync({ id: editingId, body });
       }
       resetForm();
-    } catch {
-      // La UI ya muestra mensajes de error desde React Query.
+    } catch (error){
     }
   };
 
-  const handleEdit = (item: {codigo_maquina: string; id: number; id_maquina: number; id_inventario: number; cantidad?: number | null }) => {
+  const handleEdit = (item: {
+    codigo_maquina: string;
+    id: number;
+    id_maquina: number | string;
+    id_inventario: number;
+    cantidad?: number | null;
+  }) => {
+    const nextIdMaquina = Number(item.id_maquina);
     setEditingId(item.id);
-    setForm({
-      codigo_maquina: item.codigo_maquina,
-      id_maquina: item.id_maquina,
+    reset({
+      codigo_maquina: item.codigo_maquina || String(item.id_maquina ?? ''),
+      id_maquina: Number.isNaN(nextIdMaquina) ? 0 : nextIdMaquina,
       id_inventario: item.id_inventario,
       cantidad: item.cantidad ?? null,
     });
-    setFormError(null);
   };
 
   const getMedicamentoLabel = (item: Inventario | undefined) => {
@@ -122,12 +126,6 @@ export function MaquinaInventarioManager() {
     return `${nombre}${marca}`;
   };
 
-  const getMaquinaLabel = (item: Maquina | undefined, fallbackCode: string) => {
-    if (!item) return fallbackCode;
-    const ubicacion = item.ubicacion ? ` - ${item.ubicacion}` : '';
-    return `${item.id_maquina}${ubicacion}`;
-  };
-
   return (
     <Box sx={{ mt: 3 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -135,77 +133,114 @@ export function MaquinaInventarioManager() {
       </Typography>
 
       <Paper sx={{ p: 2, mb: 2 }}>
-        <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
-          <TextField
-            select
-            fullWidth
-            label="Maquina"
-            value={form.id_maquina}
-            onChange={(e) => setForm((prev) => ({ ...prev, id_maquina: e.target.value, }))}
-          >
-            {(maquinas ?? []).map((maquina) => (
-              <MenuItem key={maquina.id} value={maquina.id_maquina}>
-                {getMaquinaLabel(maquina, maquina.id_maquina)}
-              </MenuItem>
-            ))}
-          </TextField>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
+            <Stack spacing={1} sx={{ width: '100%' }}>
+              <Controller
+                name="id_maquina"
+                control={control}
+                render={({ field }) => (
+                  <CustomeSelectQuery
+                    onChange={(event) => {
+                      const nextValue = Number(event.target.value) || 0;
+                      const selected = (maquinas ?? []).find(
+                        (maquina) => Number(maquina.id) === nextValue,
+                      );
+                      field.onChange(nextValue);
+                      setValue('codigo_maquina', selected?.id_maquina ?? '', {
+                        shouldValidate: true,
+                      });
+                    }}
+                    value={field.value}
+                    label='Id Maquina'
+                    labelID='select-maquina'
+                    endpoint='maquinas'
+                    labelSelector='id_maquina'
+                    secondaryLabelSelector='ubicacion'
+                    valueSelector='id'
+                  />
+                )}
+              />
+              {errors.id_maquina && (
+                <Typography variant="caption" sx={{ color: 'error.main' }}>
+                  {errors.id_maquina.message}
+                </Typography>
+              )}
+              <Controller
+                name="codigo_maquina"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    label="Codigo maquina"
+                    value={field.value || ''}
+                    disabled
+                  />
+                )}
+              />
+            </Stack>
 
-          <TextField
-            select
-            fullWidth
-            label="Medicamento"
-            value={form.id_inventario}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                id_inventario: e.target.value === '' ? '' : Number(e.target.value),
-              }))
-            }
-          >
-            {(inventarios ?? []).map((inventario) => (
-              <MenuItem key={inventario.id} value={inventario.id}>
-                {getMedicamentoLabel(inventario)}
-              </MenuItem>
-            ))}
-          </TextField>
+            <Controller
+              name="id_inventario"
+              control={control}
+              render={({ field }) => {
+                return (
+                  <Stack spacing={1} sx={{ width: '100%' }}>
+                    <CustomeSelectQuery
+                      onChange={(event) => field.onChange(Number(event.target.value) || 0)}
+                      value={field.value}
+                      label='Id medicamento'
+                      labelID='select-medicamento'
+                      endpoint='inventario'
+                      labelSelector='nombre_medicamento'
+                      secondaryLabelSelector='marca'
+                      valueSelector='id'
+                    />
+                    {errors.id_inventario && (
+                      <Typography variant="caption" sx={{ color: 'error.main' }}>
+                        {errors.id_inventario.message}
+                      </Typography>
+                    )}
+                  </Stack>
+                )
+              }}
+            />
+            <Controller
+              name="cantidad"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  label="Cantidad"
+                  type="number"
+                  value={field.value ?? ''}
+                  onChange={(e) =>
+                    field.onChange(e.target.value === '' ? null : Number(e.target.value))
+                  }
+                  error={!!errors.cantidad}
+                  helperText={errors.cantidad?.message}
+                />
+              )}
+            />
 
-          <TextField
-            label="Cantidad"
-            type="number"
-            value={form.cantidad ?? ''}
-            onChange={(e) =>
-              setForm((prev) => ({
-                ...prev,
-                cantidad: e.target.value === '' ? null : Number(e.target.value),
-              }))
-            }
-          />
-
-          <Stack direction="row" spacing={1}>
-            <Button variant="contained" onClick={handleSubmit} disabled={isSubmitting}>
-              {isSubmitting ? <CircularProgress size={18} /> : editingId === null ? 'Asignar' : 'Guardar'}
-            </Button>
-            {editingId !== null && (
-              <Button variant="outlined" onClick={resetForm} disabled={isSubmitting}>
-                Cancelar
+            <Stack direction="row" spacing={1}>
+              <Button variant="contained" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? <CircularProgress size={18} /> : editingId === null ? 'Asignar' : 'Guardar'}
               </Button>
-            )}
+              {editingId !== null && (
+                <Button variant="outlined" onClick={resetForm} disabled={isSubmitting}>
+                  Cancelar
+                </Button>
+              )}
+            </Stack>
           </Stack>
-        </Stack>
 
-        {formError && (
-          <Alert severity="warning" sx={{ mt: 2 }}>
-            {formError}
-          </Alert>
-        )}
-
-        {(createMutation.isError || updateMutation.isError) && (
-          <Alert severity="error" sx={{ mt: 2 }}>
-            {(createMutation.error as Error | undefined)?.message ||
-              (updateMutation.error as Error | undefined)?.message ||
-              'No se pudo guardar la asignacion'}
-          </Alert>
-        )}
+          {(createMutation.isError || updateMutation.isError) && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {(createMutation.error as Error | undefined)?.message ||
+                (updateMutation.error as Error | undefined)?.message ||
+                'No se pudo guardar la asignacion'}
+            </Alert>
+          )}
+        </form>
       </Paper>
 
       {isLoading ? (
@@ -236,7 +271,7 @@ export function MaquinaInventarioManager() {
                 return (
                   <TableRow key={item.id}>
                     <TableCell>{item.id}</TableCell>
-                    <TableCell>{getMaquinaLabel(maquina, item.id_maquina)}</TableCell>
+                    <TableCell>{item.codigo_maquina}</TableCell>
                     <TableCell>{getMedicamentoLabel(inventario)}</TableCell>
                     <TableCell>{item.cantidad ?? 'N/A'}</TableCell>
                     <TableCell>
