@@ -3,7 +3,7 @@
 **Documentación completa de la API REST** para Sisteam Inteligente Medicación Asistida de recetas electrónicas y dispensación de medicamentos. 
 
 **Versión**: 1.0.0  
-**Prefijo Base**: `/api/v0`  
+**Prefijo Base**: `/api/v1`  
 **Ambiente**: Production-ready
 
 ---
@@ -233,11 +233,11 @@ Content-Type: application/json
 
 ### Rutas Públicas (Sin Autenticación)
 
-- `POST /api/v0/auth/login`
-- `POST /api/v0/auth/signup`
-- `POST /api/v0/auth/refresh-token`
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/signup`
+- `POST /api/v1/auth/refresh-token`
 
-> Todas las demás rutas bajo `/api/v0` están protegidas por el middleware `requireSupabaseAuth`.
+> Todas las demás rutas bajo `/api/v1` están protegidas por el middleware `requireSupabaseAuth`.
 
 ### Códigos de Error de Autenticación
 
@@ -305,7 +305,7 @@ router.put('/recurso/:id', validateRecursoCreation, handleValidationErrors, UPDA
 
 ### Autenticación (Rutas Públicas)
 
-#### POST /api/v0/auth/login
+#### POST /api/v1/auth/login
 **Inicia sesión con Supabase y devuelve tokens.**
 
 - **Auth**: No requerida (pública)
@@ -319,7 +319,7 @@ router.put('/recurso/:id', validateRecursoCreation, handleValidationErrors, UPDA
 
 **Request Completo**:
 ```bash
-curl -X POST http://localhost:3000/api/v0/auth/login \
+curl -X POST http://localhost:3000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "doctor@correo.com",
@@ -358,7 +358,7 @@ curl -X POST http://localhost:3000/api/v0/auth/login \
 
 ---
 
-#### POST /api/v0/auth/signup
+#### POST /api/v1/auth/signup
 **Crea una nueva cuenta de usuario en Supabase.**
 
 - **Auth**: No requerida (pública)
@@ -372,7 +372,7 @@ curl -X POST http://localhost:3000/api/v0/auth/login \
 
 **Request Completo**:
 ```bash
-curl -X POST http://localhost:3000/api/v0/auth/signup \
+curl -X POST http://localhost:3000/api/v1/auth/signup \
   -H "Content-Type: application/json" \
   -d '{
     "email": "newuser@correo.com",
@@ -405,7 +405,7 @@ curl -X POST http://localhost:3000/api/v0/auth/signup \
 
 ---
 
-#### POST /api/v0/auth/refresh-token
+#### POST /api/v1/auth/refresh-token
 **Renueva los tokens usando el refresh_token.**
 
 - **Auth**: No requerida (pública)
@@ -418,7 +418,7 @@ curl -X POST http://localhost:3000/api/v0/auth/signup \
 
 **Request Completo**:
 ```bash
-curl -X POST http://localhost:3000/api/v0/auth/refresh-token \
+curl -X POST http://localhost:3000/api/v1/auth/refresh-token \
   -H "Content-Type: application/json" \
   -d '{
     "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -451,7 +451,7 @@ curl -X POST http://localhost:3000/api/v0/auth/refresh-token \
 
 ### Accesos (Protegidas)
 
-#### POST /api/v0/accesos
+#### POST /api/v1/accesos
 **Crea un registro de acceso (auditoría de sesiones).**
 
 - **Auth**: Bearer token requerido
@@ -469,7 +469,7 @@ curl -X POST http://localhost:3000/api/v0/auth/refresh-token \
 
 **Request Completo**:
 ```bash
-curl -X POST http://localhost:3000/api/v0/accesos \
+curl -X POST http://localhost:3000/api/v1/accesos \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -490,7 +490,7 @@ curl -X POST http://localhost:3000/api/v0/accesos \
 
 ---
 
-#### GET /api/v0/accesos/:id
+#### GET /api/v1/accesos/:id
 **Obtiene un acceso por su identificador (UUID).**
 
 - **Auth**: Bearer token requerido
@@ -499,7 +499,7 @@ curl -X POST http://localhost:3000/api/v0/accesos \
 
 **Request Completo**:
 ```bash
-curl -X GET http://localhost:3000/api/v0/accesos/550e8400-e29b-41d4-a716-446655440000 \
+curl -X GET http://localhost:3000/api/v1/accesos/550e8400-e29b-41d4-a716-446655440000 \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
@@ -518,7 +518,7 @@ curl -X GET http://localhost:3000/api/v0/accesos/550e8400-e29b-41d4-a716-4466554
 
 ---
 
-#### PUT /api/v0/accesos/:id
+#### PUT /api/v1/accesos/:id
 **Actualiza un acceso existente.**
 
 - **Auth**: Bearer token requerido
@@ -540,7 +540,7 @@ curl -X GET http://localhost:3000/api/v0/accesos/550e8400-e29b-41d4-a716-4466554
 
 ---
 
-#### DELETE /api/v0/accesos/:id
+#### DELETE /api/v1/accesos/:id
 **Elimina un acceso (soft delete: marca como inactivo).**
 
 - **Auth**: Bearer token requerido
@@ -557,7 +557,7 @@ curl -X GET http://localhost:3000/api/v0/accesos/550e8400-e29b-41d4-a716-4466554
 
 ### Clientes (Protegidas)
 
-#### POST /api/v0/clientes
+#### POST /api/v1/clientes
 **Crea un nuevo cliente (paciente).**
 
 - **Auth**: Bearer token requerido
@@ -577,7 +577,7 @@ curl -X GET http://localhost:3000/api/v0/accesos/550e8400-e29b-41d4-a716-4466554
 
 **Request Completo**:
 ```bash
-curl -X POST http://localhost:3000/api/v0/clientes \
+curl -X POST http://localhost:3000/api/v1/clientes \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -607,7 +607,7 @@ curl -X POST http://localhost:3000/api/v0/clientes \
 
 ---
 
-#### GET /api/v0/clientes/:id
+#### GET /api/v1/clientes/:id
 **Obtiene un cliente por ID o todos si no especifica ID.**
 
 - **Auth**: Bearer token requerido
@@ -615,7 +615,7 @@ curl -X POST http://localhost:3000/api/v0/clientes \
 
 **Request (un cliente)**:
 ```bash
-curl -X GET http://localhost:3000/api/v0/clientes/1 \
+curl -X GET http://localhost:3000/api/v1/clientes/1 \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
@@ -638,7 +638,7 @@ curl -X GET http://localhost:3000/api/v0/clientes/1 \
 
 ---
 
-#### PUT /api/v0/clientes/:id
+#### PUT /api/v1/clientes/:id
 **Actualiza un cliente.**
 
 - **Auth**: Bearer token requerido
@@ -659,7 +659,7 @@ curl -X GET http://localhost:3000/api/v0/clientes/1 \
 
 ---
 
-#### DELETE /api/v0/clientes/:id
+#### DELETE /api/v1/clientes/:id
 **Elimina un cliente (soft delete).**
 
 - **Auth**: Bearer token requerido
@@ -675,7 +675,7 @@ curl -X GET http://localhost:3000/api/v0/clientes/1 \
 
 ### Usuarios (Protegidas)
 
-#### POST /api/v0/usuarios
+#### POST /api/v1/usuarios
 **Crea un nuevo usuario (doctor, admin).**
 
 - **Auth**: Bearer token requerido
@@ -693,7 +693,7 @@ curl -X GET http://localhost:3000/api/v0/clientes/1 \
 
 **Request Completo**:
 ```bash
-curl -X POST http://localhost:3000/api/v0/usuarios \
+curl -X POST http://localhost:3000/api/v1/usuarios \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -715,7 +715,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### GET /api/v0/usuarios/:id
+#### GET /api/v1/usuarios/:id
 **Obtiene un usuario por ID.**
 
 - **Auth**: Bearer token requerido
@@ -735,7 +735,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### PUT /api/v0/usuarios/:id
+#### PUT /api/v1/usuarios/:id
 **Actualiza un usuario.**
 
 **Response 200 OK**:
@@ -747,7 +747,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### DELETE /api/v0/usuarios/:id
+#### DELETE /api/v1/usuarios/:id
 **Elimina un usuario (soft delete).**
 
 **Response 200 OK**:
@@ -761,7 +761,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ### Fichas Médicas (Protegidas)
 
-#### POST /api/v0/fichas-medicas
+#### POST /api/v1/fichas-medicas
 **Crea una ficha médica de un cliente.**
 
 - **Auth**: Bearer token requerido
@@ -784,7 +784,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### GET /api/v0/fichas-medicas/:id
+#### GET /api/v1/fichas-medicas/:id
 **Obtiene una ficha médica por ID.**
 
 **Response 200 OK**:
@@ -800,7 +800,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### PUT /api/v0/fichas-medicas/:id
+#### PUT /api/v1/fichas-medicas/:id
 **Actualiza una ficha médica.**
 
 **Response 200 OK**:
@@ -812,7 +812,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### DELETE /api/v0/fichas-medicas/:id
+#### DELETE /api/v1/fichas-medicas/:id
 **Elimina una ficha médica (hard delete).**
 
 **Response 200 OK**:
@@ -826,7 +826,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ### Historiales Médicos (Protegidas)
 
-#### POST /api/v0/historiales-medicos
+#### POST /api/v1/historiales-medicos
 **Registra una consulta médica con signos vitales.**
 
 - **Auth**: Bearer token requerido
@@ -858,7 +858,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### GET /api/v0/historiales-medicos/:id
+#### GET /api/v1/historiales-medicos/:id
 **Obtiene un historial médico por ID.**
 
 **Response 200 OK**:
@@ -881,7 +881,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### PUT /api/v0/historiales-medicos/:id
+#### PUT /api/v1/historiales-medicos/:id
 **Actualiza un historial médico.**
 
 **Response 200 OK**:
@@ -893,7 +893,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### DELETE /api/v0/historiales-medicos/:id
+#### DELETE /api/v1/historiales-medicos/:id
 **Elimina un historial médico (hard delete).**
 
 **Response 200 OK**:
@@ -907,7 +907,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ### Recetas
 
-#### POST /api/v0/recetas
+#### POST /api/v1/recetas
 **Crea una receta para un cliente (usando id_cliente en body).**
 
 - **Auth**: Bearer token requerido
@@ -934,7 +934,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 ---
 
-#### POST /api/v0/recetas/cedula/:cedula
+#### POST /api/v1/recetas/cedula/:cedula
 **Crea una receta buscando el cliente por cédula.**
 
 - **Auth**: Bearer token requerido
@@ -954,7 +954,7 @@ curl -X POST http://localhost:3000/api/v0/usuarios \
 
 **Request Completo**:
 ```bash
-curl -X POST http://localhost:3000/api/v0/recetas/cedula/1234567890 \
+curl -X POST http://localhost:3000/api/v1/recetas/cedula/1234567890 \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -984,7 +984,7 @@ curl -X POST http://localhost:3000/api/v0/recetas/cedula/1234567890 \
 
 ---
 
-#### POST /api/v0/recetas/dosis
+#### POST /api/v1/recetas/dosis
 **Crea una receta con múltiples dosis en una sola operación.**
 
 - **Auth**: Bearer token requerido
@@ -1017,7 +1017,7 @@ curl -X POST http://localhost:3000/api/v0/recetas/cedula/1234567890 \
 
 ---
 
-#### GET /api/v0/recetas/:id
+#### GET /api/v1/recetas/:id
 **Obtiene una receta por ID.**
 
 - **Auth**: Bearer token requerido
@@ -1039,7 +1039,7 @@ curl -X POST http://localhost:3000/api/v0/recetas/cedula/1234567890 \
 
 ---
 
-#### GET /api/v0/recetas/cliente/:cedula
+#### GET /api/v1/recetas/cliente/:cedula
 **Obtiene todas las recetas de un cliente por cédula (PÚBLICA - sin autenticación).**
 
 - **Auth**: No requerida
@@ -1047,7 +1047,7 @@ curl -X POST http://localhost:3000/api/v0/recetas/cedula/1234567890 \
 
 **Request Completo**:
 ```bash
-curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
+curl -X GET http://localhost:3000/api/v1/recetas/cliente/1234567890
 ```
 
 **Response 200 OK**:
@@ -1072,7 +1072,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### PUT /api/v0/recetas/:id
+#### PUT /api/v1/recetas/:id
 **Actualiza una receta.**
 
 - **Auth**: Bearer token requerido
@@ -1086,7 +1086,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### DELETE /api/v0/recetas/:id
+#### DELETE /api/v1/recetas/:id
 **Elimina una receta (hard delete).**
 
 - **Auth**: Bearer token requerido
@@ -1102,7 +1102,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ### Dosis (Protegidas)
 
-#### POST /api/v0/dosis
+#### POST /api/v1/dosis
 **Crea una dosis de medicamento para una receta.**
 
 - **Auth**: Bearer token requerido
@@ -1125,7 +1125,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### GET /api/v0/dosis/:id
+#### GET /api/v1/dosis/:id
 **Obtiene una dosis por ID.**
 
 **Response 200 OK**:
@@ -1141,7 +1141,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### PUT /api/v0/dosis/:id
+#### PUT /api/v1/dosis/:id
 **Actualiza una dosis.**
 
 **Response 200 OK**:
@@ -1153,7 +1153,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### DELETE /api/v0/dosis/:id
+#### DELETE /api/v1/dosis/:id
 **Elimina una dosis (hard delete).**
 
 **Response 200 OK**:
@@ -1167,7 +1167,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ### Inventario (Protegidas)
 
-#### POST /api/v0/inventario
+#### POST /api/v1/inventario
 **Registra un medicamento en inventario (asociado a una máquina).**
 
 - **Auth**: Bearer token requerido
@@ -1192,7 +1192,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### GET /api/v0/inventario/:id
+#### GET /api/v1/inventario/:id
 **Obtiene un producto del inventario por ID.**
 
 **Response 200 OK**:
@@ -1210,7 +1210,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### PUT /api/v0/inventario/:id
+#### PUT /api/v1/inventario/:id
 **Actualiza un producto del inventario.**
 
 **Response 200 OK**:
@@ -1222,7 +1222,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### DELETE /api/v0/inventario/:id
+#### DELETE /api/v1/inventario/:id
 **Elimina un producto del inventario (hard delete).**
 
 **Response 200 OK**:
@@ -1236,7 +1236,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ### Máquinas (Protegidas)
 
-#### POST /api/v0/maquinas
+#### POST /api/v1/maquinas
 **Registra una máquina dispensadora en el sistema.**
 
 - **Auth**: Bearer token requerido
@@ -1259,7 +1259,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### GET /api/v0/maquinas/:id
+#### GET /api/v1/maquinas/:id
 **Obtiene una máquina por ID.**
 
 **Response 200 OK**:
@@ -1275,7 +1275,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### PUT /api/v0/maquinas/:id
+#### PUT /api/v1/maquinas/:id
 **Actualiza una máquina (ubicación, estado, coordenadas).**
 
 **Response 200 OK**:
@@ -1287,7 +1287,7 @@ curl -X GET http://localhost:3000/api/v0/recetas/cliente/1234567890
 
 ---
 
-#### DELETE /api/v0/maquinas/:id
+#### DELETE /api/v1/maquinas/:id
 **Elimina una máquina (soft delete).**
 
 **Response 200 OK**:
@@ -1600,41 +1600,6 @@ Maquina (1) ── (n) MaquinaInventario (n) ── (1) Inventario
 - Configura `CROSS_ORIGIN` con el dominio de la web.
 - Asegura `PROJECT_URL` y `SUPABASE_KEY` validos para Supabase Auth.
 - Usa un process manager (PM2, systemd, Docker) para procesos persistentes.
-| `Inventario` | `id_maquina` | `Maquina.id` | ON DELETE CASCADE |
-
----
-
-## 🚀 Deployment
-
-### Deploy a Producción
-
-1. **Compilar**:
-   ```bash
-   npm run build
-   ```
-
-2. **Configurar variables de producción** en el servidor:
-   ```bash
-   export NODE_ENV=production
-   export PORT=3000
-   export DB_URL=postgres://...
-   export PROJECT_URL=https://...
-   export SUPABASE_KEY=...
-   ```
-
-3. **Ejecutar**:
-   ```bash
-   npm run start
-   ```
-
-### Monitoreo Recomendado
-
-- **PM2**: Mantener el proceso activo
-- **Nginx**: Proxy reverso
-- **CloudFlare**: CDN y DDoS protection
-- **Sentry**: Error tracking
-
----
 
 ## 🤝 Contribuciones
 

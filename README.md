@@ -30,7 +30,7 @@ S.I.M.A. es un sistema integral que permite a los doctores gestionar recetas ele
 
 ## Documentación por módulo
 
-- [API](api/README.md)
+- [API (prefijo /api/v1)](api/README.md)
 - [Web](web/README.md)
 
 ## Estructura general
