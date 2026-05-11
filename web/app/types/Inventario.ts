@@ -18,17 +18,19 @@ export const InventarioCreationSchema = z.object({
 
 export const InventarioUpdateSchema = InventarioCreationSchema.partial();
 
-// Relación many-to-many entre Máquina e Inventario
+// Relacion many-to-many entre maquina e inventario
 export const MaquinaInventarioSchema = z.object({
   id: z.number(),
-  id_maquina: z.number(),
+  codigo_maquina: z.string(),
+  id_maquina: z.string(),
   id_inventario: z.number(),
   cantidad: z.number().nullable().optional(),
 });
 
 export const MaquinaInventarioCreationSchema = z.object({
-  id_maquina: z.number("ID de máquina es requerido"),
-  id_inventario: z.number("ID de inventario es requerido"),
+  codigo_maquina: z.string().min(1, 'El código de la máquina es requerido'),
+  id_maquina: z.number(),
+  id_inventario: z.number(),
   cantidad: z.number().nullable().optional(),
 });
 
