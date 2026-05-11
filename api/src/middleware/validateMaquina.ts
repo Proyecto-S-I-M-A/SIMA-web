@@ -7,7 +7,11 @@ export const validateMaquinaCreation = [
     .optional({ checkFalsy: true })
     .isLength({ max: 50 })
     .withMessage('La ubicación no puede exceder 50 caracteres'),
-
+  body('id_maquina')
+    .notEmpty()
+    .withMessage('El ID de la máquina es requerido')
+    .isString()
+    .withMessage('El ID de la máquina debe ser una cadena de texto'),
   body('activo')
     .optional()
     .isBoolean()

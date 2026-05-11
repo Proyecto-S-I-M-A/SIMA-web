@@ -4,7 +4,7 @@ import { apiJson } from '../apiClient';
 
 export interface InventarioMaquinaItem {
   id: number;
-  id_maquina: number;
+  id_maquina: string;
   id_inventario: number;
   cantidad: number | null;
   medicamento: {
@@ -63,7 +63,7 @@ export const useGetMaquinaInventarios = (id: string, enabled: boolean = true) =>
   });
 };
 
-export const useGetMaquinaInventariosByMaquina = (id_maquina: number | null, enabled: boolean = true) => {
+export const useGetMaquinaInventariosByMaquina = (id_maquina: string | null, enabled: boolean = true) => {
   return useQuery({
     queryKey: ['maquina-inventario-by-maquina', id_maquina],
     queryFn: async (): Promise<MaquinaInventario[]> => {
@@ -76,7 +76,7 @@ export const useGetMaquinaInventariosByMaquina = (id_maquina: number | null, ena
   });
 };
 
-export const useGetInventarioMaquina = (id_maquina: number | null, enabled: boolean = true) => {
+export const useGetInventarioMaquina = (id_maquina: string | null, enabled: boolean = true) => {
   return useQuery({
     queryKey: ['inventario-maquina', id_maquina],
     queryFn: async (): Promise<InventarioMaquinaItem[]> => {
