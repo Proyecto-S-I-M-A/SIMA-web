@@ -27,6 +27,7 @@ export function MaquinaTable() {
 
   const handleRowClick = (maquina: {
     id: number;
+    id_maquina: string;
     ubicacion: string | null;
     activo: boolean | null;
     latitud: number | null;
@@ -36,6 +37,7 @@ export function MaquinaTable() {
 
     setEditingId(maquina.id);
     setEditForm({
+      id_maquina: maquina.id_maquina,
       ubicacion: maquina.ubicacion ?? '',
       activo: maquina.activo ?? true,
       latitud: maquina.latitud,
@@ -84,6 +86,7 @@ export function MaquinaTable() {
         <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
           <TableRow>
             <TableCell><strong>ID</strong></TableCell>
+            <TableCell><strong>Código</strong></TableCell>
             <TableCell><strong>Ubicación</strong></TableCell>
             <TableCell><strong>Latitud</strong></TableCell>
             <TableCell><strong>Longitud</strong></TableCell>
@@ -100,6 +103,18 @@ export function MaquinaTable() {
               sx={{ cursor: updatingId ? 'wait' : 'pointer' }}
             >
               <TableCell>{maquina.id}</TableCell>
+              <TableCell>
+                {editingId === maquina.id ? (
+                  <TextField
+                    value={editForm.id_maquina ?? ''}
+                    size="small"
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => handleFieldChange('id_maquina', e.target.value)}
+                  />
+                ) : (
+                  maquina.id_maquina
+                )}
+              </TableCell>
               <TableCell>
                 {editingId === maquina.id ? (
                   <TextField

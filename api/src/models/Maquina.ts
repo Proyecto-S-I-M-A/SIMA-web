@@ -3,6 +3,7 @@ import sequelize from "../config/sequelize.js";
 
 class Maquina extends Model {
   declare id: number;
+  declare id_maquina: string;
   declare ubicacion: string;
   declare activo: boolean;
   declare latitud: number;
@@ -15,6 +16,11 @@ Maquina.init(
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
+    },
+    id_maquina: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      unique: true,
     },
     ubicacion: DataTypes.STRING(50),
     activo: DataTypes.BOOLEAN,

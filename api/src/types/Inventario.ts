@@ -20,14 +20,14 @@ export type InventarioUpdateAttributes = Partial<
 
 export interface MaquinaInventarioAttributes {
   id: number;
-  id_maquina: number;
+  id_maquina: string;
   id_inventario: number;
   cantidad: number | null;
 }
 
 export interface MaquinaInventarioCreationAttributes {
   id?: number;
-  id_maquina: number;
+  id_maquina: string;
   id_inventario: number;
   cantidad?: number | null;
 }

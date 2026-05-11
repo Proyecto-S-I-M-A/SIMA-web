@@ -2,6 +2,11 @@ import { body, validationResult } from 'express-validator';
 import type { Request, Response, NextFunction } from 'express';
 
 export const validateMaquinaInventarioCreation = [
+  body('codigo_maquina')
+    .notEmpty()
+    .withMessage('El código de la máquina es requerido')
+    .isString()
+    .withMessage('El código de la máquina debe ser una cadena de texto'),
   body('id_maquina')
     .notEmpty()
     .withMessage('El ID de la máquina es requerido')
