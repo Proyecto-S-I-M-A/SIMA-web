@@ -2,12 +2,6 @@ import { body, validationResult } from 'express-validator';
 import type { Request, Response, NextFunction } from 'express';
 
 export const validateInventarioCreation = [
-  body('id_maquina')
-    .notEmpty()
-    .withMessage('El ID de la máquina es requerido')
-    .isInt()
-    .withMessage('El ID de la máquina debe ser un número'),
-
   body('nombre_medicamento')
     .trim()
     .optional({ checkFalsy: true })
@@ -25,15 +19,29 @@ export const validateInventarioCreation = [
     .isDecimal()
     .withMessage('El precio debe ser un número decimal'),
 
-  body('cantidad')
-    .optional({ checkFalsy: true })
-    .isInt()
-    .withMessage('La cantidad debe ser un número entero'),
-
   body('resetado')
     .optional()
     .isBoolean()
     .withMessage('Resetado debe ser un booleano'),
+];
+
+export const validateMaquinaInventarioCreation = [
+  body('id_maquina')
+    .notEmpty()
+    .withMessage('El ID de la máquina es requerido')
+    .isInt()
+    .withMessage('El ID de la máquina debe ser un número'),
+
+  body('id_inventario')
+    .notEmpty()
+    .withMessage('El ID del inventario es requerido')
+    .isInt()
+    .withMessage('El ID del inventario debe ser un número'),
+
+  body('cantidad')
+    .optional({ checkFalsy: true })
+    .isInt()
+    .withMessage('La cantidad debe ser un número entero'),
 ];
 
 export const handleValidationErrors = (

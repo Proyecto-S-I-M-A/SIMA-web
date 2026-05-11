@@ -1,23 +1,37 @@
 export interface InventarioAttributes {
   id: number;
-  id_maquina: number;
   nombre_medicamento: string | null;
   marca: string | null;
   precio: number | null;
-  cantidad: number | null;
   resetado: boolean | null;
 }
 
 export interface InventarioCreationAttributes {
   id?: number;
-  id_maquina: number;
   nombre_medicamento?: string | null;
   marca?: string | null;
   precio?: number | null;
-  cantidad?: number | null;
   resetado?: boolean | null;
 }
 
 export type InventarioUpdateAttributes = Partial<
   Omit<InventarioAttributes, "id">
+>;
+
+export interface MaquinaInventarioAttributes {
+  id: number;
+  id_maquina: string;
+  id_inventario: number;
+  cantidad: number | null;
+}
+
+export interface MaquinaInventarioCreationAttributes {
+  id?: number;
+  id_maquina: string;
+  id_inventario: number;
+  cantidad?: number | null;
+}
+
+export type MaquinaInventarioUpdateAttributes = Partial<
+  Omit<MaquinaInventarioAttributes, "id">
 >;

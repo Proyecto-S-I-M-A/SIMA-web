@@ -1,38 +1,64 @@
-export function useLogin() {
-  function SaveOnCokie(token: string, refreshToken: string) {
-    try {
-      localStorage.setItem('token', token);
-      localStorage.setItem('refresh_token', refreshToken);
-    } catch {
-      // ignore
-    }
+import { saveCookieStoreValue, deleteCookieStoreValue } from "~/lib/GetCookie";
 
-    const anyWindow = window as any;
-    if (anyWindow.cookieStore?.set) {
-      anyWindow.cookieStore.set('token', token);
-      anyWindow.cookieStore.set('refresh_token', refreshToken);
+export function useLogin() {
+  /**
+   * Guarda tokens de forma segura SOLO en cookies
+   * IMPORTANTE: NUNCA usa localStorage para tokens
+   */
+  async function SaveOnCookie(token: string, refreshToken: string) {
+    try {
+      // Guardar tokens en cookies seguras (NO en localStorage)
+      await saveCookieStoreValue("token", token);
+      await saveCookieStoreValue("refresh_token", refreshToken);
+    } catch {
+      console.error("Error al guardar tokens en cookies");
     }
   }
 
-  function GetFromCookie() {
-    const token = localStorage.getItem('token');
-    const refreshToken = localStorage.getItem('refresh_token');
+  /**
+   * Obtiene tokens de las cookies
+   */
+  async function GetFromCookie() {
+    // Nota: Esta es una función síncrona que devuelve sesión de sessionStorage
+    // Los tokens (access/refresh) se obtienen de manera asíncrona con getAccessToken() y getRefreshToken()
+    const token = sessionStorage.getItem('token');
+    const refreshToken = sessionStorage.getItem('refresh_token');
     return { token, refreshToken };
   }
 
-  function SaveSession(sessionID: string){
+  /**
+   * Guarda la sesión ID en sessionStorage (temporal, por sesión del navegador)
+   */
+  function SaveSession(sessionID: string) {
+    if (typeof window === 'undefined') return;
     sessionStorage.setItem('sessionID', sessionID);
   }
 
-  function SaveID(ID: number){
+  /**
+   * Guarda el ID del usuario en sessionStorage
+   */
+  function SaveID(ID: number) {
+    if (typeof window === 'undefined') return;
     sessionStorage.setItem('ID', ID.toString());
   }
 
+  /**
+   * Limpia los tokens de las cookies
+   */
+  async function ClearTokens() {
+    try {
+      await deleteCookieStoreValue("token");
+      await deleteCookieStoreValue("refresh_token");
+    } catch {
+      console.error("Error al limpiar tokens");
+    }
+  }
 
   return {
-    SaveOnCokie,
+    SaveOnCookie,
     GetFromCookie,
     SaveSession,
-    SaveID
-  }
+    SaveID,
+    ClearTokens,
+  };
 }

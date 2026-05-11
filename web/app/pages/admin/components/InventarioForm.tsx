@@ -4,7 +4,6 @@ import { Button, Checkbox, FormControlLabel, Stack, TextField, Typography } from
 import { useCreateInventarioMutation } from '~/lib/api/QueryInventario';
 import type { InventarioCreation } from '~/types/Inventario';
 import { InventarioCreationSchema } from '~/types/Inventario';
-import CustomeSelectQuery from '~/components/CustomeSelectQuery';
 
 export function InventarioForm() {
   const {
@@ -15,11 +14,9 @@ export function InventarioForm() {
   } = useForm<InventarioCreation>({
     resolver: zodResolver(InventarioCreationSchema),
     defaultValues: {
-      id_maquina: undefined,
       nombre_medicamento: '',
       marca: '',
       precio: null,
-      cantidad: null,
       resetado: false,
     },
   });
@@ -47,30 +44,6 @@ export function InventarioForm() {
             {error instanceof Error ? error.message : 'Error al crear inventario'}
           </Typography>
         )}
-
-        <Controller
-          name="id_maquina"
-          control={control}
-          render={({ field }) => (
-            <>
-              {errors.id_maquina && (
-                <Typography variant="body2" sx={{ color: 'error.main' }}>
-                  {errors.id_maquina.message}
-                </Typography>
-              )}
-             <CustomeSelectQuery
-             value={field.value || ''}
-              labelID='maquinas1'
-              label='ID Maquina'
-              labelSelector='ubicacion'
-              secondaryLabelSelector='id'
-              valueSelector='id'
-             endpoint='maquinas'
-             onChange={field.onChange}
-             />
-            </>
-          )}
-        />
 
         <Controller
           name="nombre_medicamento"
@@ -109,21 +82,6 @@ export function InventarioForm() {
             <TextField
               fullWidth
               label="Precio"
-              type="number"
-              variant="outlined"
-              value={field.value ?? ''}
-              onChange={(e) => field.onChange(e.target.value === '' ? null : Number(e.target.value))}
-            />
-          )}
-        />
-
-        <Controller
-          name="cantidad"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              fullWidth
-              label="Cantidad"
               type="number"
               variant="outlined"
               value={field.value ?? ''}

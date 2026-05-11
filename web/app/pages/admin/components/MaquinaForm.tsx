@@ -14,6 +14,7 @@ export function MaquinaForm() {
   } = useForm<MaquinaCreation>({
     resolver: zodResolver(MaquinaCreationSchema),
     defaultValues: {
+      id_maquina: '',
       ubicacion: '',
       activo: true,
       latitud: null,
@@ -43,6 +44,23 @@ export function MaquinaForm() {
             {error instanceof Error ? error.message : 'Error al crear máquina'}
           </Typography>
         )}
+
+        <Controller
+          name="id_maquina"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              fullWidth
+              label="Codigo de maquina"
+              placeholder="MQ-001"
+              variant="outlined"
+              {...field}
+              value={field.value || ''}
+              error={!!errors.id_maquina}
+              helperText={errors.id_maquina?.message}
+            />
+          )}
+        />
 
         <Controller
           name="ubicacion"

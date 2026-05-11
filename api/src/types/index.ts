@@ -6,5 +6,6 @@ export * from "./HistorialMedico.js";
 export * from "./Inventario.js";
 export * from "./Maquina.js";
 export * from "./Receta.js";
+export * from "./RecetasYDosis.js";
 export * from "./Usuario.js";
 export * from "./Login.js";

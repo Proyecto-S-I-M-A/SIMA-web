@@ -9,6 +9,7 @@ import RouteReceta from "./routes/Route_Receta.js";
 import RouteDosis from "./routes/Route_Dosis.js";
 import RouteInventario from "./routes/Route_Inventario.js";
 import RouteMaquina from "./routes/Route_Maquina.js";
+import RouteMaquinaInventario from "./routes/Route_MaquinaInventario.js";
 import requireSupabaseAuth from "./middleware/requireSupabaseAuth.js";
 import RouteSession from "./routes/Route_Session.js";
 import RouteGetRecetaByCedula from "./routes/Route-GetRecetaByCedula.js";
@@ -20,7 +21,7 @@ dotenv.config();
 
 const app = express();
 
-const prefix = "/api/v0";
+const prefix = "/api/v1";
 
 app.use(cors(
   {
@@ -31,8 +32,10 @@ app.use(cors(
 
 app.use(express.json());
 app.use(prefix, RouteSession);
-app.use(prefix, RouteGetRecetaByCedula);
+
 app.use(prefix, requireSupabaseAuth);
+// Rutas protegidas por autenticación
+app.use(prefix, RouteGetRecetaByCedula);
 app.use(prefix, RouteAcceso);
 app.use(prefix, RouteCliente);
 app.use(prefix, RouteUsuario);
@@ -42,5 +45,6 @@ app.use(prefix, RouteReceta);
 app.use(prefix, RouteDosis);
 app.use(prefix, RouteInventario);
 app.use(prefix, RouteMaquina);
+app.use(prefix, RouteMaquinaInventario);
 
 export default app;

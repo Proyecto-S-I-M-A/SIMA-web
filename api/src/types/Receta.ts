@@ -10,6 +10,7 @@ export interface RecetaAttributes {
   correo: string | null;
   codigo: number | null;
   fecha: Date | null;
+  estado: string | null;
 }
 
 export interface RecetaCreationAttributes {
@@ -22,6 +23,7 @@ export interface RecetaCreationAttributes {
   correo?: string | null;
   codigo?: number | null;
   fecha?: Date | null;
+  estado?: "Pendiente" | "Retirado" | "Vencido" | null;
 }
 
 export interface RecetasDosisAttributes {

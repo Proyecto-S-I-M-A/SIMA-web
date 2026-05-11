@@ -46,10 +46,6 @@ export function PatientsTable({
 }: Props) {
   const navigate = useNavigate();
 
-  const handleRowClick = (cedula: string) => {
-    navigate(`/home/paciente/${cedula}`);
-  };
-
   return (
     <>
       <Box sx={{ px: 4, mt: 3, mb: 2 }}>
@@ -124,7 +120,6 @@ export function PatientsTable({
                   <TableRow
                     key={row.id}
                     hover
-                    onClick={() => handleRowClick(row.cedula ?? '')}
                     sx={{
                       cursor: 'pointer',
                       transition: 'background-color 0.2s',

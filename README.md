@@ -1,10 +1,10 @@
-# FarmaExpress
+# S.I.M.A.
 
-Plataforma para una máquina expendedora de medicamentos con recetas electrónicas. El proyecto contempla tres frentes: una API para la lógica de negocio, una web para doctores, una app móvil para clientes y un panel para el retiro de medicamentos en la máquina.
+**Sisteam Inteligente Medicación Asistida** - Plataforma completa para una máquina expendedora de medicamentos con recetas electrónicas. El proyecto contempla tres frentes: una API para la lógica de negocio, una web para doctores, una app móvil para clientes y un panel para el retiro de medicamentos en la máquina.
 
 ## Descripción
 
-El sistema permite a los doctores gestionar recetas electrónicas desde la web, a los clientes consultar su información desde la app móvil y a la máquina validar y dispensar medicamentos según la receta aprobada. La arquitectura separa claramente el backend, el frontend web y el cliente móvil para facilitar mantenimiento y evolución.
+S.I.M.A. es un sistema integral que permite a los doctores gestionar recetas electrónicas desde la web, a los clientes consultar su información desde la app móvil y a la máquina validar y dispensar medicamentos según la receta aprobada. La arquitectura separa claramente el backend, el frontend web y el cliente móvil para facilitar mantenimiento, escalabilidad y evolución del sistema.
 
 ## Tecnologías utilizadas
 
@@ -30,7 +30,7 @@ El sistema permite a los doctores gestionar recetas electrónicas desde la web, 
 
 ## Documentación por módulo
 
-- [API](api/README.md)
+- [API (prefijo /api/v1)](api/README.md)
 - [Web](web/README.md)
 
 ## Estructura general

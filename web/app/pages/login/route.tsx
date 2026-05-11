@@ -38,7 +38,7 @@ export default function Login() {
     resolver: zodResolver(LoginSchema),
   });
   const navigate = useNavigate();
-  const { SaveOnCokie, SaveSession } = useLogin();
+  const { SaveOnCookie, SaveSession } = useLogin();
   const { mutateAsync, isError, isSuccess, error } = useLoginMutation();
   const { mutateAsync: UpdateAccess } = useUpdateAccesoActivoMutation();
   const [sessionID, setSessionID] = useState<string | null>(null);
@@ -54,12 +54,14 @@ export default function Login() {
       });
       navigate('/home');
     }
-  }, [isSuccess, navigate]);
+  }, [sessionID]);
+
   const onSubmit = async (formData: LoginData) => {
     try {
       const result = await mutateAsync(formData);
       if (result?.session?.access_token && result?.session?.refresh_token) {
-        SaveOnCokie(result.session.access_token, result.session.refresh_token);
+        // Guardar tokens en cookies seguras
+        await SaveOnCookie(result.session.access_token, result.session.refresh_token);
         setSessionID(result.session.user.id);
       }
     } catch {
@@ -177,22 +179,6 @@ export default function Login() {
             }}
           >
             {/* Logo/Title */}
-            <Box
-              sx={{
-                width: 60,
-                height: 60,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #0095ff 0%, #1e00ff 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                mb: 2,
-              }}
-            >
-              <Typography variant="h5" sx={{ color: 'white', fontWeight: 700 }}>
-                FE
-              </Typography>
-            </Box>
 
             <Typography
               component="h1"
@@ -205,14 +191,14 @@ export default function Login() {
                 margin: '18px auto 10px auto',
               }}
             >
-              FarmaExpress
+              S.I.M.A.
             </Typography>
 
             <Typography
               variant="body2"
               sx={{ color: 'text.secondary', mb: 3, textAlign: 'center' }}
             >
-              Excelencia en el cuidado de tu salud.
+              Sistema Inteligente Medica Asistida
             </Typography>
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)}>

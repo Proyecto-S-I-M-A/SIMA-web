@@ -1,10 +1,10 @@
-# Web de FarmaTicAPI
+# Web de S.I.M.A.
 
-Interfaz web pensada para el uso exclusivo de doctores. Desde aquí se gestiona la consulta y creación de recetas electrónicas, así como el acceso a la información necesaria para operar el sistema de dispensación.
+Interfaz web pensada para el uso exclusivo de doctores. Desde aquí se gestiona la consulta y creación de recetas electrónicas, así como el acceso a la información necesaria para operar el sistema de dispensación de S.I.M.A.
 
 ## Descripción
 
-Esta aplicación web funciona como panel médico del proyecto. Su foco es la gestión de recetas, la consulta de datos del paciente y la interacción con los flujos que alimentan la máquina expendedora de medicamentos.
+Esta aplicación web funciona como panel médico de Sisteam Inteligente Medicación Asistida. Su foco es la gestión de recetas, la consulta de datos del paciente y la interacción con los flujos que alimentan la máquina expendedora de medicamentos.
 
 ## Tecnologías utilizadas
 
@@ -18,6 +18,26 @@ Esta aplicación web funciona como panel médico del proyecto. Su foco es la ges
 - React Hook Form
 - React Query
 - Zod
+
+## Componentes globales útiles
+
+- **ButtonVariant**: Botón reutilizable con variantes y tamaños.
+- **CustomeSelectQuery**: Select conectado a endpoints con `useQueryAll`.
+- **CustomeTabPanel**: Paneles reutilizables para tabs administrativas.
+- **ProtectedRoute**: Wrapper de rutas protegidas (valida sesion).
+
+## Librerías y utilidades (lib)
+
+- **apiClient**: cliente HTTP con soporte de auth y manejo de errores.
+- **GetCookie / GetSession**: utilidades para tokens y session storage.
+- **useProtectedRoute**: hook para proteger pantallas privadas.
+- **RefreshQuery**: helper de invalidacion de cache en React Query.
+
+## Query helpers
+
+- `app/lib/api/*`: hooks de React Query por recurso (CRUD, listados, filtros).
+- `app/lib/Query.ts`: helpers de login/signup y mutaciones generales.
+- `app/lib/api/QueryAll.ts`: helper para cargar listas completas (`/endpoint/all`).
 
 ## Estado actual
 
@@ -117,3 +137,21 @@ Definición del tema visual utilizado por Material UI y la consistencia de estil
 ## Nota
 
 La app móvil del cliente está contemplada aparte y se desarrollará con Expo y React Native.
+
+## 🚀 Deploy (Web)
+
+1. Configura variables de entorno:
+	- `VITE_API_URL` (URL base de la API)
+2. Instala dependencias:
+	```bash
+	npm install
+	```
+3. Compila para produccion:
+	```bash
+	npm run build
+	```
+4. Publica el contenido de `dist/` en tu hosting estatico.
+
+**Notas**
+- En local, `VITE_API_URL` suele apuntar a `http://localhost:3000`.
+- Ajusta el CORS en la API para permitir el dominio del frontend.
