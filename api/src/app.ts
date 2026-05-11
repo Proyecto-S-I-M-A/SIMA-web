@@ -21,7 +21,7 @@ dotenv.config();
 
 const app = express();
 
-const prefix = "/api/v0";
+const prefix = "/api/v1";
 
 app.use(cors(
   {
