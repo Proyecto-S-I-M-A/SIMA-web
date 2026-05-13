@@ -1,7 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Cliente, ClienteUpdate } from "~/types/cliente";
+import type { Cliente, ClienteCreation, ClienteUpdate } from "~/types/cliente";
 import type { Row } from "~/pages/dashboard/types";
 import { apiJson } from "../apiClient";
+import type { CreateClienteResponse } from "../Query";
+
+export const useCreateClienteMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (form: ClienteCreation): Promise<CreateClienteResponse> => {
+      return apiJson<CreateClienteResponse>("/clientes", {
+        method: "POST",
+        body: form,
+        auth: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["clientes"] });
+      queryClient.invalidateQueries({ queryKey: ["clientes-all"] });
+    },
+  }
+);
+};
+
+
 
 export const useGetAllClientes = () => {
   return useQuery({

@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Stack, TextField, Typography, Button, FormControlLabel, Checkbox } from '@mui/material';
 import type { ClienteCreation } from '~/types/cliente';
 import { ClienteCreationSchema } from '~/types/cliente';
-import { useCreateClienteMutation } from '~/lib/Query';
+import { useCreateClienteMutation } from '~/lib/api/QueryCliente';
 import RefreshQuery from '~/lib/RefreshQuery';
 import CustomeSelectQuery from '~/components/CustomeSelectQuery';
 
@@ -20,7 +20,6 @@ export function ClienteForm() {
   const { mutate, isPending, isError, error, isSuccess, data } = useCreateClienteMutation();
 
   const onSubmit = (data: ClienteCreation) => {
-    console.log('Form Data:', data);
     mutate(data, {
       onSuccess: () => reset(),
     });

@@ -4,6 +4,7 @@ import { Button, Stack, TextField, Typography } from '@mui/material';
 import { useCreateDosisMutation } from '~/lib/api/QueryDosis';
 import type { DosisCreation } from '~/types/Dosis';
 import { DosisCreationSchema } from '~/types/Dosis';
+import { number } from 'zod';
 
 export function DosisForm() {
   const {
@@ -54,7 +55,7 @@ export function DosisForm() {
               type="number"
               variant="outlined"
               value={field.value ?? ''}
-              onChange={(e) => field.onChange(e.target.value === '' ? null : Number(e.target.value))}
+              onChange={(e) => field.onChange(Number(e.target.value) || undefined)}
             />
           )}
         />
@@ -75,7 +76,7 @@ export function DosisForm() {
                 type="number"
                 variant="outlined"
                 value={field.value ?? ''}
-                onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                onChange={(e) => field.onChange(Number(e.target.value) || undefined)}
               />
             </>
           )}

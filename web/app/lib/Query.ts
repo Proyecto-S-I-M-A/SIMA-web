@@ -28,28 +28,4 @@ export const useSignupMutation = () => {
 
 export type CreateClienteResponse = { messages: string };
 
-export const useCreateClienteMutation = () => {
-  return useMutation({
-    mutationFn: async (form: ClienteCreation): Promise<CreateClienteResponse> => {
-      return apiJson<CreateClienteResponse>("/clientes", {
-        method: "POST",
-        body: form,
-        auth: true,
-      });
-    },
-  });
-};
 
-
-
-export const useCreateUsuarioMutation = () => {
-  return useMutation({
-    mutationFn: async (form: UsuarioCreation): Promise<unknown> => {
-      return apiJson<unknown>("/usuarios", {
-        method: "POST",
-        body: form,
-        auth: true,
-      });
-    },
-  });
-};
