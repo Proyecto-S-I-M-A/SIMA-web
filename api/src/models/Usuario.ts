@@ -8,6 +8,7 @@ class Usuario extends Model {
   declare rol: string | null;
   declare password: string | null;
   declare usuario: string | null
+  declare id_acceso: string;
   declare ruc_doctor: string | null;
   declare especialidades: string | null;
   declare activo: boolean;
@@ -23,6 +24,10 @@ Usuario.init(
     nombre: DataTypes.STRING(20),
     apellido: DataTypes.STRING(20),
     rol: DataTypes.STRING(20),
+    id_acceso: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
     ruc_doctor: DataTypes.TEXT,
     especialidades: DataTypes.STRING(20),
     activo: {

@@ -20,6 +20,7 @@ export function ClienteForm() {
   const { mutate, isPending, isError, error, isSuccess, data } = useCreateClienteMutation();
 
   const onSubmit = (data: ClienteCreation) => {
+    console.log('Form Data:', data);
     mutate(data, {
       onSuccess: () => reset(),
     });
@@ -152,7 +153,7 @@ export function ClienteForm() {
                 secondaryLabelSelector='correo'
                 valueSelector='id'
                 value={field.value ?? ''}
-                onChange={field.onChange}
+                onChange={(e) => {field.onChange(String(e.target.value))}}
               />
             </>
           )}

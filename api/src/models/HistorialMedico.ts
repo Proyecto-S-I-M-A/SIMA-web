@@ -3,6 +3,7 @@ import sequelize from "../config/sequelize.js";
 
 class HistorialMedico extends Model {
   declare id: number;
+  declare id_cliente: number;
   declare fecha_consulta: Date
   declare motivo_consulta: string
   declare diagnostico: string
@@ -23,6 +24,10 @@ HistorialMedico.init(
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
+    },
+    id_cliente: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
     },
     fecha_consulta: DataTypes.DATE,
     motivo_consulta: DataTypes.STRING(255),
