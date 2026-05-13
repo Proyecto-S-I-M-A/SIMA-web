@@ -10,14 +10,14 @@
 
 ## 📋 Tabla de Contenidos
 
-1. [Descripción General](#descripción-general)
-2. [Tecnologías y Dependencias](#tecnologías-y-dependencias)
+1. [Descripción General](#descripcion-general)
+2. [Tecnologías y Dependencias](#tecnologias-y-dependencias)
 3. [Requisitos Previos](#requisitos-previos)
-4. [Instalación](#instalación)
-5. [Configuración (Variables de Entorno)](#configuración-variables-de-entorno)
+4. [Instalación](#instalacion)
+5. [Configuración (Variables de Entorno)](#configuracion-variables-de-entorno)
 6. [Scripts Disponibles](#scripts-disponibles)
-7. [Autenticación](#autenticación)
-8. [Documentación de Endpoints](#documentación-de-endpoints)
+7. [Autenticación](#autenticacion)
+8. [Documentación de Endpoints](#documentacion-de-endpoints)
 9. [Ejemplos de Modelos](#ejemplos-de-modelos)
 10. [Estructura del Proyecto](#estructura-del-proyecto)
 11. [Relaciones de Base de Datos](#relaciones-de-base-de-datos)
@@ -26,6 +26,7 @@
 
 ---
 
+<a id="descripcion-general"></a>
 ## 🎯 Descripción General
 
 API de S.I.M.A. es una REST API desarrollada con **Express.js** y **TypeScript** que gestiona:
@@ -40,6 +41,7 @@ API de S.I.M.A. es una REST API desarrollada con **Express.js** y **TypeScript**
 
 ---
 
+<a id="tecnologias-y-dependencias"></a>
 ## 🛠 Tecnologías y Dependencias
 
 ### Core
@@ -69,6 +71,7 @@ API de S.I.M.A. es una REST API desarrollada con **Express.js** y **TypeScript**
 
 ---
 
+<a id="requisitos-previos"></a>
 ## ✅ Requisitos Previos
 
 Antes de instalar, asegúrate de tener:
@@ -88,6 +91,7 @@ psql --version
 
 ---
 
+<a id="instalacion"></a>
 ## 📦 Instalación
 
 ### 1. Clonar o descargar el repositorio
@@ -137,6 +141,7 @@ El servidor estará disponible en `http://localhost:3000` (o el puerto configura
 
 ---
 
+<a id="configuracion-variables-de-entorno"></a>
 ## 🔑 Configuración (Variables de Entorno)
 
 ### .env Ejemplo Completo
@@ -185,6 +190,7 @@ LOG_LEVEL=debug
 
 ---
 
+<a id="scripts-disponibles"></a>
 ## 📜 Scripts Disponibles
 
 ```bash
@@ -214,6 +220,7 @@ npm run gen-types        # Genera types/database.types.ts desde Supabase
 
 ---
 
+<a id="autenticacion"></a>
 ## 🔐 Autenticación
 
 ### Flujo Estándar
@@ -250,30 +257,7 @@ Content-Type: application/json
 
 ---
 
-## ✅ Validación de Inputs
-
-La API usa **express-validator** con middlewares por recurso. Cada ruta de creación/actualización aplica el validador correspondiente y luego `handleValidationErrors`.
-
-**Middleware disponibles (api/src/middleware):**
-- `validateAccesoCreation`
-- `validateClienteCreation`
-- `validateDosisCreation`
-- `validateFichaMedicaCreation`
-- `validateHistorialMedicoCreation`
-- `validateInventarioCreation`
-- `validateMaquinaCreation`
-- `validateMaquinaInventarioCreation`
-- `validateRecetaCreation`
-- `validateUsuarioCreation`
-
-**Patrón de uso:**
-```ts
-router.post('/recurso', validateRecursoCreation, handleValidationErrors, CREATE);
-router.put('/recurso/:id', validateRecursoCreation, handleValidationErrors, UPDATE);
-```
-
----
-
+<a id="documentacion-de-endpoints"></a>
 ## 📚 Documentación de Endpoints
 
 ### Resumen de Endpoints y Controladores
@@ -1299,6 +1283,7 @@ curl -X GET http://localhost:3000/api/v1/recetas/cliente/1234567890
 
 ---
 
+<a id="ejemplos-de-modelos"></a>
 ## 📊 Ejemplos de Modelos
 
 ### Completo: Acceso
@@ -1448,6 +1433,7 @@ curl -X GET http://localhost:3000/api/v1/recetas/cliente/1234567890
 
 ---
 
+<a id="estructura-del-proyecto"></a>
 ## 📁 Estructura del Proyecto
 
 ```
@@ -1546,21 +1532,13 @@ api/
 
 ---
 
+<a id="relaciones-de-base-de-datos"></a>
 ## 🗄️ Relaciones de Base de Datos
 
 ### Diagrama Conceptual
 
-```
-Acceso (1) ──────────────────── (n) Cliente
-           |
-           ├── (1) FichaMedica
-           ├── (n) HistorialMedico
-           └── (n) Receta
-             |
-             └── (n) Dosis
+<img width="1615" height="829" alt="Diagrama DB" src="https://github.com/user-attachments/assets/bff01c4e-53e5-48ea-b74a-ecb4199bf5f4" />
 
-Maquina (1) ── (n) MaquinaInventario (n) ── (1) Inventario
-```
 
 ### Foreign Keys
 
