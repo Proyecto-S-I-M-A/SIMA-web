@@ -1,15 +1,22 @@
-import  { Paper, Box, Typography, IconButton, TextField, MenuItem } from "@mui/material";
-import  { Controller } from "react-hook-form";
+import { Paper, Box, Typography, IconButton, TextField } from '@mui/material';
+import { Controller, type Control, type FieldErrors } from 'react-hook-form';
 import DeleteIcon from '@mui/icons-material/Delete';
+import type { RecetasDosisCreation } from '~/types/receta';
+import CustomeSelectQuery from '~/components/CustomeSelectQuery';
 
-
-export default function DosisField({ index, control, errors, inventarios, onRemove }: {
+type DosisFieldProps = {
   index: number;
-  control: any;
-  errors: any;
-  inventarios: any[];
+  control: Control<RecetasDosisCreation>;
+  errors: FieldErrors<RecetasDosisCreation>;
   onRemove: () => void;
-}) {
+};
+
+export default function DosisField({
+  index,
+  control,
+  errors,
+  onRemove,
+}: DosisFieldProps) {
   return (
     <Paper sx={{ p: 2, mb: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -26,23 +33,18 @@ export default function DosisField({ index, control, errors, inventarios, onRemo
             name={`Dosis.${index}.id_medicamento`}
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                select
-                fullWidth
+              <CustomeSelectQuery
+                endpoint="inventario"
+                labelSelector="nombre_medicamento"
+                secondaryLabelSelector="marca"
+                valueSelector="id"
                 label="Medicina"
                 value={field.value ?? ''}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                error={!!errors?.Dosis?.[index]?.id_medicamento}
-                helperText={errors?.Dosis?.[index]?.id_medicamento?.message}
-              >
-                <MenuItem value="">Seleccionar medicina</MenuItem>
-                {inventarios?.map((inv: any) => (
-                  <MenuItem key={inv.id} value={inv.id}>
-                    {inv.nombre_medicamento} - {inv.marca}
-                  </MenuItem>
-                ))}
-              </TextField>
+                onChange={(event) => {
+                  const nextValue = event.target.value;
+                  field.onChange(nextValue ? Number(nextValue) : null);
+                }}
+              />
             )}
           />
         </Box>

@@ -34,6 +34,7 @@ export default function NuevaReceta() {
   const cedula = searchParams.get('cedula') || '';
   const sessionID = GetSession() || '';
   const [successMessage, setSuccessMessage] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     data: cliente,
@@ -101,6 +102,7 @@ export default function NuevaReceta() {
 
   const onSubmit = async (data: RecetasDosisCreation) => {
     try {
+      setSubmitError(null);
       await createRecetaMutation.mutateAsync({
         Receta: {
           ...data.Receta,
@@ -116,6 +118,7 @@ export default function NuevaReceta() {
       }, 1500);
     } catch (error) {
       console.error('Error al crear receta:', error);
+      setSubmitError(error instanceof Error ? error.message : 'No se pudo crear la receta');
     }
   };
 
@@ -243,13 +246,25 @@ export default function NuevaReceta() {
                 <Controller
                   name="Receta.fecha"
                   control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      type="date"
-                    />
-                  )}
+                  render={({ field }) => {
+                    const value = field.value
+                      ? new Date(field.value).toISOString().slice(0, 10)
+                      : '';
+
+                    return (
+                      <TextField
+                        {...field}
+                        fullWidth
+                        type="date"
+                        value={value}
+                        onChange={(event) =>
+                          field.onChange(event.target.value ? new Date(event.target.value) : null)
+                        }
+                        error={!!errors.Receta?.fecha}
+                        helperText={errors.Receta?.fecha?.message}
+                      />
+                    );
+                  }}
                 />
               </Box>
               <Box>
@@ -292,13 +307,18 @@ export default function NuevaReceta() {
               </Alert>
             )}
 
+            {submitError && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {submitError}
+              </Alert>
+            )}
+
             {fields.map((field, index) => (
               <DosisField
                 key={field.id}
                 index={index}
                 control={control}
                 errors={errors}
-                inventarios={inventarios ?? []}
                 onRemove={() => remove(index)}
               />
             ))}

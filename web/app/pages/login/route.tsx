@@ -19,7 +19,6 @@ import { useLoginMutation } from '~/lib/Query';
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import {
-  useCreateAccesoMutation,
   useUpdateAccesoActivoMutation,
 } from '~/lib/api/QueryAcceso';
 
@@ -39,7 +38,7 @@ export default function Login() {
   });
   const navigate = useNavigate();
   const { SaveOnCookie, SaveSession } = useLogin();
-  const { mutateAsync, isError, isSuccess, error } = useLoginMutation();
+  const { mutateAsync, isError, isSuccess, error, isPending } = useLoginMutation();
   const { mutateAsync: UpdateAccess } = useUpdateAccesoActivoMutation();
   const [sessionID, setSessionID] = useState<string | null>(null);
 
@@ -295,7 +294,7 @@ export default function Login() {
                   </Typography>
                 )}
                 <ButtonVariant type="submit" variant="Primary" size="medium">
-                  Iniciar Sesión
+                  {isPending ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                 </ButtonVariant>
 
                 <Stack spacing={4}>
