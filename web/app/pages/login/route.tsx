@@ -197,7 +197,7 @@ export default function Login() {
               variant="body2"
               sx={{ color: 'text.secondary', mb: 3, textAlign: 'center' }}
             >
-              Sistema Inteligente Medica Asistida
+              Sistema Inteligente Medicación Asistida
             </Typography>
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)}>

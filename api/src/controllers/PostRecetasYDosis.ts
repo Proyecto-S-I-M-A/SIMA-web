@@ -10,9 +10,11 @@ export default async function PostRecetasYDosis(req: Request, res: Response) {
             return res.status(400).json({ error: 'Faltan datos de receta o dosis' });
         }
         const receta = await Receta.create(body.Receta as any, {returning: true});
-        body.Dosis.forEach(async (dosis) => {
-            await Dosis.create({ ...dosis, id_receta: receta.id } as any);
-        });
+        await Promise.all(
+            body.Dosis.map((dosis) =>
+                Dosis.create({ ...dosis, id_receta: receta.id } as any),
+            ),
+        );
         res.status(201).json(receta);
     }
     catch (error) {
