@@ -3,6 +3,7 @@ export interface InventarioAttributes {
   nombre_medicamento: string | null;
   marca: string | null;
   precio: number | null;
+  codigo: string | null;
   resetado: boolean | null;
 }
 
@@ -12,6 +13,7 @@ export interface InventarioCreationAttributes {
   marca?: string | null;
   precio?: number | null;
   resetado?: boolean | null;
+  codigo?: string | null;
 }
 
 export type InventarioUpdateAttributes = Partial<
