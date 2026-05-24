@@ -9,7 +9,6 @@ export const DosisSchema = z.object({
 });
 
 export const DosisCreationSchema = z.object({
-  id: z.number().optional(),
   id_medicamento: z.number().nullable().optional(),
   id_receta: z.number({ message: 'El ID de la receta es requerido' }),
   cantidad: z.number().nullable().optional(),
