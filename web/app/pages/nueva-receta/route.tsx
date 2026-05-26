@@ -4,52 +4,43 @@ import { useGetUsuario } from '~/lib/api/QueryUsuario';
 import { useCreateRecetaWithDosisMutation } from '~/lib/api/QueryReceta';
 import { useGetInventario } from '~/lib/api/QueryInventario';
 import { useProtectedRoute } from '~/lib/useProtectedRoute';
-import {GetSession} from '~/lib/GetSession';
+import { GetSession } from '~/lib/GetSession';
 import {
+  Alert,
   Box,
-  Container,
-  Typography,
-  Paper,
-  TextField,
   Button,
   CircularProgress,
-  Alert,
-  InputLabel,
+  Container,
+  Stack,
+  Typography,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
 import { RecetasDosisSchema, type RecetasDosisCreation } from '~/types/receta';
 import { useState, useEffect } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Navbar } from '../dashboard/components/Navbar';
-import DosisField from './components/DosisField';
+import PatientBanner from './components/PatientBanner';
+import DoctorSection from './components/DoctorSection';
+import RecetaDataSection from './components/RecetaDataSection';
+import MedicamentosSection from './components/MedicamentosSection';
+import SuccessModal from './components/SuccessModal';
 
 export default function NuevaReceta() {
-  // Validar autenticación
   useProtectedRoute();
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const cedula = searchParams.get('cedula') || '';
   const sessionID = GetSession() || '';
+
   const [successMessage, setSuccessMessage] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const {
-    data: cliente,
-    isLoading: loadingCliente,
-  } = useGetClienteByCedula(cedula, !!cedula);
-
-  const {
-    data: usuario,
-    isLoading: loadingUsuario,
-  } = useGetUsuario(sessionID, !!sessionID);
-
-  const {
-    data: inventarios,
-    isLoading: loadingInventario,
-  } = useGetInventario('all', true);
+  const { data: cliente, isLoading: loadingCliente } = useGetClienteByCedula(cedula, !!cedula);
+  const { data: usuario, isLoading: loadingUsuario } = useGetUsuario(sessionID, !!sessionID);
+  // Precarga el caché que consume CustomeSelectQuery en DosisField
+  const { isLoading: loadingInventario } = useGetInventario('all', true);
 
   const createRecetaMutation = useCreateRecetaWithDosisMutation();
 
@@ -71,25 +62,14 @@ export default function NuevaReceta() {
         fecha: new Date(),
         estado: 'Pendiente',
       },
-      Dosis: [
-        {
-          id_medicamento: null,
-          cantidad: null,
-          instrucciones: '',
-        },
-      ],
+      Dosis: [{ id_medicamento: null, cantidad: null, instrucciones: '' }],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'Dosis',
-  });
+  const { fields, append, remove } = useFieldArray({ control, name: 'Dosis' });
 
   useEffect(() => {
-    if (cliente) {
-      setValue('Receta.id_cliente', Number(cliente.id));
-    }
+    if (cliente) setValue('Receta.id_cliente', Number(cliente.id));
   }, [cliente, setValue]);
 
   useEffect(() => {
@@ -104,48 +84,45 @@ export default function NuevaReceta() {
     try {
       setSubmitError(null);
       await createRecetaMutation.mutateAsync({
-        Receta: {
-          ...data.Receta,
-        },
+        Receta: { ...data.Receta },
         Dosis: data.Dosis.map((d) => ({
           ...d,
           cantidad: d.cantidad ? Number(d.cantidad) : null,
         })),
       });
       setSuccessMessage(true);
-      setTimeout(() => {
-        navigate('/home');
-      }, 1500);
+      setTimeout(() => navigate('/home'), 1500);
     } catch (error) {
       console.error('Error al crear receta:', error);
       setSubmitError(error instanceof Error ? error.message : 'No se pudo crear la receta');
     }
   };
 
+  /* ─── Loading ─── */
   if (loadingCliente || loadingUsuario || loadingInventario) {
     return (
-      <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
         <Navbar rawSearch="" onSearchChange={() => {}} />
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-          <CircularProgress />
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 12, gap: 2 }}>
+          <CircularProgress size={48} />
+          <Typography variant="body2" color="text.secondary">
+            Cargando información…
+          </Typography>
         </Box>
       </Box>
     );
   }
 
+  /* ─── Sin paciente ─── */
   if (!cedula || !cliente) {
     return (
-      <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
         <Navbar rawSearch="" onSearchChange={() => {}} />
-        <Container maxWidth="lg" sx={{ pt: 2 }}>
-          <Alert severity="warning">
+        <Container maxWidth="sm" sx={{ pt: 6 }}>
+          <Alert severity="warning" sx={{ borderRadius: 2 }}>
             No se seleccionó un paciente. Seleccione uno desde el dashboard.
           </Alert>
-          <Button
-            startIcon={<ArrowBackIcon />}
-            onClick={() => navigate('/home')}
-            sx={{ mt: 2 }}
-          >
+          <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/home')} sx={{ mt: 2 }}>
             Volver al dashboard
           </Button>
         </Container>
@@ -153,222 +130,43 @@ export default function NuevaReceta() {
     );
   }
 
+  const doctorName =
+    usuario && usuario.length > 0
+      ? `${usuario[0].nombre} ${usuario[0].apellido}`.trim()
+      : '';
+  const doctorRuc = usuario && usuario.length > 0 ? usuario[0].ruc_doctor || '' : '';
+
+  /* ─── Main ─── */
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Navbar rawSearch="" onSearchChange={() => {}} />
-      <Container maxWidth="lg" sx={{ pt: 2, pb: 4 }}>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate('/home')}
-          sx={{ mb: 2 }}
-        >
-          Volver
-        </Button>
 
-        <Paper sx={{ p: 3, mb: 3 }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
-            Nueva Receta
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>Paciente:</strong> {cliente.nombre} {cliente.apellido}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 1 }}>
-            <strong>Cédula:</strong> {cliente.cedula}
-          </Typography>
-        </Paper>
+      <PatientBanner cliente={cliente} onBack={() => navigate('/home')} />
 
-        <Paper sx={{ p: 3 }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-              Datos del Doctor
-            </Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 3 }}>
-              <Box>
-                <Controller
-                  name="Receta.doctor_remitente"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Doctor"
-                      disabled
-                    />
-                  )}
-                />
-              </Box>
-              <Box>
-                <Controller
-                  name="Receta.ruc_doctor_remitente"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="RUC Doctor"
-                      disabled
-                    />
-                  )}
-                />
-              </Box>
-              <Box>
-                <Controller
-                  name="Receta.hospital_remitente"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Hospital"
-                      error={!!errors.Receta?.hospital_remitente}
-                      helperText={errors.Receta?.hospital_remitente?.message}
-                    />
-                  )}
-                />
-              </Box>
-              <Box>
-                <Controller
-                  name="Receta.telefono_hospital"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Teléfono Hospital"
-                      error={!!errors.Receta?.telefono_hospital}
-                      helperText={errors.Receta?.telefono_hospital?.message}
-                    />
-                  )}
-                />
-              </Box>
-              <Box>
-                <InputLabel sx={{ mb: 1 }}>Expiración de la receta</InputLabel>
-                <Controller
-                  name="Receta.fecha"
-                  control={control}
-                  render={({ field }) => {
-                    const value = field.value
-                      ? new Date(field.value).toISOString().slice(0, 10)
-                      : '';
-
-                    return (
-                      <TextField
-                        {...field}
-                        fullWidth
-                        type="date"
-                        value={value}
-                        onChange={(event) =>
-                          field.onChange(event.target.value ? new Date(event.target.value) : null)
-                        }
-                        error={!!errors.Receta?.fecha}
-                        helperText={errors.Receta?.fecha?.message}
-                      />
-                    );
-                  }}
-                />
-              </Box>
-              <Box>
-                <Controller
-                  name="Receta.codigo"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      fullWidth
-                      label="Código"
-                      type="number"
-                    />
-                  )}
-                />
-              </Box>
-            </Box>
-
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                Medicinas Recetadas
-              </Typography>
-              <Button
-                startIcon={<AddIcon />}
-                onClick={() =>
-                  append({
-                    id_medicamento: null,
-                    cantidad: null,
-                    instrucciones: '',
-                  })
-                }
-              >
-                Agregar Medicina
-              </Button>
-            </Box>
-
-            {errors.Dosis && typeof errors.Dosis === 'object' && 'root' in errors.Dosis && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {errors.Dosis.root?.message || 'Al menos una medicina es requerida'}
-              </Alert>
-            )}
-
-            {submitError && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {submitError}
-              </Alert>
-            )}
-
-            {fields.map((field, index) => (
-              <DosisField
-                key={field.id}
-                index={index}
-                control={control}
-                errors={errors}
-                onRemove={() => remove(index)}
-              />
-            ))}
-
-            <Button
-              type="submit"
-              variant="contained"
-              startIcon={<SaveIcon />}
-              disabled={createRecetaMutation.isPending}
-              sx={{ mt: 2 }}
-            >
-              {createRecetaMutation.isPending ? 'Guardando...' : 'Guardar Receta'}
-            </Button>
-          </form>
-        </Paper>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack spacing={3}>
+            <DoctorSection
+              control={control}
+              errors={errors}
+              doctorName={doctorName}
+              doctorRuc={doctorRuc}
+            />
+            <RecetaDataSection control={control} errors={errors} />
+            <MedicamentosSection
+              control={control}
+              errors={errors}
+              fields={fields}
+              onAppend={() => append({ id_medicamento: null, cantidad: null, instrucciones: '' })}
+              onRemove={remove}
+              isPending={createRecetaMutation.isPending}
+              submitError={submitError}
+            />
+          </Stack>
+        </form>
       </Container>
 
-      {successMessage && (
-        <>
-          <Box sx={{ 
-            position: 'fixed', 
-            top: 0, 
-            left: 0, 
-            right: 0, 
-            bottom: 0,
-            bgcolor: 'rgba(0,0,0,0.5)',
-            zIndex: 9998,
-          }} />
-          <Box sx={{ 
-            position: 'fixed', 
-            top: '50%', 
-            left: '50%', 
-            transform: 'translate(-50%, -50%)',
-            zIndex: 9999,
-            bgcolor: 'white',
-            p: 4,
-            borderRadius: 2,
-            boxShadow: 3,
-            textAlign: 'center',
-            minWidth: 300
-          }}>
-            <Typography variant="h4" sx={{ color: 'success.main', fontWeight: 'bold', mb: 2 }}>
-              Receta creada exitosamente
-            </Typography>
-            <Typography variant="body1">
-              Redireccionando...
-            </Typography>
-          </Box>
-        </>
-      )}
+      <SuccessModal open={successMessage} />
     </Box>
   );
 }
