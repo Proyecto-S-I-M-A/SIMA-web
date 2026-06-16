@@ -95,8 +95,8 @@ export function RecetaAndDosisForm() {
                       label='ID Cliente'
                       labelID='client'
                       endpoint='clientes'
-                      onChange={field.onChange}
-                      value={field.value}
+                      onChange={(e) => field.onChange(Number(e.target.value) || undefined)}
+                      value={Number(field.value) || undefined}
                       valueSelector='id'
                       labelSelector='nombre'
                       secondaryLabelSelector='apellido'
@@ -263,8 +263,8 @@ export function RecetaAndDosisForm() {
                             )}
                             <CustomeSelectQuery
                               endpoint='inventario'
-                              onChange={field.onChange}
-                              value={field.value}
+                              onChange={(e) => field.onChange(Number(e.target.value) || undefined)}
+                              value={Number(field.value) || undefined}
                               valueSelector='id'
                               labelSelector='nombre_medicamento'
                               label='Medicamento'

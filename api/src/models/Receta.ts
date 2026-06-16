@@ -3,6 +3,7 @@ import sequelize from "../config/sequelize.js";
 
 class Receta extends Model {
   declare id: number;
+  declare id_cliente: number;
   declare doctor_remitente: string
   declare ruc_doctor_remitente: string;
   declare hospital_remitente: string
@@ -19,6 +20,10 @@ Receta.init(
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
+    },
+    id_cliente: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
     },
     doctor_remitente: DataTypes.STRING(20),
     ruc_doctor_remitente: DataTypes.STRING(50),

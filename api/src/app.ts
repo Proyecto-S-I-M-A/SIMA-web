@@ -23,9 +23,17 @@ const app = express();
 
 const prefix = "/api/v1";
 
+const allowedOrigins = () => {
+  const originString = process.env.CROSS_ORIGIN || "";
+  if (originString.includes(",")) {
+    return originString.split(",");
+  }
+  return [originString];
+}
+
 app.use(cors(
   {
-    origin: process.env.CROSS_ORIGIN,
+    origin: allowedOrigins(),
     credentials: true,
   }
 ))

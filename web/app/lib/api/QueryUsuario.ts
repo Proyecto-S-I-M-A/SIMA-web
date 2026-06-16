@@ -1,6 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Usuario, UsuarioUpdate } from "~/types/Usuario";
+import type { Usuario, UsuarioCreation, UsuarioUpdate } from "~/types/Usuario";
 import { apiJson } from "../apiClient";
+
+export const useCreateUsuarioMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (form: UsuarioCreation): Promise<unknown> => {
+      return apiJson<unknown>("/usuarios", {
+        method: "POST",
+        body: form,
+        auth: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["usuarios"] });
+    },
+  });
+};
 
 export const useUpdateUsuarioMutation = () => {
   const queryClient = useQueryClient();

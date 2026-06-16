@@ -16,6 +16,13 @@ async function CREATE(request: Request, response: Response) {
       }
     }
 
+    const acceso = await Acceso.findByPk(String(body.id_acceso));
+    if (!acceso) {
+      return response.status(400).json({
+        error: 'El id_acceso no existe',
+      });
+    }
+
     await Cliente.create(body as any);
     response.status(201).json({messages: "Cliente creado exitosamente"});
   } catch (e: any) {

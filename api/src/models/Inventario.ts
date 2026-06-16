@@ -6,6 +6,7 @@ class Inventario extends Model {
   declare nombre_medicamento: string;
   declare marca: string;
   declare precio: number;
+  declare codigo: string;
   declare resetado: boolean;
 }
 
@@ -19,6 +20,7 @@ Inventario.init(
     nombre_medicamento: DataTypes.STRING(40),
     marca: DataTypes.STRING(40),
     precio: DataTypes.DECIMAL,
+    codigo: DataTypes.STRING(20),
     resetado: DataTypes.BOOLEAN,
   },
   {

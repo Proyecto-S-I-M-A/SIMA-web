@@ -10,6 +10,7 @@ class Cliente extends Model {
   declare asegurado: boolean;
   declare verificado: boolean;
   declare sexo: string;
+  declare id_acceso: string;
 }
 
 Cliente.init(
@@ -43,6 +44,10 @@ Cliente.init(
     },
     sexo: {
       type: DataTypes.STRING(10),
+    },
+    id_acceso: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
     }
   },
   {

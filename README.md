@@ -15,9 +15,9 @@ S.I.M.A. es un sistema integral que permite a los doctores gestionar recetas ele
 
 ## Estado actual del proyecto
 
-- Backend: completado.
-- Web para doctores: en desarrollo.
-- App móvil para clientes: en desarrollo.
+- Backend: completado (API REST con todos los endpoints documentados).
+- Web para doctores: en desarrollo (dashboard, recetas, historial y admin operativos).
+- App móvil para clientes: en desarrollo (Expo + React Native).
 - Panel de la máquina: pendiente de integración o desarrollo.
 
 ## Integrantes

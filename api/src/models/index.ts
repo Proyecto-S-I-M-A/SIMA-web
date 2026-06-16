@@ -12,22 +12,22 @@ import MaquinaInventario from "./MaquinaInventario.js";
 /* Relaciones */
 
 Acceso.hasOne(Cliente, { foreignKey: "id_acceso" });
-Cliente.belongsTo(Acceso);
+Cliente.belongsTo(Acceso, { foreignKey: "id_acceso" });
 
 Acceso.hasOne(Usuario, { foreignKey: "id_acceso" });
-Usuario.belongsTo(Acceso);
+Usuario.belongsTo(Acceso, { foreignKey: "id_acceso" });
 
 Cliente.hasOne(FichaMedica, { foreignKey: "id_cliente" });
-FichaMedica.belongsTo(Cliente);
+FichaMedica.belongsTo(Cliente, { foreignKey: "id_cliente" });
 
 Cliente.hasMany(HistorialMedico, { foreignKey: "id_cliente" });
-HistorialMedico.belongsTo(Cliente);
+HistorialMedico.belongsTo(Cliente, { foreignKey: "id_cliente" });
 
 Cliente.hasMany(Receta, { foreignKey: "id_cliente" });
-Receta.belongsTo(Cliente);
+Receta.belongsTo(Cliente, { foreignKey: "id_cliente" });
 
 Receta.hasMany(Dosis, { foreignKey: "id_receta" });
-Dosis.belongsTo(Receta);
+Dosis.belongsTo(Receta, { foreignKey: "id_receta" });
 
 // Relación many-to-many entre Maquina e Inventario
 Maquina.belongsToMany(Inventario, {

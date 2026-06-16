@@ -286,6 +286,7 @@ Content-Type: application/json
   - `GET /maquina-inventario/inventario-maquina/:id_maquina`
   - `PUT /maquina-inventario/:id`
   - `DELETE /maquina-inventario/:id`
+- **Recetas con Dosis** (especial): `GET /recetas/dosis/cliente/:cedula` (`GetRecetasYDosis`)
 
 ### Autenticación (Rutas Públicas)
 
@@ -1024,9 +1025,9 @@ curl -X POST http://localhost:3000/api/v1/recetas/cedula/1234567890 \
 ---
 
 #### GET /api/v1/recetas/cliente/:cedula
-**Obtiene todas las recetas de un cliente por cédula (PÚBLICA - sin autenticación).**
+**Obtiene todas las recetas de un cliente por cédula.**
 
-- **Auth**: No requerida
+- **Auth**: Bearer token requerido
 - **Parámetros**: `:cedula` (path, string, requerido)
 
 **Request Completo**:
@@ -1079,6 +1080,61 @@ curl -X GET http://localhost:3000/api/v1/recetas/cliente/1234567890
 ```json
 {
   "message": "Receta eliminada exitosamente"
+}
+```
+
+---
+
+#### GET /api/v1/recetas/dosis/cliente/:cedula
+**Obtiene todas las recetas de un cliente con sus dosis e información del medicamento.**
+
+- **Auth**: Bearer token requerido
+- **Parámetros**: `:cedula` (path, string, requerido)
+
+**Request Completo**:
+```bash
+curl -X GET http://localhost:3000/api/v1/recetas/dosis/cliente/1234567890 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Response 200 OK**:
+```json
+[
+  {
+    "id": 1,
+    "id_cliente": 1,
+    "doctor_remitente": "Dr. Juan Pérez",
+    "ruc_doctor_remitente": "1701234567001",
+    "hospital_remitente": "Hospital Central",
+    "telefono_hospital": "+593-2-1234567",
+    "correo": "hospital@example.com",
+    "codigo": 12345,
+    "fecha": "2026-05-02T10:30:00Z",
+    "dosis": [
+      {
+        "id": 1,
+        "id_receta": 1,
+        "id_medicamento": 1,
+        "cantidad": 2,
+        "instrucciones": "Tomar una tableta cada 8 horas",
+        "inventario": {
+          "id": 1,
+          "nombre_medicamento": "Paracetamol 500 mg",
+          "marca": "Genfar",
+          "precio": 2.5,
+          "codigo": "MED-001",
+          "resetado": false
+        }
+      }
+    ]
+  }
+]
+```
+
+**Response 404 Not Found**:
+```json
+{
+  "error": "Cliente no encontrado"
 }
 ```
 
@@ -1152,17 +1208,16 @@ curl -X GET http://localhost:3000/api/v1/recetas/cliente/1234567890
 ### Inventario (Protegidas)
 
 #### POST /api/v1/inventario
-**Registra un medicamento en inventario (asociado a una máquina).**
+**Registra un medicamento en el inventario global del sistema.**
 
 - **Auth**: Bearer token requerido
 - **Body (requerido)**:
   ```json
   {
-    "id_maquina": 1,
     "nombre_medicamento": "Paracetamol 500 mg",
     "marca": "Genfar",
     "precio": 2.5,
-    "cantidad": 100,
+    "codigo": "MED-001",
     "resetado": false
   }
   ```
@@ -1183,12 +1238,13 @@ curl -X GET http://localhost:3000/api/v1/recetas/cliente/1234567890
 ```json
 {
   "id": 1,
-  "id_maquina": 1,
   "nombre_medicamento": "Paracetamol 500 mg",
   "marca": "Genfar",
   "precio": 2.5,
-  "cantidad": 100,
-  "resetado": false
+  "codigo": "MED-001",
+  "resetado": false,
+  "createdAt": "2026-05-02T10:00:00Z",
+  "updatedAt": "2026-05-02T10:00:00Z"
 }
 ```
 
@@ -1278,6 +1334,171 @@ curl -X GET http://localhost:3000/api/v1/recetas/cliente/1234567890
 ```json
 {
   "message": "Máquina eliminada exitosamente"
+}
+```
+
+---
+
+### Máquina-Inventario (Protegidas)
+
+#### POST /api/v1/maquina-inventario
+**Asocia un medicamento del inventario a una máquina con su cantidad disponible.**
+
+- **Auth**: Bearer token requerido
+- **Body (requerido)**:
+  ```json
+  {
+    "id_maquina": 1,
+    "codigo_maquina": "M-001",
+    "id_inventario": 3,
+    "cantidad": 50
+  }
+  ```
+
+**Request Completo**:
+```bash
+curl -X POST http://localhost:3000/api/v1/maquina-inventario \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id_maquina": 1,
+    "codigo_maquina": "M-001",
+    "id_inventario": 3,
+    "cantidad": 50
+  }'
+```
+
+**Response 201 Created**:
+```json
+{
+  "id": 10,
+  "id_maquina": 1,
+  "codigo_maquina": "M-001",
+  "id_inventario": 3,
+  "cantidad": 50,
+  "createdAt": "2026-05-02T10:00:00Z",
+  "updatedAt": "2026-05-02T10:00:00Z"
+}
+```
+
+---
+
+#### GET /api/v1/maquina-inventario
+**Lista todos los registros de Máquina-Inventario.**
+
+- **Auth**: Bearer token requerido
+
+**Response 200 OK**: Array de registros MaquinaInventario.
+
+---
+
+#### GET /api/v1/maquina-inventario/:id
+**Filtra registros de Máquina-Inventario por `id_maquina`.**
+
+- **Auth**: Bearer token requerido
+- **Parámetros**: `:id` (path, integer) — se interpreta como `id_maquina`
+
+**Response 200 OK**: Array de registros de esa máquina.
+
+---
+
+#### GET /api/v1/maquina-inventario/maquina/:id_maquina
+**Obtiene todos los registros de una máquina específica.**
+
+- **Auth**: Bearer token requerido
+- **Parámetros**: `:id_maquina` (path, integer, requerido)
+
+**Request Completo**:
+```bash
+curl -X GET http://localhost:3000/api/v1/maquina-inventario/maquina/1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Response 200 OK**:
+```json
+[
+  {
+    "id": 10,
+    "id_maquina": 1,
+    "codigo_maquina": "M-001",
+    "id_inventario": 3,
+    "cantidad": 50
+  }
+]
+```
+
+---
+
+#### GET /api/v1/maquina-inventario/inventario/:id_inventario
+**Obtiene todos los registros asociados a un medicamento del inventario.**
+
+- **Auth**: Bearer token requerido
+- **Parámetros**: `:id_inventario` (path, integer, requerido)
+
+**Response 200 OK**: Array de registros MaquinaInventario para ese inventario.
+
+---
+
+#### GET /api/v1/maquina-inventario/inventario-maquina/:id_maquina
+**Obtiene el inventario completo cargado en una máquina (join con Inventario).**
+
+- **Auth**: Bearer token requerido
+- **Parámetros**: `:id_maquina` (path, integer, requerido)
+
+**Request Completo**:
+```bash
+curl -X GET http://localhost:3000/api/v1/maquina-inventario/inventario-maquina/1 \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+```
+
+**Response 200 OK**:
+```json
+[
+  {
+    "id": 10,
+    "id_maquina": 1,
+    "codigo_maquina": "M-001",
+    "id_inventario": 3,
+    "cantidad": 50,
+    "Inventario": {
+      "id": 3,
+      "nombre_medicamento": "Paracetamol 500 mg",
+      "marca": "Genfar",
+      "precio": 2.5,
+      "codigo": "MED-001",
+      "resetado": false
+    }
+  }
+]
+```
+
+---
+
+#### PUT /api/v1/maquina-inventario/:id
+**Actualiza un registro Máquina-Inventario (ej. ajustar cantidad disponible).**
+
+- **Auth**: Bearer token requerido
+- **Body (parcial)**:
+  ```json
+  {
+    "cantidad": 35
+  }
+  ```
+
+**Response 200 OK**: Número de registros actualizados.
+
+---
+
+#### DELETE /api/v1/maquina-inventario/:id
+**Elimina un registro Máquina-Inventario.**
+
+- **Auth**: Bearer token requerido
+
+**Response 200 OK**:
+```json
+{
+  "message": "Registro de relación MaquinaInventario eliminado",
+  "data": 1
 }
 ```
 
@@ -1393,7 +1614,10 @@ curl -X GET http://localhost:3000/api/v1/recetas/cliente/1234567890
   "nombre_medicamento": "Paracetamol 500 mg",
   "marca": "Genfar",
   "precio": 2.5,
-  "resetado": false
+  "codigo": "MED-001",
+  "resetado": false,
+  "createdAt": "2026-05-02T10:00:00Z",
+  "updatedAt": "2026-05-02T10:00:00Z"
 }
 ```
 
@@ -1591,6 +1815,6 @@ ISC — Ver `LICENSE` en el repositorio.
 
 ---
 
-**Última actualización**: 02 de mayo de 2026  
+**Última actualización**: 16 de junio de 2026  
 **Versión API**: 1.0.0  
 **Versión Node.js soportada**: 18+

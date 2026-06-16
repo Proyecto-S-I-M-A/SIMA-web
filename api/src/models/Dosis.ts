@@ -16,7 +16,10 @@ Dosis.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    id_receta: DataTypes.BIGINT,
+    id_receta: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
     id_medicamento: DataTypes.BIGINT,
     cantidad: DataTypes.INTEGER,
     instrucciones: DataTypes.TEXT,

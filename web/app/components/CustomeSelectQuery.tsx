@@ -16,6 +16,9 @@ export default function CustomeSelectQuery(props: CustomSelectQueryProps) {
   const { onChange, labelID, label, value, endpoint, labelSelector, secondaryLabelSelector, valueSelector } = props;
   const { All } = useQueryAll(endpoint || '');
   const { data } = All;
+  const optionValues = (data || []).map((item: any) => String(valueSelector ? item[valueSelector] : item.id));
+  const normalizedValue = value == null ? '' : String(value);
+  const safeValue = optionValues.includes(normalizedValue) ? normalizedValue : '';
   return(
     <Stack spacing={1} sx={{ width: "100%" }}>
       <InputLabel
@@ -26,7 +29,7 @@ export default function CustomeSelectQuery(props: CustomSelectQueryProps) {
       </InputLabel>
       <Select
         labelId={labelID}
-        value={value ?? ''}
+        value={safeValue}
         onChange={onChange}
         size="small"
         fullWidth
@@ -49,7 +52,7 @@ export default function CustomeSelectQuery(props: CustomSelectQueryProps) {
         {data?.map((item: any) => (
           <MenuItem
             key={item.id}
-            value={valueSelector ? parseInt(item[valueSelector]) : item.id}
+            value={valueSelector ? item[valueSelector] : item.id}
             sx={{
               whiteSpace: 'normal',
               alignItems: 'flex-start',

@@ -5,6 +5,7 @@ export interface UsuarioAttributes {
   rol: string | null;
   password: string | null;
   usuario: string | null;
+  id_acceso: string;
   ruc_doctor: string | null;
   especialidades: string | null;
 }
@@ -16,6 +17,7 @@ export interface UsuarioCreationAttributes {
   rol?: string | null;
   password?: string | null;
   usuario?: string | null;
+  id_acceso: string;
   ruc_doctor?: string | null;
   especialidades?: string | null;
 }

@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Stack, TextField, Typography, Button } from '@mui/material';
 import type { UsuarioCreation } from '~/types/Usuario';
 import { UsuarioCreationSchema } from '~/types/Usuario';
-import { useCreateUsuarioMutation } from '~/lib/Query';
+import { useCreateUsuarioMutation } from '~/lib/api/QueryUsuario';
 import RefreshQuery from '~/lib/RefreshQuery';
 import CustomeSelectQuery from '~/components/CustomeSelectQuery';
 

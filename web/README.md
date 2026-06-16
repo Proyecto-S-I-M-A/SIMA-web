@@ -1,130 +1,159 @@
 # Web de S.I.M.A.
 
-Interfaz web pensada para el uso exclusivo de doctores. Desde aquí se gestiona la consulta y creación de recetas electrónicas, así como el acceso a la información necesaria para operar el sistema de dispensación de S.I.M.A.
+Panel web exclusivo para doctores que permite gestionar recetas electrónicas y consultar información de pacientes dentro del sistema de dispensación S.I.M.A.
 
-## Descripción
+## Herramientas utilizadas
 
-Esta aplicación web funciona como panel médico de Sisteam Inteligente Medicación Asistida. Su foco es la gestión de recetas, la consulta de datos del paciente y la interacción con los flujos que alimentan la máquina expendedora de medicamentos.
+| Herramienta | Versión | Función |
+|-------------|---------|---------|
+| React | 19 | Librería de UI |
+| React Router | 7.14 | Enrutamiento y SSR |
+| Vite | 8 | Bundler y servidor de desarrollo |
+| TypeScript | 5.9 | Tipado estático |
+| Material UI (MUI) | 9 | Componentes de interfaz |
+| Emotion | 11 | CSS-in-JS (requerido por MUI) |
+| Tailwind CSS | 4 | Utilidades de estilos |
+| React Hook Form | 7 | Manejo de formularios |
+| TanStack React Query | 5 | Estado del servidor y caché |
+| Zod | 4 | Validación de esquemas |
+| Font Awesome | 7 | Iconos |
 
-## Tecnologías utilizadas
+## Requisitos previos
 
-- React 19
-- React Router 7
-- Vite
-- TypeScript
-- Material UI
-- Emotion
-- Tailwind CSS 4
-- React Hook Form
-- React Query
-- Zod
+- Node.js 18 o superior
+- npm 9 o superior
+- API de S.I.M.A. corriendo (ver [api/README.md](../api/README.md))
 
-## Componentes globales útiles
+## Inicialización
 
-- **ButtonVariant**: Botón reutilizable con variantes y tamaños.
-- **CustomeSelectQuery**: Select conectado a endpoints con `useQueryAll`.
-- **CustomeTabPanel**: Paneles reutilizables para tabs administrativas.
-- **ProtectedRoute**: Wrapper de rutas protegidas (valida sesion).
-
-## Librerías y utilidades (lib)
-
-- **apiClient**: cliente HTTP con soporte de auth y manejo de errores.
-- **GetCookie / GetSession**: utilidades para tokens y session storage.
-- **useProtectedRoute**: hook para proteger pantallas privadas.
-- **RefreshQuery**: helper de invalidacion de cache en React Query.
-
-## Query helpers
-
-- `app/lib/api/*`: hooks de React Query por recurso (CRUD, listados, filtros).
-- `app/lib/Query.ts`: helpers de login/signup y mutaciones generales.
-- `app/lib/api/QueryAll.ts`: helper para cargar listas completas (`/endpoint/all`).
-
-## Estado actual
-
-- Base del frontend creada.
-- Interfaz orientada a doctores.
-- Integración con la API en progreso.
-- Proyecto general con backend completado.
-
-## Funcionalidades previstas
-
-- Inicio de sesión de doctores.
-- Gestión de recetas electrónicas.
-- Consulta de datos del paciente.
-- Vistas administrativas y de detalle.
-
-## Instalación
+### 1. Instalar dependencias
 
 ```bash
 cd web
 npm install
 ```
 
-## Desarrollo
+### 2. Configurar variables de entorno
+
+```bash
+cp .env.example .env
+```
+
+Edita `.env` con los valores correspondientes:
+
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+| Variable | Valor por defecto | Descripción |
+|----------|------------------|-------------|
+| `VITE_API_URL` | `http://localhost:3000` | URL base de la API |
+
+### 3. Iniciar en desarrollo
 
 ```bash
 npm run dev
 ```
 
-La aplicación se ejecuta en `http://localhost:5173`.
+La aplicación estará disponible en `http://localhost:5173`.
 
-## Build de producción
+## Scripts disponibles
 
 ```bash
-npm run build
+npm run dev        # Inicia el servidor de desarrollo con hot reload
+npm run build      # Compila para producción
+npm run start      # Sirve el build de producción
+npm run typecheck  # Verifica tipos y genera tipos de React Router
 ```
 
-## Estructura general
+## Rutas
+
+### Rutas públicas
+
+| Ruta | Página | Descripción |
+|------|--------|-------------|
+| `/` | `routes/index.tsx` | Redirige a `/login` |
+| `/login` | `pages/login/` | Pantalla de inicio de sesión para doctores |
+| `/autenticacion` | `pages/autenticacion/` | Verificación OTP tras el login |
+| `/no-autorizado` | `pages/unauthorized/` | Acceso denegado |
+
+### Rutas protegidas (requieren sesión activa)
+
+| Ruta | Página | Descripción |
+|------|--------|-------------|
+| `/home` | `pages/dashboard/` | Dashboard principal: tabla de pacientes y estadísticas |
+| `/home/historial` | `pages/historial/` | Historial de recetas del doctor |
+| `/home/nueva-receta` | `pages/nueva-receta/` | Formulario para crear una receta electrónica |
+| `/home/paciente/:cedula` | `pages/detalles/` | Detalle de un paciente por cédula |
+| `/admin` | `pages/admin/` | Panel CRUD completo de todas las entidades |
+
+### Ruta comodín
+
+| Ruta | Descripción |
+|------|-------------|
+| `/*` | `routes/catch-all.tsx` — Captura rutas no definidas |
+
+## Estructura del proyecto
 
 ```text
 app/
-├── components/
-├── config/
-├── lib/
+├── components/          # Componentes reutilizables globales
+├── config/              # URLs de API y constantes de entorno
+├── lib/                 # Hooks, cliente HTTP, helpers de sesión y queries
+│   └── api/             # Hooks de React Query por recurso
 ├── pages/
-├── routes/
-├── types/
-├── root.tsx
-└── routes.ts
+│   ├── admin/           # Panel administrativo con CRUD de entidades
+│   │   └── components/  # Formularios y tablas por entidad (Acceso, Cliente, Receta…)
+│   ├── autenticacion/   # Flujo de verificación OTP
+│   ├── dashboard/       # Panel principal del doctor
+│   │   ├── components/  # Navbar, tabla de pacientes, tarjetas de estadísticas
+│   │   └── hooks/       # Lógica de la tabla de pacientes
+│   ├── detalles/        # Vista de detalle de paciente
+│   ├── historial/       # Historial de recetas con dosis
+│   ├── login/           # Inicio de sesión
+│   ├── nueva-receta/    # Creación de receta con secciones y medicamentos
+│   └── unauthorized/    # Página de acceso denegado
+├── routes/              # Rutas de React Router
+├── types/               # Tipos TypeScript compartidos
+├── root.tsx             # Componente raíz y proveedores globales
+├── routes.ts            # Mapa de rutas de la aplicación
+├── app.css              # Estilos globales
+└── theme.ts             # Tema de Material UI
 ```
 
-## Descripción de carpetas
+## Componentes globales
 
-### `app/components/`
-Componentes reutilizables de la interfaz, como botones, selectores y paneles visuales compartidos entre pantallas.
+- **ButtonVariant** — Botón reutilizable con variantes y tamaños.
+- **CustomeSelectQuery** — Select conectado a endpoints con `useQueryAll`.
+- **CustomeTabPanel** — Paneles reutilizables para tabs administrativas.
+- **ProtectedRoute** — Wrapper de rutas protegidas que valida sesión activa.
 
-### `app/config/`
-Configuración central de la aplicación, como URLs de API, constantes y valores de entorno.
+## Utilidades (lib)
 
-### `app/lib/`
-Funciones de apoyo para el consumo de la API, manejo de cookies, sesión, consultas y refresco de datos.
+- **apiClient** — Cliente HTTP con soporte de auth y manejo de errores.
+- **GetCookie / GetSession** — Helpers para leer tokens y sesión del navegador.
+- **useProtectedRoute** — Hook para proteger pantallas privadas.
+- **RefreshQuery** — Helper de invalidación de caché en React Query.
 
-### `app/pages/`
-Pantallas principales del frontend organizadas por contexto funcional.
+## Deploy
 
-- `admin/`: vistas administrativas para control interno.
-- `autenticacion/`: flujo de autenticación y acceso.
-- `dashboard/`: panel principal del doctor.
-- `detalles/`: vistas de detalle de pacientes, recetas o registros.
-- `login/`: pantalla de inicio de sesión.
+1. Configura variables de entorno de producción en `.env`.
+2. Instala dependencias:
+   ```bash
+   npm install
+   ```
+3. Compila para producción:
+   ```bash
+   npm run build
+   ```
+4. Sirve el build (SSR) o publica `dist/` en tu hosting estático:
+   ```bash
+   npm run start
+   ```
 
-### `app/routes/`
-Definición de rutas de React Router y manejo de navegación de la aplicación.
-
-### `app/types/`
-Tipos de TypeScript compartidos entre componentes, páginas y utilidades.
-
-### `app/root.tsx`
-Componente raíz de la aplicación, donde se define la estructura global y los proveedores principales.
-
-### `app/routes.ts`
-Mapa o configuración central de rutas de la aplicación.
-
-### `app/app.css`
-Estilos globales de la interfaz.
-
-### `app/theme.ts`
-Definición del tema visual utilizado por Material UI y la consistencia de estilos.
+**Notas**
+- En local, `VITE_API_URL` apunta a `http://localhost:3000`.
+- Ajusta `CROSS_ORIGIN` en la API para permitir el dominio del frontend en producción.
 
 ## Integrantes
 
@@ -137,21 +166,3 @@ Definición del tema visual utilizado por Material UI y la consistencia de estil
 ## Nota
 
 La app móvil del cliente está contemplada aparte y se desarrollará con Expo y React Native.
-
-## 🚀 Deploy (Web)
-
-1. Configura variables de entorno:
-	- `VITE_API_URL` (URL base de la API)
-2. Instala dependencias:
-	```bash
-	npm install
-	```
-3. Compila para produccion:
-	```bash
-	npm run build
-	```
-4. Publica el contenido de `dist/` en tu hosting estatico.
-
-**Notas**
-- En local, `VITE_API_URL` suele apuntar a `http://localhost:3000`.
-- Ajusta el CORS en la API para permitir el dominio del frontend.
