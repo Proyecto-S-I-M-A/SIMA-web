@@ -8,6 +8,8 @@ export interface ClienteAttributes {
   verificado: boolean;
   sexo: string | null;
   id_acceso: string;
+  telefono: string | null;
+  push_token: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,6 +23,8 @@ export interface ClienteCreationAttributes {
   verificado?: boolean;
   sexo?: string | null;
   id_acceso: string;
+  telefono?: string | null;
+  push_token?: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }

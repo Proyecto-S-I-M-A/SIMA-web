@@ -11,6 +11,8 @@ class Cliente extends Model {
   declare verificado: boolean;
   declare sexo: string;
   declare id_acceso: string;
+  declare telefono: string | null;
+  declare push_token: string | null;
 }
 
 Cliente.init(
@@ -48,7 +50,15 @@ Cliente.init(
     id_acceso: {
       type: DataTypes.STRING(255),
       allowNull: false,
-    }
+    },
+    telefono: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
+    push_token: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
   },
   {
     sequelize,
