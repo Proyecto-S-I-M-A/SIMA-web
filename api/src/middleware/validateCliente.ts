@@ -50,6 +50,12 @@ export const validateClienteCreation = [
     .withMessage('el id_acceso es requerido')
     .isString()
     .withMessage('el id_acceso debe ser texto'),
+
+  body('telefono')
+    .trim()
+    .optional({ checkFalsy: true })
+    .matches(/^\+?[0-9\s\-()]{7,20}$/)
+    .withMessage('El teléfono debe ser un número válido'),
 ];
 
 // Middleware para manejar errores de validación

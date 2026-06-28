@@ -13,6 +13,7 @@ import RouteMaquinaInventario from "./routes/Route_MaquinaInventario.js";
 import requireSupabaseAuth from "./middleware/requireSupabaseAuth.js";
 import RouteSession from "./routes/Route_Session.js";
 import RouteGetRecetaByCedula from "./routes/Route-GetRecetaByCedula.js";
+import RoutePushNotification from "./routes/Route_PushNotification.js";
 import "./models/index.js";
 import dotenv from "dotenv";
 
@@ -54,5 +55,6 @@ app.use(prefix, RouteDosis);
 app.use(prefix, RouteInventario);
 app.use(prefix, RouteMaquina);
 app.use(prefix, RouteMaquinaInventario);
+app.use(prefix, RoutePushNotification);
 
 export default app;
