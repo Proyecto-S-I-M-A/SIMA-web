@@ -29,12 +29,12 @@ export type NotificationType =
   | 'recordatorio-receta';
 
 export interface SendNotificationBody {
-  id_cliente: number;
+  id_acceso: string;
   type: NotificationType;
   data?: Record<string, unknown>;
 }
 
 export interface RegisterTokenBody {
-  id_cliente: number;
+  id_acceso: string;
   push_token: string;
 }
