@@ -10,10 +10,10 @@ import {
 
 async function registerToken(request: Request, response: Response) {
   try {
-    const { id_cliente, push_token }: RegisterTokenBody = request.body;
+    const { id_acceso, push_token }: RegisterTokenBody = request.body;
 
-    if (!id_cliente || !push_token) {
-      return response.status(400).json({ error: 'id_cliente y push_token son requeridos' });
+    if (!id_acceso || !push_token) {
+      return response.status(400).json({ error: 'id_acceso y push_token son requeridos' });
     }
 
     const valid =
@@ -26,7 +26,7 @@ async function registerToken(request: Request, response: Response) {
 
     const [affected] = await Cliente.update(
       { push_token },
-      { where: { id: id_cliente } }
+      { where: { id_acceso } }
     );
 
     if (affected === 0) {
@@ -41,13 +41,13 @@ async function registerToken(request: Request, response: Response) {
 
 async function sendNotification(request: Request, response: Response) {
   try {
-    const { id_cliente, type, data = {} }: SendNotificationBody = request.body;
+    const { id_acceso, type, data = {} }: SendNotificationBody = request.body;
 
-    if (!id_cliente || !type) {
-      return response.status(400).json({ error: 'id_cliente y type son requeridos' });
+    if (!id_acceso || !type) {
+      return response.status(400).json({ error: 'id_acceso y type son requeridos' });
     }
 
-    const cliente = await Cliente.findByPk(id_cliente);
+    const cliente = await Cliente.findOne({ where: { id_acceso } });
 
     if (!cliente) {
       return response.status(404).json({ error: 'Cliente no encontrado' });
