@@ -16,6 +16,7 @@ import { MaquinaInventarioManager } from './components/MaquinaInventarioManager'
 import { RecetaAndDosisForm } from './components/RecetaAndDosisForm';
 import { RecetaTable } from './components/RecetaTable';
 import { DosisTable } from './components/DosisTable';
+import { NotificationTestPanel } from './components/NotificationTestPanel';
 import { useGetAccesos } from '~/lib/api/QueryAcceso';
 import { useProtectedRoute } from '~/lib/useProtectedRoute';
 import {GetSession} from '~/lib/GetSession';
@@ -30,7 +31,7 @@ export default function AdminPanel() {
   const [tabValue, setTabValue] = useState(0);
   const navigate = useNavigate();
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
   const sessionID = GetSession();
@@ -93,6 +94,7 @@ export default function AdminPanel() {
               <Tab label="Administrar Máquinas" id="admin-tab-4" aria-controls="admin-tabpanel-4" />
               <Tab label="Inventario y Máquinas" id="admin-tab-5" aria-controls="admin-tabpanel-5" />
               <Tab label="Recetas y Dosis" id="admin-tab-6" aria-controls="admin-tabpanel-6" />
+              <Tab label="Probar Notificaciones" id="admin-tab-7" aria-controls="admin-tabpanel-7" />
             </Tabs>
           </Box>
 
@@ -130,6 +132,10 @@ export default function AdminPanel() {
             <RecetaAndDosisForm />
             <RecetaTable />
             <DosisTable />
+          </CustomTabPanel>
+
+          <CustomTabPanel value={tabValue} index={7}>
+            <NotificationTestPanel />
           </CustomTabPanel>
         </Paper>
       </Box>

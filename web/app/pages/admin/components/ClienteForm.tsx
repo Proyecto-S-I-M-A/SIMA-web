@@ -1,8 +1,8 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Stack, TextField, Typography, Button, FormControlLabel, Checkbox } from '@mui/material';
-import type { ClienteCreation } from '~/types/cliente';
-import { ClienteCreationSchema } from '~/types/cliente';
+import type { ClienteCreation } from '~/types/Cliente';
+import { ClienteCreationSchema } from '~/types/Cliente';
 import { useCreateClienteMutation } from '~/lib/api/QueryCliente';
 import RefreshQuery from '~/lib/RefreshQuery';
 import CustomeSelectQuery from '~/components/CustomeSelectQuery';

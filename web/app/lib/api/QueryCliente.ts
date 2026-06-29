@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Cliente, ClienteCreation, ClienteUpdate } from "~/types/cliente";
+import type { Cliente, ClienteCreation, ClienteUpdate } from "~/types/Cliente";
 import type { Row } from "~/pages/dashboard/types";
 import { apiJson } from "../apiClient";
 import type { CreateClienteResponse } from "../Query";

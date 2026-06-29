@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useGetClientes, useUpdateClienteMutation } from '~/lib/api/QueryCliente';
-import type { ClienteUpdate } from '~/types/cliente';
+import type { ClienteUpdate } from '~/types/Cliente';
 
 export function ClienteTable() {
   const { data: clientes, isLoading, isError, error } = useGetClientes('all');
