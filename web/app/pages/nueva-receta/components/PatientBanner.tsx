@@ -2,7 +2,7 @@ import { Box, Button, Chip, Container, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PersonIcon from '@mui/icons-material/Person';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
-import type { Cliente } from '~/types/cliente';
+import type { Cliente } from '~/types/Cliente';
 
 type PatientBannerProps = {
   cliente: Cliente;

@@ -2,6 +2,7 @@ import { useSearchParams, useNavigate } from 'react-router';
 import { useGetClienteByCedula } from '~/lib/api/QueryCliente';
 import { useGetUsuario } from '~/lib/api/QueryUsuario';
 import { useCreateRecetaWithDosisMutation } from '~/lib/api/QueryReceta';
+import { useSendPushNotificationMutation } from '~/lib/api/QueryNotification';
 import { useGetInventario } from '~/lib/api/QueryInventario';
 import { useProtectedRoute } from '~/lib/useProtectedRoute';
 import { GetSession } from '~/lib/GetSession';
@@ -43,6 +44,7 @@ export default function NuevaReceta() {
   const { isLoading: loadingInventario } = useGetInventario('all', true);
 
   const createRecetaMutation = useCreateRecetaWithDosisMutation();
+  const sendNotification = useSendPushNotificationMutation();
 
   const {
     handleSubmit,
@@ -90,6 +92,16 @@ export default function NuevaReceta() {
           cantidad: d.cantidad ? Number(d.cantidad) : null,
         })),
       });
+
+      // Fire-and-forget: no bloquea el flujo si la notificacion falla
+      if (cliente?.id_acceso) {
+        sendNotification.mutate({
+          id_acceso: cliente.id_acceso,
+          type: 'nueva-receta',
+          data: { doctor: doctorName },
+        });
+      }
+
       setSuccessMessage(true);
       setTimeout(() => navigate('/home'), 1500);
     } catch (error) {
