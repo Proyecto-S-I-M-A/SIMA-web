@@ -178,6 +178,12 @@ export default function Login() {
             }}
           >
             {/* Logo/Title */}
+            <Box
+              component="img"
+              src="/logo/SIMA-logo.png"
+              alt="Logo S.I.M.A."
+              sx={{ width: 96, height: 96, mb: 1 }}
+            />
 
             <Typography
               component="h1"
@@ -187,7 +193,7 @@ export default function Login() {
                 fontWeight: 600,
                 textAlign: 'center',
                 width: '80%',
-                margin: '18px auto 10px auto',
+                margin: '8px auto 10px auto',
               }}
             >
               S.I.M.A.

@@ -28,7 +28,7 @@ export default function UnauthorizedPage() {
           <LockIcon
             sx={{
               fontSize: 80,
-              color: '#d32f2f',
+              color: 'error.dark',
               mb: 2,
             }}
           />

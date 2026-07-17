@@ -5,6 +5,7 @@ import { PatientsTable } from './components/PatientsTable';
 import { usePatientsTable } from './hooks/usePatientsTable';
 import { useProtectedRoute } from '~/lib/useProtectedRoute';
 import { ProtectedRoute } from '~/components/ProtectedRoute';
+import Sidebar from '~/components/Sidebar';
 
 export default function Dashboard() {
   // Validar autenticación
@@ -31,10 +32,12 @@ export default function Dashboard() {
 
   return (
     <ProtectedRoute>
-      <Box sx={{ minHeight: '100vh', bgcolor: '#ffffff' }}>
-        <Navbar rawSearch={rawSearch} onSearchChange={setRawSearch} />
+      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+        <Sidebar />
+        <Box sx={{ flexGrow: 1, minWidth: 0, bgcolor: '#ffffff' }}>
+          <Navbar rawSearch={rawSearch} onSearchChange={setRawSearch} />
 
-        {/* Cargando */}
+          {/* Cargando */}
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
             <CircularProgress />
@@ -79,8 +82,9 @@ export default function Dashboard() {
                 setPage(0);
               }}
             />
-          </>
-        )}
+            </>
+          )}
+        </Box>
       </Box>
     </ProtectedRoute>
   );

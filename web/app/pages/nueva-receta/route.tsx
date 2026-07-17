@@ -7,20 +7,18 @@ import { useGetInventario } from '~/lib/api/QueryInventario';
 import { useProtectedRoute } from '~/lib/useProtectedRoute';
 import { GetSession } from '~/lib/GetSession';
 import {
-  Alert,
   Box,
-  Button,
   CircularProgress,
   Container,
   Stack,
   Typography,
 } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { RecetasDosisSchema, type RecetasDosisCreation } from '~/types/receta';
 import { useState, useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Navbar } from '../dashboard/components/Navbar';
+import PatientSelector from '~/components/PatientSelector';
 import PatientBanner from './components/PatientBanner';
 import DoctorSection from './components/DoctorSection';
 import RecetaDataSection from './components/RecetaDataSection';
@@ -110,6 +108,17 @@ export default function NuevaReceta() {
     }
   };
 
+  /* ─── Sin paciente: capa de selección ─── */
+  if (!cedula) {
+    return (
+      <PatientSelector
+        destination="/home/nueva-receta"
+        title="Nueva receta"
+        subtitle="Selecciona un paciente para crear una nueva receta."
+      />
+    );
+  }
+
   /* ─── Loading ─── */
   if (loadingCliente || loadingUsuario || loadingInventario) {
     return (
@@ -125,20 +134,14 @@ export default function NuevaReceta() {
     );
   }
 
-  /* ─── Sin paciente ─── */
-  if (!cedula || !cliente) {
+  /* ─── Cédula inválida / paciente no encontrado ─── */
+  if (!cliente) {
     return (
-      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-        <Navbar rawSearch="" onSearchChange={() => {}} />
-        <Container maxWidth="sm" sx={{ pt: 6 }}>
-          <Alert severity="warning" sx={{ borderRadius: 2 }}>
-            No se seleccionó un paciente. Seleccione uno desde el dashboard.
-          </Alert>
-          <Button startIcon={<ArrowBackIcon />} onClick={() => navigate('/home')} sx={{ mt: 2 }}>
-            Volver al dashboard
-          </Button>
-        </Container>
-      </Box>
+      <PatientSelector
+        destination="/home/nueva-receta"
+        title="Nueva receta"
+        subtitle="No se encontró el paciente indicado. Selecciona uno de la lista."
+      />
     );
   }
 

@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Navbar } from '../dashboard/components/Navbar';
+import PatientSelector from '~/components/PatientSelector';
 import RecetaDosisList from './components/DosisTable';
 
 
@@ -47,18 +48,11 @@ export default function Historial() {
 
   if (!cedula) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Alert severity="warning">
-          No se proporcionó una cédula para consultar el historial.
-        </Alert>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate('/home')}
-          sx={{ mt: 2 }}
-        >
-          Volver al dashboard
-        </Button>
-      </Container>
+      <PatientSelector
+        destination="/home/historial"
+        title="Historial médico"
+        subtitle="Selecciona un paciente para ver su historial."
+      />
     );
   }
 
@@ -106,7 +100,7 @@ export default function Historial() {
         {!loading && !error && (
           <Paper sx={{ p: 3, borderRadius: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-              <MedicalServicesIcon sx={{ color: '#0288D1' }} />
+              <MedicalServicesIcon sx={{ color: 'primary.main' }} />
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Recetas
               </Typography>
