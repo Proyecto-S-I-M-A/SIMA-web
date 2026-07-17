@@ -15,6 +15,8 @@ import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", type: "image/x-icon", href: "/logo/SIMA-logo.ico" },
+  { rel: "apple-touch-icon", href: "/logo/SIMA-logo.png" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",

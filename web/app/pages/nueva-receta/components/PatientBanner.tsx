@@ -13,7 +13,8 @@ export default function PatientBanner({ cliente, onBack }: PatientBannerProps) {
   return (
     <Box
       sx={{
-        background: 'linear-gradient(135deg, #0288D1 0%, #01579B 100%)',
+        background: (theme) =>
+          `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
         color: 'white',
         py: 3,
         px: { xs: 2, md: 4 },

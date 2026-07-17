@@ -18,6 +18,7 @@ import type { Row, SortKey, SortDir } from '../types';
 import { SortCell } from './SortCell';
 import AddIcon from '@mui/icons-material/Add';
 import HistoryIcon from '@mui/icons-material/History';
+import CheckIcon from '@mui/icons-material/Check';
 
 type Props = {
   search: string;
@@ -30,6 +31,12 @@ type Props = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
+  /**
+   * Modo selección: si se define, cada fila se vuelve seleccionable
+   * (clic en la fila o botón "Seleccionar") en lugar de mostrar las
+   * acciones Receta/Historial.
+   */
+  onSelectPatient?: (row: Row) => void;
 };
 
 export function PatientsTable({
@@ -43,6 +50,7 @@ export function PatientsTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
+  onSelectPatient,
 }: Props) {
   const navigate = useNavigate();
 
@@ -120,6 +128,9 @@ export function PatientsTable({
                   <TableRow
                     key={row.id}
                     hover
+                    onClick={
+                      onSelectPatient ? () => onSelectPatient(row) : undefined
+                    }
                     sx={{
                       cursor: 'pointer',
                       transition: 'background-color 0.2s',
@@ -173,40 +184,62 @@ export function PatientsTable({
 
                     <TableCell align="center">
                       <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          startIcon={<AddIcon />}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/home/nueva-receta?cedula=${row.cedula}`);
-                          }}
-                          sx={{
-                            bgcolor: '#0288D1',
-                            '&:hover': { bgcolor: '#01579B' },
-                            fontSize: '0.75rem',
-                            py: 0.5,
-                          }}
-                        >
-                          Receta
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          startIcon={<HistoryIcon />}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/home/historial?cedula=${row.cedula}`);
-                          }}
-                          sx={{
-                            color: '#0288D1',
-                            borderColor: '#0288D1',
-                            fontSize: '0.75rem',
-                            py: 0.5,
-                          }}
-                        >
-                          Historial
-                        </Button>
+                        {onSelectPatient ? (
+                          <Button
+                            variant="contained"
+                            size="small"
+                            startIcon={<CheckIcon />}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelectPatient(row);
+                            }}
+                            sx={{
+                              bgcolor: 'primary.main',
+                              '&:hover': { bgcolor: 'primary.dark' },
+                              fontSize: '0.75rem',
+                              py: 0.5,
+                            }}
+                          >
+                            Seleccionar
+                          </Button>
+                        ) : (
+                          <>
+                            <Button
+                              variant="contained"
+                              size="small"
+                              startIcon={<AddIcon />}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/home/nueva-receta?cedula=${row.cedula}`);
+                              }}
+                              sx={{
+                                bgcolor: 'primary.main',
+                                '&:hover': { bgcolor: 'primary.dark' },
+                                fontSize: '0.75rem',
+                                py: 0.5,
+                              }}
+                            >
+                              Receta
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              startIcon={<HistoryIcon />}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/home/historial?cedula=${row.cedula}`);
+                              }}
+                              sx={{
+                                color: 'primary.main',
+                                borderColor: 'primary.main',
+                                fontSize: '0.75rem',
+                                py: 0.5,
+                              }}
+                            >
+                              Historial
+                            </Button>
+                          </>
+                        )}
                       </Box>
                     </TableCell>
                   </TableRow>

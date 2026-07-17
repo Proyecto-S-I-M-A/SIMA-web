@@ -110,7 +110,7 @@ export function InventarioForm() {
           type="submit"
           variant="contained"
           disabled={isPending}
-          sx={{ mt: 2, bgcolor: '#2E7D32', '&:hover': { bgcolor: '#1b5e20' } }}
+          sx={{ mt: 2, bgcolor: 'secondary.main', '&:hover': { bgcolor: 'secondary.dark' } }}
         >
           {isPending ? 'Creando…' : 'Crear Inventario'}
         </Button>
