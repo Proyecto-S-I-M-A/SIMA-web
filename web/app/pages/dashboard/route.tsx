@@ -1,6 +1,7 @@
 import { Alert, Box, Button, CircularProgress } from '@mui/material';
 import { Navbar } from './components/Navbar';
 import { StatsCards } from './components/StatsCards';
+import { UserInfoCard } from './components/UserInfoCard';
 import { PatientsTable } from './components/PatientsTable';
 import { usePatientsTable } from './hooks/usePatientsTable';
 import { useProtectedRoute } from '~/lib/useProtectedRoute';
@@ -36,6 +37,9 @@ export default function Dashboard() {
         <Sidebar />
         <Box sx={{ flexGrow: 1, minWidth: 0, bgcolor: '#ffffff' }}>
           <Navbar rawSearch={rawSearch} onSearchChange={setRawSearch} />
+
+          {/* Información del profesional con la sesión abierta */}
+          <UserInfoCard />
 
           {/* Cargando */}
         {loading && (

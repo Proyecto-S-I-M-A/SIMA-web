@@ -75,6 +75,7 @@ export default function RecetaDataSection({ control, errors }: RecetaDataSection
               <TextField
                 {...field}
                 fullWidth
+                onChange={(e) => field.onChange(parseInt(e.target.value) || null)}
                 size="small"
                 type="number"
                 placeholder="Código único"

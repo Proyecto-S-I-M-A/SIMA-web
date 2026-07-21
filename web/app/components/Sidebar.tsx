@@ -25,7 +25,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { DeleteSession } from '~/lib/GetSession';
 import { deleteAllCookieStoreValue } from '~/lib/GetCookie';
 
-const DRAWER_WIDTH = 260;
+const DRAWER_WIDTH = 230;
 
 type NavItem = {
   label: string;
@@ -33,13 +33,15 @@ type NavItem = {
   icon: ReactNode;
   /** Coincidencia exacta (para no marcar activo en sub-rutas). */
   end?: boolean;
+  /** Solo visible para usuarios con rol admin. */
+  adminOnly?: boolean;
 };
 
 const navItems: NavItem[] = [
   { label: 'Pacientes', to: '/home', icon: <PeopleIcon />, end: true },
   { label: 'Nueva receta', to: '/home/nueva-receta', icon: <NoteAddIcon /> },
   { label: 'Historial', to: '/home/historial', icon: <HistoryIcon /> },
-  { label: 'Administración', to: '/admin', icon: <AdminPanelSettingsIcon /> },
+  { label: 'Administración', to: '/admin', icon: <AdminPanelSettingsIcon />},
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {

@@ -1,6 +1,6 @@
 
-import { useEffect, useState } from 'react';
-import { Box, Container, Paper, Tabs, Tab, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Box, CircularProgress, Container, Paper, Tabs, Tab, Typography } from '@mui/material';
 import { ClienteForm } from './components/ClienteForm';
 import { AccesoForm } from './components/AccesoForm';
 import { UsuarioForm } from './components/UsuarioForm';
@@ -21,7 +21,7 @@ import { useGetAccesos } from '~/lib/api/QueryAcceso';
 import { useProtectedRoute } from '~/lib/useProtectedRoute';
 import {GetSession} from '~/lib/GetSession';
 import CustomTabPanel from '~/components/CustomeTabPanel';
-import { useNavigate } from 'react-router';
+import { Navigate } from 'react-router';
 import type { Acceso } from '~/types/Acceso';
 
 export default function AdminPanel() {
@@ -29,26 +29,34 @@ export default function AdminPanel() {
   useProtectedRoute();
 
   const [tabValue, setTabValue] = useState(0);
-  const navigate = useNavigate();
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
   const sessionID = GetSession();
-  const { data, isError, isSuccess } = useGetAccesos(sessionID || "", true);
+  const { data, isError, isLoading } = useGetAccesos(sessionID || '', !!sessionID);
 
-  useEffect(() => {
-    if (isSuccess && !Array.isArray(data)) {
-      const acceso = data as Acceso
-      if (acceso?.tipo !== "admin") {
-        navigate("/home");
-      }
-    }
+  // El endpoint devuelve el acceso suelto o dentro de un arreglo según el caso.
+  const acceso = (Array.isArray(data) ? data[0] : data) as Acceso | undefined;
+  const isAdmin = acceso?.tipo === 'admin';
 
-    if (isError) {
-      navigate("/home");
-    }
-  }, [data, isError, isSuccess, navigate]);
+  // Las guardas van antes del render del panel: así sus tablas y formularios
+  // nunca llegan a montarse ni a lanzar peticiones si el usuario no es admin.
+  if (!sessionID) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'grid', placeItems: 'center', minHeight: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (isError || !isAdmin) {
+    return <Navigate to="/home" replace />;
+  }
 
   return (
     <Container component="main" maxWidth="lg">
