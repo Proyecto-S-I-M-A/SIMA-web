@@ -13,7 +13,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import SectionHeading from './SectionHeading';
 
 // Cuenta de demostración pública: solo datos ficticios, sin información real de pacientes.
-const DEMO_EMAIL = 'ruben@admin.com';
+const DEMO_EMAIL = 'demo@demo.com';
 const DEMO_PASSWORD = '123456';
 
 const steps = [
